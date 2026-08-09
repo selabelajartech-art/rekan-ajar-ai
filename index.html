@@ -68,51 +68,53 @@
 <body class="bg-slate-50 text-slate-800 font-sans antialiased h-screen flex flex-col overflow-hidden">
 
     <!-- HEADER / NAVIGATION TOP BAR -->
-    <header class="bg-tealbrand-900 text-white border-b border-tealbrand-800 px-6 py-3 flex items-center justify-between shadow-md z-30 flex-shrink-0">
-        <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('landing')">
-            <!-- LOGO HEADER DENGAN TRIK CSS BRIGHTNESS-0 INVERT (Hitam -> Putih) -->
-            <div class="p-1 rounded-xl font-bold flex items-center justify-center w-11 h-11 overflow-hidden">
-                <img src="logo.png" alt="Rekan Ajar AI Logo" class="w-full h-full object-contain brightness-0 invert">
-            </div>
-            <div>
-                <h1 class="text-xl font-extrabold tracking-tight flex items-center gap-2">
-                    Rekan Ajar <span class="bg-tealbrand-500/20 text-tealbrand-200 text-xs px-2.5 py-0.5 rounded-full font-semibold border border-tealbrand-500/30">AI Pro</span>
-                </h1>
-                <p class="text-[11px] text-tealbrand-100/70">Asisten Administrasi & Workspace Guru Merdeka</p>
+    <header class="bg-tealbrand-900 text-white border-b border-tealbrand-800 px-4 md:px-6 py-2.5 md:py-3 flex items-center justify-between shadow-md z-30 flex-shrink-0">
+        <div class="flex items-center space-x-2 md:space-x-3 cursor-pointer">
+            <!-- Mobile Menu Hamburger Button -->
+            <button id="mobile-menu-btn" onclick="toggleMobileSidebar()" class="lg:hidden p-2 text-tealbrand-200 hover:text-white hover:bg-tealbrand-800 rounded-lg transition" title="Buka Sidebar Navigasi">
+                <i class="fa-solid fa-bars text-lg"></i>
+            </button>
+
+            <!-- Brand Logo & Title -->
+            <div class="flex items-center space-x-2" onclick="switchTab('landing')">
+                <div class="p-1 rounded-xl font-bold flex items-center justify-center w-9 h-9 md:w-11 md:h-11 overflow-hidden">
+                    <img src="logo.png" alt="Rekan Ajar AI Logo" class="w-full h-full object-contain brightness-0 invert">
+                </div>
+                <div>
+                    <h1 class="text-base md:text-xl font-extrabold tracking-tight flex items-center gap-1.5 md:gap-2">
+                        Rekan Ajar <span class="bg-tealbrand-500/20 text-tealbrand-200 text-[10px] md:text-xs px-2 py-0.5 rounded-full font-semibold border border-tealbrand-500/30">AI Pro</span>
+                    </h1>
+                    <p class="hidden sm:block text-[11px] text-tealbrand-100/70">Asisten Administrasi & Workspace Guru Merdeka</p>
+                </div>
             </div>
         </div>
 
         <!-- Navigation Links & User Bar -->
-        <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-2 md:space-x-4">
             <nav class="hidden md:flex items-center space-x-1 mr-2 text-xs font-semibold">
                 <button onclick="switchTab('landing')" class="px-3 py-1.5 rounded-lg hover:bg-tealbrand-800 text-tealbrand-100 transition">Beranda</button>
                 <button onclick="switchTab('generator')" class="px-3 py-1.5 rounded-lg hover:bg-tealbrand-800 text-tealbrand-100 transition">Workspace Generator</button>
                 <button onclick="switchTab('workbook')" class="px-3 py-1.5 rounded-lg hover:bg-tealbrand-800 text-tealbrand-100 transition">Workbook Guru</button>
             </nav>
 
-            <button onclick="openApiKeyModal()" class="hidden items-center gap-2 bg-tealbrand-800 hover:bg-tealbrand-700 text-tealbrand-200 text-xs px-3 py-2 rounded-lg border border-tealbrand-700 transition">
-                <i class="fa-solid fa-key text-amber-400"></i>
-                <span id="apiKeyStatus">Set Gemini Key</span>
-            </button>
-
             <!-- Dynamic Header Elements: Saldo Token & Top-up -->
-            <div id="header-token-container" class="hidden bg-tealbrand-800 border border-tealbrand-700 rounded-xl px-3 py-1.5 items-center gap-2">
-                <i class="fa-solid fa-coins text-amber-400 text-sm"></i>
+            <div id="header-token-container" class="hidden bg-tealbrand-800 border border-tealbrand-700 rounded-xl px-2.5 md:px-3 py-1 md:py-1.5 items-center gap-1.5 md:gap-2">
+                <i class="fa-solid fa-coins text-amber-400 text-xs md:text-sm"></i>
                 <div class="text-xs">
-                    <span class="text-tealbrand-200 block text-[10px]">Saldo Token</span>
+                    <span class="text-tealbrand-200 hidden md:block text-[10px]">Saldo Token</span>
                     <span id="tokenBalance" class="font-bold text-amber-300">0</span>
                 </div>
             </div>
 
-            <button id="header-topup-btn" onclick="switchTab('topup')" class="hidden bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-bold text-xs px-3.5 py-2 rounded-xl shadow-sm transition items-center gap-1.5">
+            <button id="header-topup-btn" onclick="switchTab('topup')" class="hidden bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-bold text-xs px-2.5 md:px-3.5 py-1.5 md:py-2 rounded-xl shadow-sm transition items-center gap-1 md:gap-1.5">
                 <i class="fa-solid fa-plus-circle"></i>
-                <span>Isi Token</span>
+                <span class="hidden sm:inline">Isi Token</span>
             </button>
 
             <div id="auth-btn-container">
-                <button onclick="openAuthModal()" class="bg-tealbrand-600 hover:bg-tealbrand-500 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition shadow flex items-center gap-1.5">
+                <button onclick="openAuthModal()" class="bg-tealbrand-600 hover:bg-tealbrand-500 text-white font-bold text-xs px-3 md:px-3.5 py-1.5 md:py-2 rounded-xl transition shadow flex items-center gap-1.5">
                     <i class="fa-solid fa-user-plus"></i>
-                    <span>Login / Daftar</span>
+                    <span class="hidden sm:inline">Login / Daftar</span>
                 </button>
             </div>
         </div>
@@ -126,23 +128,23 @@
         <!-- ================================================================= -->
         <div id="view-landing" class="flex-1 overflow-y-auto custom-scrollbar bg-slate-50">
             <!-- HERO SECTION -->
-            <section class="bg-gradient-to-b from-tealbrand-900 via-tealbrand-800 to-slate-900 text-white py-16 px-6 relative overflow-hidden">
+            <section class="bg-gradient-to-b from-tealbrand-900 via-tealbrand-800 to-slate-900 text-white py-12 md:py-16 px-4 md:px-6 relative overflow-hidden">
                 <div class="max-w-5xl mx-auto text-center relative z-10">
-                    <span class="inline-flex items-center gap-2 bg-tealbrand-500/20 text-tealbrand-200 border border-tealbrand-500/30 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-6">
+                    <span class="inline-flex items-center gap-2 bg-tealbrand-500/20 text-tealbrand-200 border border-tealbrand-500/30 px-3 py-1 rounded-full text-xs font-semibold mb-4 md:mb-6">
                         <i class="fa-solid fa-sparkles text-amber-400"></i> Platform Kurikulum Merdeka AI No. 1 di Indonesia
                     </span>
-                    <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight mb-6">
+                    <h1 class="text-2xl md:text-5xl font-extrabold tracking-tight leading-tight mb-4 md:mb-6">
                         Rekan Administrasi Mengajar <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-tealbrand-200 to-emerald-400">10x Lebih Cepat & Presisi</span>
                     </h1>
-                    <p class="text-sm md:text-base text-tealbrand-100/80 max-w-2xl mx-auto mb-8 leading-relaxed">
+                    <p class="text-xs md:text-base text-tealbrand-100/80 max-w-2xl mx-auto mb-6 md:mb-8 leading-relaxed">
                         Susun Modul Ajar, TP/ATP, Prota, Prosem, LKPD, hingga Asesmen sesuai standar BSKAP resmi secara instan. Dilengkapi Workbook Digital untuk manajemen kelas tanpa ribet.
                     </p>
-                    <div class="flex flex-wrap items-center justify-center gap-4">
-                        <button onclick="switchTab('generator')" class="bg-tealbrand-500 hover:bg-tealbrand-600 text-tealbrand-950 font-extrabold text-sm px-6 py-3.5 rounded-2xl shadow-lg transition transform hover:-translate-y-0.5 flex items-center gap-2">
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4">
+                        <button onclick="switchTab('generator')" class="w-full sm:w-auto bg-tealbrand-500 hover:bg-tealbrand-600 text-tealbrand-950 font-extrabold text-xs md:text-sm px-6 py-3.5 rounded-2xl shadow-lg transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
                             <i class="fa-solid fa-rocket"></i>
                             <span>Coba Generator Sekarang (Gratis 15 Token)</span>
                         </button>
-                        <button onclick="switchTab('workbook')" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold text-sm px-5 py-3.5 rounded-2xl transition">
+                        <button onclick="switchTab('workbook')" class="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold text-xs md:text-sm px-5 py-3.5 rounded-2xl transition">
                             <i class="fa-solid fa-book-bookmark mr-2"></i> Buka Workbook Guru
                         </button>
                     </div>
@@ -150,15 +152,15 @@
             </section>
 
             <!-- INTERACTIVE TIME SAVER CALCULATOR -->
-            <section class="py-14 px-6 max-w-4xl mx-auto -mt-8 relative z-20">
-                <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-xl">
+            <section class="py-10 md:py-14 px-4 md:px-6 max-w-4xl mx-auto -mt-6 md:-mt-8 relative z-20">
+                <div class="bg-white p-5 md:p-8 rounded-3xl border border-slate-200 shadow-xl">
                     <div class="text-center mb-6">
                         <span class="bg-tealbrand-50 text-tealbrand-700 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Kalkulator Efisiensi</span>
                         <h2 class="text-xl md:text-2xl font-extrabold text-slate-800 mt-2">Berapa Banyak Waktu yang Bisa Anda Hemat?</h2>
                         <p class="text-xs text-slate-500 mt-1">Hitung perbandingan pembuatan dokumen manual vs Rekan Ajar AI</p>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center border-t border-slate-100 pt-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center border-t border-slate-100 pt-6">
                         <!-- Sliders Controls -->
                         <div class="space-y-5">
                             <div>
@@ -179,9 +181,9 @@
                         </div>
 
                         <!-- Results Card -->
-                        <div class="bg-gradient-to-br from-tealbrand-50 to-emerald-50 p-6 rounded-2xl border border-tealbrand-100 text-center">
+                        <div class="bg-gradient-to-br from-tealbrand-50 to-emerald-50 p-5 md:p-6 rounded-2xl border border-tealbrand-100 text-center">
                             <div class="text-xs text-slate-500 font-semibold">Estimasi Waktu Dihemat:</div>
-                            <div id="calc-hours-saved" class="text-3xl font-extrabold text-tealbrand-800 my-1">91.2 Jam</div>
+                            <div id="calc-hours-saved" class="text-2xl md:text-3xl font-extrabold text-tealbrand-800 my-1">91.2 Jam</div>
                             <p id="calc-description" class="text-[11px] text-slate-600 leading-relaxed">
                                 Setara dengan hemat <strong class="text-tealbrand-700">11 hari kerja</strong>! Waktu istirahat dan akhir pekan Anda kini bisa dinikmati bersama keluarga.
                             </p>
@@ -191,8 +193,8 @@
             </section>
 
             <!-- FEATURE HIGHLIGHTS -->
-            <section class="py-12 px-6 max-w-6xl mx-auto">
-                <div class="text-center mb-12">
+            <section class="py-8 md:py-12 px-4 md:px-6 max-w-6xl mx-auto">
+                <div class="text-center mb-8 md:mb-12">
                     <h2 class="text-2xl font-extrabold text-slate-800">Semua Kebutuhan Guru dalam Satu Tempat</h2>
                     <p class="text-xs text-slate-500 mt-1">Dirancang khusus menjawab komprehensivitas Kurikulum Merdeka</p>
                 </div>
@@ -242,16 +244,16 @@
                 </div>
             </section>
 
-            <!-- WHY CHOOSE US / VALUE PROPOSITIONS SECTION -->
-            <section class="py-14 bg-slate-100/80 border-y border-slate-200 px-6">
+            <!-- WHY CHOOSE US -->
+            <section class="py-12 md:py-14 bg-slate-100/80 border-y border-slate-200 px-4 md:px-6">
                 <div class="max-w-6xl mx-auto">
-                    <div class="text-center mb-12">
+                    <div class="text-center mb-8 md:mb-12">
                         <span class="bg-tealbrand-100 text-tealbrand-800 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Keunggulan Rekan Ajar AI</span>
                         <h2 class="text-2xl font-extrabold text-slate-800 mt-2">Mengapa Ribuan Guru Memilih Rekan Ajar AI Pro?</h2>
                         <p class="text-xs text-slate-500 mt-1">Dibuat khusus menyesuaikan standar administrasi sekolah di Indonesia</p>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                             <div class="w-10 h-10 bg-tealbrand-100 text-tealbrand-700 rounded-xl flex items-center justify-center font-bold text-lg mb-3">
                                 <i class="fa-solid fa-certificate"></i>
@@ -288,7 +290,7 @@
             </section>
 
             <!-- CONTACT & SUPPORT SECTION -->
-            <section class="py-14 bg-white border-t border-slate-200 px-6">
+            <section class="py-12 md:py-14 bg-white border-t border-slate-200 px-4 md:px-6">
                 <div class="max-w-5xl mx-auto">
                     <div class="text-center mb-10">
                         <span class="bg-tealbrand-50 text-tealbrand-700 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Layanan Bantuan</span>
@@ -340,23 +342,30 @@
             </section>
 
             <!-- CTA SECTION -->
-            <section class="py-16 px-6 text-center max-w-3xl mx-auto">
-                <h2 class="text-2xl font-extrabold text-slate-800 mb-3">Siap Menyusun Perangkat Ajar Lebih Praktis?</h2>
+            <section class="py-12 md:py-16 px-4 md:px-6 text-center max-w-3xl mx-auto">
+                <h2 class="text-xl md:text-2xl font-extrabold text-slate-800 mb-3">Siap Menyusun Perangkat Ajar Lebih Praktis?</h2>
                 <p class="text-xs text-slate-500 mb-6">Dapatkan 15 Token Gratis saat pertama kali mendaftar akun Rekan Ajar AI.</p>
-                <button onclick="openAuthModal()" class="bg-tealbrand-700 hover:bg-tealbrand-800 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-md transition">
+                <button onclick="openAuthModal()" class="bg-tealbrand-700 hover:bg-tealbrand-800 text-white font-bold text-xs md:text-sm px-6 py-3 rounded-xl shadow-md transition">
                     Daftar Sekarang & Klaim Token Gratis
                 </button>
             </section>
         </div>
 
         <!-- ================================================================= -->
-        <!-- VIEW 2: APP WORKSPACE SHELL (SHARED SIDEBAR & MAIN CONTENT)        -->
+        <!-- VIEW 2: APP WORKSPACE SHELL (RESPONSIVE SIDEBAR & MAIN CONTENT)    -->
         <!-- ================================================================= -->
-        <div id="app-workspace" class="hidden flex-1 flex overflow-hidden w-full">
+        <div id="app-workspace" class="hidden flex-1 flex overflow-hidden w-full relative">
             
-            <!-- GLOBAL SIDEBAR MODULE NAVIGATION -->
-            <aside class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between flex-shrink-0">
+            <!-- GLOBAL SIDEBAR MODULE NAVIGATION (DRAWER IN MOBILE, FIXED IN DESKTOP) -->
+            <aside id="global-sidebar" class="fixed lg:static inset-y-0 left-0 w-64 bg-white border-r border-slate-200 flex flex-col justify-between z-40 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out flex-shrink-0 shadow-lg lg:shadow-none">
                 <div class="p-4 space-y-5 overflow-y-auto custom-scrollbar">
+                    
+                    <!-- Mobile Close Sidebar Header -->
+                    <div class="flex items-center justify-between lg:hidden border-b pb-3 border-slate-100">
+                        <span class="font-bold text-xs text-slate-700">Menu Navigasi</span>
+                        <button onclick="toggleMobileSidebar()" class="p-1 text-slate-400 hover:text-slate-600 text-xs"><i class="fa-solid fa-xmark text-base"></i></button>
+                    </div>
+
                     <div>
                         <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-3">Perencanaan (Planning)</div>
                         <nav class="space-y-1">
@@ -412,7 +421,6 @@
                     </div>
                 </div>
 
-                <!-- Footer User Info -->
                 <div class="p-3.5 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
                     <div class="flex items-center gap-2.5">
                         <div id="user-avatar" class="w-8 h-8 rounded-full bg-tealbrand-700 text-white flex items-center justify-center font-bold text-xs">
@@ -426,25 +434,40 @@
                 </div>
             </aside>
 
-            <!-- WORKSPACE MAIN CONTENT AREA -->
-            <main class="flex-1 bg-slate-100 overflow-hidden flex flex-col relative">
+            <!-- SIDEBAR OVERLAY FOR MOBILE -->
+            <div id="sidebar-overlay" onclick="toggleMobileSidebar()" class="hidden fixed inset-0 bg-slate-900/40 z-30 lg:hidden backdrop-blur-xs"></div>
 
-                <!-- SUB-VIEW A: GENERATOR FORM & EDITOR -->
-                <div id="view-generator" class="flex-1 flex overflow-hidden">
-                    <section class="w-1/2 p-5 overflow-y-auto custom-scrollbar border-r border-slate-200 bg-white">
-                        <div class="mb-5 flex items-center justify-between border-b pb-3 border-slate-100">
+            <!-- WORKSPACE MAIN CONTENT AREA -->
+            <main class="flex-1 bg-slate-100 overflow-hidden flex flex-col relative w-full">
+
+                <!-- SUB-VIEW A: GENERATOR FORM & EDITOR (RESPONSIVE SINGLE/TWO COLUMN) -->
+                <div id="view-generator" class="flex-1 flex flex-col lg:flex-row overflow-hidden">
+                    
+                    <!-- MOBILE TAB TOGGLE BUTTONS (Visible only on mobile) -->
+                    <div class="lg:hidden bg-white border-b border-slate-200 p-2 flex text-xs font-bold">
+                        <button onclick="switchMobileWorkspaceTab('form')" id="btn-tab-mobile-form" class="flex-1 py-2 text-center rounded-lg bg-tealbrand-50 text-tealbrand-700">
+                            <i class="fa-solid fa-pen-to-square mr-1"></i> Form Input
+                        </button>
+                        <button onclick="switchMobileWorkspaceTab('editor')" id="btn-tab-mobile-editor" class="flex-1 py-2 text-center rounded-lg text-slate-500 hover:bg-slate-50">
+                            <i class="fa-solid fa-file-lines mr-1"></i> Hasil Dokumen
+                        </button>
+                    </div>
+
+                    <!-- LEFT FORM PANEL -->
+                    <section id="panel-generator-form" class="w-full lg:w-1/2 p-4 md:p-5 overflow-y-auto custom-scrollbar border-r border-slate-200 bg-white flex-1">
+                        <div class="mb-4 md:mb-5 flex items-center justify-between border-b pb-3 border-slate-100">
                             <div>
-                                <h2 id="generator-title" class="text-base font-bold text-slate-800">Generator Modul Ajar / RPP Plus</h2>
+                                <h2 id="generator-title" class="text-sm md:text-base font-bold text-slate-800">Generator Modul Ajar / RPP Plus</h2>
                                 <p class="text-[11px] text-slate-500">Isi parameter di bawah untuk menyusun dokumen presisi.</p>
                             </div>
-                            <span id="token-cost-badge" class="bg-amber-100 text-amber-800 border border-amber-200 text-xs px-2.5 py-1 rounded-full font-bold">
-                                <i class="fa-solid fa-coins mr-1"></i> Biaya: 5 Token
+                            <span id="token-cost-badge" class="bg-amber-100 text-amber-800 border border-amber-200 text-[11px] px-2.5 py-1 rounded-full font-bold whitespace-nowrap">
+                                <i class="fa-solid fa-coins mr-1"></i> 5 Token
                             </span>
                         </div>
 
                         <form id="generator-form" onsubmit="handleGenerate(event)" class="space-y-3.5 text-xs">
 
-                            <div class="grid grid-cols-3 gap-3">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                 <div>
                                     <label class="block font-semibold text-slate-700 mb-1">Jenjang</label>
                                     <select id="input-jenjang" onchange="updateFaseMapping()" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
@@ -472,7 +495,7 @@
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-3 gap-3">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                 <div>
                                     <label class="block font-semibold text-slate-700 mb-1">Mata Pelajaran</label>
                                     <input type="text" id="input-mapel" required placeholder="Misal: IPAS / Matematika" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
@@ -493,9 +516,7 @@
                             </div>
 
                             <div>
-                                <label class="block font-semibold text-slate-700 mb-1 flex justify-between items-center">
-                                    <span>Teks Capaian Pembelajaran (CP) Resmi (Opsional)</span>
-                                </label>
+                                <label class="block font-semibold text-slate-700 mb-1">Teks CP Resmi (Opsional)</label>
                                 <textarea id="input-cp-text" rows="2" placeholder="Tempelkan paragraf CP resmi di sini..." class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500"></textarea>
                             </div>
 
@@ -504,16 +525,16 @@
                             <div>
                                 <label class="block font-semibold text-slate-700 mb-1.5">Dimensi Profil Pelajar Pancasila (P3)</label>
                                 <div class="grid grid-cols-2 gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                                    <label class="flex items-center gap-2"><input type="checkbox" value="Beriman, Bertaqwa & Berakhlak Mulia" class="ppp-check text-tealbrand-600 rounded"> Beriman & Bertaqwa</label>
-                                    <label class="flex items-center gap-2"><input type="checkbox" value="Berkebinekaan Global" class="ppp-check text-tealbrand-600 rounded"> Berkebinekaan Global</label>
-                                    <label class="flex items-center gap-2"><input type="checkbox" value="Gotong Royong" class="ppp-check text-tealbrand-600 rounded"> Gotong Royong</label>
-                                    <label class="flex items-center gap-2"><input type="checkbox" value="Mandiri" class="ppp-check text-tealbrand-600 rounded" checked> Mandiri</label>
-                                    <label class="flex items-center gap-2"><input type="checkbox" value="Bernalar Kritis" class="ppp-check text-tealbrand-600 rounded" checked> Bernalar Kritis</label>
-                                    <label class="flex items-center gap-2"><input type="checkbox" value="Kreatif" class="ppp-check text-tealbrand-600 rounded" checked> Kreatif</label>
+                                    <label class="flex items-center gap-1.5"><input type="checkbox" value="Beriman, Bertaqwa & Berakhlak Mulia" class="ppp-check text-tealbrand-600 rounded"> Beriman & Bertaqwa</label>
+                                    <label class="flex items-center gap-1.5"><input type="checkbox" value="Berkebinekaan Global" class="ppp-check text-tealbrand-600 rounded"> Berkebinekaan Global</label>
+                                    <label class="flex items-center gap-1.5"><input type="checkbox" value="Gotong Royong" class="ppp-check text-tealbrand-600 rounded"> Gotong Royong</label>
+                                    <label class="flex items-center gap-1.5"><input type="checkbox" value="Mandiri" class="ppp-check text-tealbrand-600 rounded" checked> Mandiri</label>
+                                    <label class="flex items-center gap-1.5"><input type="checkbox" value="Bernalar Kritis" class="ppp-check text-tealbrand-600 rounded" checked> Bernalar Kritis</label>
+                                    <label class="flex items-center gap-1.5"><input type="checkbox" value="Kreatif" class="ppp-check text-tealbrand-600 rounded" checked> Kreatif</label>
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-2 gap-3">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div>
                                     <label class="block font-semibold text-slate-700 mb-1">Model Pembelajaran</label>
                                     <select id="input-model" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
@@ -542,33 +563,34 @@
                         </form>
                     </section>
 
-                    <section class="w-1/2 p-5 flex flex-col h-full bg-slate-100">
-                        <div class="bg-white p-3 rounded-t-2xl border border-slate-200 flex items-center justify-between shadow-sm">
-                            <div class="flex items-center space-x-1 border-r border-slate-200 pr-3">
+                    <!-- RIGHT EDITOR PANEL -->
+                    <section id="panel-generator-editor" class="hidden lg:flex w-full lg:w-1/2 p-4 md:p-5 flex-col h-full bg-slate-100 flex-1">
+                        <div class="bg-white p-3 rounded-t-2xl border border-slate-200 flex flex-wrap items-center justify-between gap-2 shadow-sm">
+                            <div class="flex items-center space-x-1 border-r border-slate-200 pr-2">
                                 <button onclick="formatText('bold')" class="p-1.5 hover:bg-slate-100 rounded text-slate-700 font-bold"><i class="fa-solid fa-bold"></i></button>
                                 <button onclick="formatText('italic')" class="p-1.5 hover:bg-slate-100 rounded text-slate-700 italic"><i class="fa-solid fa-italic"></i></button>
                                 <button onclick="formatText('insertUnorderedList')" class="p-1.5 hover:bg-slate-100 rounded text-slate-700"><i class="fa-solid fa-list-ul"></i></button>
                             </div>
 
-                            <div class="flex items-center space-x-2">
-                                <button onclick="saveToPustaka()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3 py-1.5 rounded-lg border border-slate-300 transition flex items-center gap-1.5">
+                            <div class="flex items-center space-x-1.5">
+                                <button onclick="saveToPustaka()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-300 transition flex items-center gap-1">
                                     <i class="fa-solid fa-bookmark text-amber-600"></i> Simpan
                                 </button>
-                                <button onclick="exportToWord()" class="bg-tealbrand-700 hover:bg-tealbrand-800 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+                                <button onclick="exportToWord()" class="bg-tealbrand-700 hover:bg-tealbrand-800 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
                                     <i class="fa-solid fa-file-word"></i> .DOCX
                                 </button>
-                                <button onclick="exportToPDF()" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+                                <button onclick="exportToPDF()" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
                                     <i class="fa-solid fa-file-pdf"></i> PDF
                                 </button>
                             </div>
                         </div>
 
-                        <div class="flex-1 bg-white border-x border-b border-slate-200 rounded-b-2xl p-6 overflow-y-auto custom-scrollbar shadow-inner relative" id="printableArea">
+                        <div class="flex-1 bg-white border-x border-b border-slate-200 rounded-b-2xl p-4 md:p-6 overflow-y-auto custom-scrollbar shadow-inner relative" id="printableArea">
                             <!-- PLACEHOLDER LOGO BARU DENGAN OPACITY 25% -->
-                            <div id="editor-placeholder" class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center text-slate-400">
-                                <img src="logo.png" alt="Rekan Ajar AI Logo" class="w-16 h-16 mb-3 opacity-25 object-contain select-none pointer-events-none">
-                                <h3 class="font-bold text-slate-600">Dokumen Belum Di-generate</h3>
-                                <p class="text-xs max-w-xs mt-1">Isi parameter lalu klik "Generate Dokumen Mendalam".</p>
+                            <div id="editor-placeholder" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-slate-400">
+                                <img src="logo.png" alt="Rekan Ajar AI Logo" class="w-14 h-16 mb-3 opacity-25 object-contain select-none pointer-events-none">
+                                <h3 class="font-bold text-slate-600 text-sm">Dokumen Belum Di-generate</h3>
+                                <p class="text-[11px] max-w-xs mt-1">Isi parameter lalu klik "Generate Dokumen Mendalam".</p>
                             </div>
 
                             <div id="editor-loading" class="hidden absolute inset-0 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center z-10">
@@ -582,73 +604,66 @@
                 </div>
 
                 <!-- SUB-VIEW B: WORKBOOK GURU PRO -->
-                <div id="view-workbook" class="hidden flex-1 p-6 overflow-y-auto custom-scrollbar bg-slate-100">
-                    <div class="max-w-6xl mx-auto space-y-6">
+                <div id="view-workbook" class="hidden flex-1 p-4 md:p-6 overflow-y-auto custom-scrollbar bg-slate-100">
+                    <div class="max-w-6xl mx-auto space-y-4 md:space-y-6">
                         
-                        <!-- WORKBOOK HEADER & CONTROLS -->
-                        <div class="flex flex-wrap justify-between items-center bg-white p-5 rounded-2xl border border-slate-200 shadow-sm gap-4">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 md:p-5 rounded-2xl border border-slate-200 shadow-sm gap-3">
                             <div>
-                                <h2 class="text-xl font-bold text-slate-800">Workbook Guru Digital Pro</h2>
-                                <p class="text-xs text-slate-500">Kelola Absensi Harian, Jurnal Mengajar, & Daftar Siswa Per Kelas.</p>
+                                <h2 class="text-base md:text-xl font-bold text-slate-800">Workbook Guru Digital Pro</h2>
+                                <p class="text-[11px] text-slate-500">Kelola Absensi Harian, Jurnal Mengajar, & Daftar Siswa Per Kelas.</p>
                             </div>
 
-                            <div class="flex flex-wrap items-center gap-3 text-xs">
-                                <!-- Class Selector -->
-                                <div class="flex items-center gap-2 bg-slate-50 p-1.5 rounded-xl border border-slate-200">
-                                    <span class="font-semibold text-slate-600 pl-2">Pilih Kelas:</span>
-                                    <select id="workbook-class-select" onchange="changeWorkbookClass()" class="bg-white border border-slate-300 rounded-lg p-1.5 font-bold text-tealbrand-800 focus:ring-2 focus:ring-tealbrand-500">
-                                        <!-- Dynamic Class Dropdown Rendered via JS -->
+                            <div class="flex flex-wrap items-center gap-2 text-xs w-full sm:w-auto">
+                                <div class="flex items-center gap-1.5 bg-slate-50 p-1.5 rounded-xl border border-slate-200 flex-1 sm:flex-none">
+                                    <span class="font-semibold text-slate-600 pl-1">Kelas:</span>
+                                    <select id="workbook-class-select" onchange="changeWorkbookClass()" class="bg-white border border-slate-300 rounded-lg p-1 font-bold text-tealbrand-800 focus:ring-2 focus:ring-tealbrand-500">
                                     </select>
                                 </div>
 
-                                <!-- Date Picker -->
-                                <div class="flex items-center gap-2 bg-slate-50 p-1.5 rounded-xl border border-slate-200">
-                                    <span class="font-semibold text-slate-600 pl-2">Tanggal:</span>
-                                    <input type="date" id="workbook-date" class="bg-white border border-slate-300 rounded-lg p-1 font-bold text-slate-700">
+                                <div class="flex items-center gap-1.5 bg-slate-50 p-1.5 rounded-xl border border-slate-200 flex-1 sm:flex-none">
+                                    <span class="font-semibold text-slate-600 pl-1">Tgl:</span>
+                                    <input type="date" id="workbook-date" class="bg-white border border-slate-300 rounded-lg p-1 font-bold text-slate-700 text-xs">
                                 </div>
 
-                                <button onclick="saveWorkbookData()" class="bg-tealbrand-700 hover:bg-tealbrand-800 text-white font-bold px-4 py-2 rounded-xl shadow transition flex items-center gap-1.5">
-                                    <i class="fa-solid fa-floppy-disk"></i> Simpan Record
+                                <button onclick="saveWorkbookData()" class="bg-tealbrand-700 hover:bg-tealbrand-800 text-white font-bold px-3 py-2 rounded-xl shadow transition flex items-center gap-1 text-xs">
+                                    <i class="fa-solid fa-floppy-disk"></i> Simpan
                                 </button>
                             </div>
                         </div>
 
-                        <!-- MAIN WORKBOOK CONTENT GRID -->
-                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
                             
-                            <!-- ABSENSI DINAMIS & MANAGEMENT SISWA (2 COLS) -->
-                            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm lg:col-span-2 flex flex-col justify-between">
+                            <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200 shadow-sm lg:col-span-2 flex flex-col justify-between">
                                 <div>
                                     <div class="flex flex-wrap justify-between items-center mb-4 gap-2">
-                                        <h3 class="font-bold text-sm text-slate-800 flex items-center">
+                                        <h3 class="font-bold text-xs md:text-sm text-slate-800 flex items-center">
                                             <i class="fa-solid fa-user-check text-tealbrand-600 mr-2"></i> Presensi Siswa Harian
                                         </h3>
 
                                         <div class="flex items-center gap-2">
-                                            <button onclick="markAllPresent()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-[11px] font-bold px-2.5 py-1 rounded-lg transition">
+                                            <button onclick="markAllPresent()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-[10px] font-bold px-2 py-1 rounded-lg transition">
                                                 <i class="fa-solid fa-check-double mr-1"></i> Hadir Semua
                                             </button>
-                                            <button onclick="openAddStudentModal()" class="bg-tealbrand-700 hover:bg-tealbrand-800 text-white text-[11px] font-bold px-2.5 py-1 rounded-lg transition">
+                                            <button onclick="openAddStudentModal()" class="bg-tealbrand-700 hover:bg-tealbrand-800 text-white text-[10px] font-bold px-2 py-1 rounded-lg transition">
                                                 <i class="fa-solid fa-user-plus mr-1"></i> Tambah Siswa
                                             </button>
                                         </div>
                                     </div>
 
                                     <div class="overflow-x-auto">
-                                        <table class="w-full text-xs text-left border-collapse">
+                                        <table class="w-full text-xs text-left border-collapse min-w-[320px]">
                                             <thead>
                                                 <tr class="bg-slate-50 border-b text-slate-600">
-                                                    <th class="p-2 border.5 border-slate-200 w-10 text-center">No</th>
-                                                    <th class="p-2 border.5 border-slate-200">Nama Siswa</th>
-                                                    <th class="p-2 border.5 border-slate-200 text-center w-16">Hadir</th>
-                                                    <th class="p-2 border.5 border-slate-200 text-center w-16">Izin</th>
-                                                    <th class="p-2 border.5 border-slate-200 text-center w-16">Sakit</th>
-                                                    <th class="p-2 border.5 border-slate-200 text-center w-16">Alfa</th>
-                                                    <th class="p-2 border.5 border-slate-200 text-center w-12">Aksi</th>
+                                                    <th class="p-2 border border-slate-200 w-8 text-center">No</th>
+                                                    <th class="p-2 border border-slate-200">Nama Siswa</th>
+                                                    <th class="p-2 border border-slate-200 text-center w-12">H</th>
+                                                    <th class="p-2 border border-slate-200 text-center w-12">I</th>
+                                                    <th class="p-2 border border-slate-200 text-center w-12">S</th>
+                                                    <th class="p-2 border border-slate-200 text-center w-12">A</th>
+                                                    <th class="p-2 border border-slate-200 text-center w-10">Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="student-attendance-tbody">
-                                                <!-- Dynamic student rows rendered via JavaScript -->
                                             </tbody>
                                         </table>
                                     </div>
@@ -656,39 +671,25 @@
 
                                 <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-[11px] text-slate-400">
                                     <span>Total Siswa: <strong id="total-students-count" class="text-slate-700">0</strong></span>
-                                    <span>Status: Auto-saved to Cloud</span>
+                                    <span>Status: Auto-saved</span>
                                 </div>
                             </div>
 
-                            <!-- JURNAL & CATATAN PERKEMBANGAN -->
-                            <div class="space-y-6">
-                                <!-- Jurnal Harian -->
-                                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                                    <h3 class="font-bold text-sm text-slate-800 mb-3 flex items-center">
-                                        <i class="fa-solid fa-book-journal-whills text-indigo-600 mr-2"></i> Jurnal Mengajar Hari Ini
+                            <div class="space-y-4 md:space-y-6">
+                                <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200 shadow-sm">
+                                    <h3 class="font-bold text-xs md:text-sm text-slate-800 mb-3 flex items-center">
+                                        <i class="fa-solid fa-book-journal-whills text-indigo-600 mr-2"></i> Jurnal Mengajar
                                     </h3>
                                     <form class="space-y-3 text-xs">
                                         <div>
                                             <label class="block font-semibold mb-1 text-slate-700">Materi / Sub-Bab</label>
-                                            <input type="text" id="jurnal-materi" placeholder="Misal: Bab 2 Ekosistem & Rantai Makanan" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
+                                            <input type="text" id="jurnal-materi" placeholder="Misal: Bab 2 Ekosistem" class="w-full p-2 border border-slate-300 rounded-lg">
                                         </div>
                                         <div>
-                                            <label class="block font-semibold mb-1 text-slate-700">Hambatan / Catatan Kelas</label>
-                                            <textarea id="jurnal-hambatan" rows="3" placeholder="Misal: Diskusi kelompok berjalan lancar, 2 siswa perlu bimbingan..." class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500"></textarea>
-                                        </div>
-                                        <div>
-                                            <label class="block font-semibold mb-1 text-slate-700">Tindak Lanjut</label>
-                                            <input type="text" id="jurnal-tindak-lanjut" placeholder="Pemberian tugas mandiri / Remedial" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
+                                            <label class="block font-semibold mb-1 text-slate-700">Hambatan Kelas</label>
+                                            <textarea id="jurnal-hambatan" rows="2" placeholder="Catatan kelompok..." class="w-full p-2 border border-slate-300 rounded-lg"></textarea>
                                         </div>
                                     </form>
-                                </div>
-
-                                <!-- Catatan Perkembangan Siswa -->
-                                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                                    <h3 class="font-bold text-sm text-slate-800 mb-3 flex items-center">
-                                        <i class="fa-solid fa-comment-dots text-amber-600 mr-2"></i> Catatan Sikap & Perkembangan
-                                    </h3>
-                                    <textarea id="catatan-sikap" rows="3" placeholder="Catat prestasi khusus atau kendala perilaku siswa tertentu untuk laporan Rapor P3..." class="w-full p-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-tealbrand-500"></textarea>
                                 </div>
                             </div>
 
@@ -697,65 +698,52 @@
                 </div>
 
                 <!-- SUB-VIEW C: PUSTAKA DOKUMEN -->
-                <div id="view-pustaka" class="hidden flex-1 p-6 overflow-y-auto custom-scrollbar">
+                <div id="view-pustaka" class="hidden flex-1 p-4 md:p-6 overflow-y-auto custom-scrollbar">
                     <div class="max-w-5xl mx-auto">
                         <div class="flex justify-between items-center mb-6">
                             <div>
-                                <h2 class="text-xl font-bold text-slate-800">Pustaka Dokumen Cloud</h2>
+                                <h2 class="text-lg md:text-xl font-bold text-slate-800">Pustaka Dokumen Cloud</h2>
                                 <p class="text-xs text-slate-500">Semua dokumen tersimpan di server Rekan Ajar AI Supabase Anda.</p>
                             </div>
                         </div>
-                        <div id="pustaka-grid" class="grid grid-cols-3 gap-4"></div>
+                        <div id="pustaka-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
                     </div>
                 </div>
 
                 <!-- SUB-VIEW D: BELI TOKEN / TOP UP -->
-                <div id="view-topup" class="hidden flex-1 p-6 overflow-y-auto custom-scrollbar">
+                <div id="view-topup" class="hidden flex-1 p-4 md:p-6 overflow-y-auto custom-scrollbar">
                     <div class="max-w-4xl mx-auto">
-                        <div class="text-center mb-8">
-                            <h2 class="text-2xl font-extrabold text-slate-800">Beli Paket Token Rekan Ajar AI</h2>
+                        <div class="text-center mb-6 md:mb-8">
+                            <h2 class="text-xl md:text-2xl font-extrabold text-slate-800">Beli Paket Token Rekan Ajar AI</h2>
                             <p class="text-xs text-slate-500 mt-1">Pilih paket token sesuai kebutuhan administrasi sekolahmu.</p>
                         </div>
 
-                        <div class="grid grid-cols-3 gap-6 mb-8">
-                            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between hover:border-tealbrand-500 transition">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8">
+                            <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
                                 <div>
-                                    <span class="bg-slate-100 text-slate-700 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Pemula</span>
-                                    <h3 class="text-xl font-extrabold text-slate-800 mt-3">20 Token</h3>
-                                    <div class="text-2xl font-extrabold text-tealbrand-700 mt-2">Rp 10.000</div>
-                                    <ul class="text-xs text-slate-600 space-y-2 my-4">
-                                        <li><i class="fa-solid fa-check text-tealbrand-600 mr-2"></i>~4 Modul Ajar Lengkap</li>
-                                        <li><i class="fa-solid fa-check text-tealbrand-600 mr-2"></i>Ekspor Docx & PDF Unlimited</li>
-                                    </ul>
+                                    <span class="bg-slate-100 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Pemula</span>
+                                    <h3 class="text-lg font-extrabold text-slate-800 mt-2">20 Token</h3>
+                                    <div class="text-xl font-extrabold text-tealbrand-700 mt-1">Rp 10.000</div>
                                 </div>
-                                <button onclick="simulasiBayar(20, 10000)" class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs transition">Beli via QRIS</button>
+                                <button onclick="simulasiBayar(20, 10000)" class="w-full mt-4 py-2 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs transition">Beli via QRIS</button>
                             </div>
 
-                            <div class="bg-white rounded-2xl p-6 border-2 border-tealbrand-500 shadow-md relative flex flex-col justify-between">
-                                <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-tealbrand-700 text-white text-[10px] font-bold px-3 py-0.5 rounded-full uppercase">Paling Laris</span>
+                            <div class="bg-white rounded-2xl p-5 border-2 border-tealbrand-500 shadow-md relative flex flex-col justify-between">
                                 <div>
-                                    <span class="bg-tealbrand-50 text-tealbrand-700 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Standar Guru</span>
-                                    <h3 class="text-xl font-extrabold text-slate-800 mt-3">75 Token</h3>
-                                    <div class="text-2xl font-extrabold text-tealbrand-700 mt-2">Rp 30.000</div>
-                                    <ul class="text-xs text-slate-600 space-y-2 my-4">
-                                        <li><i class="fa-solid fa-check text-tealbrand-600 mr-2"></i>~15 Modul Ajar / ATP / Prota</li>
-                                        <li><i class="fa-solid fa-check text-tealbrand-600 mr-2"></i>Akses Workbook & Cloud</li>
-                                    </ul>
+                                    <span class="bg-tealbrand-50 text-tealbrand-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Standar</span>
+                                    <h3 class="text-lg font-extrabold text-slate-800 mt-2">75 Token</h3>
+                                    <div class="text-xl font-extrabold text-tealbrand-700 mt-1">Rp 30.000</div>
                                 </div>
-                                <button onclick="simulasiBayar(75, 30000)" class="w-full py-2.5 bg-tealbrand-700 hover:bg-tealbrand-800 text-white font-bold rounded-xl text-xs transition">Beli via QRIS</button>
+                                <button onclick="simulasiBayar(75, 30000)" class="w-full mt-4 py-2 bg-tealbrand-700 hover:bg-tealbrand-800 text-white font-bold rounded-xl text-xs transition">Beli via QRIS</button>
                             </div>
 
-                            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between hover:border-tealbrand-500 transition">
+                            <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
                                 <div>
-                                    <span class="bg-purple-100 text-purple-700 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Satu Sekolah</span>
-                                    <h3 class="text-xl font-extrabold text-slate-800 mt-3">200 Token</h3>
-                                    <div class="text-2xl font-extrabold text-tealbrand-700 mt-2">Rp 75.000</div>
-                                    <ul class="text-xs text-slate-600 space-y-2 my-4">
-                                        <li><i class="fa-solid fa-check text-tealbrand-600 mr-2"></i>~40+ Dokumen Lengkap</li>
-                                        <li><i class="fa-solid fa-check text-tealbrand-600 mr-2"></i>Prioritas Kecepatan AI</li>
-                                    </ul>
+                                    <span class="bg-purple-100 text-purple-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Sekolah</span>
+                                    <h3 class="text-lg font-extrabold text-slate-800 mt-2">200 Token</h3>
+                                    <div class="text-xl font-extrabold text-tealbrand-700 mt-1">Rp 75.000</div>
                                 </div>
-                                <button onclick="simulasiBayar(200, 75000)" class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs transition">Beli via QRIS</button>
+                                <button onclick="simulasiBayar(200, 75000)" class="w-full mt-4 py-2 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs transition">Beli via QRIS</button>
                             </div>
                         </div>
                     </div>
@@ -767,11 +755,11 @@
     </div>
 
     <!-- MODAL: ADD STUDENT -->
-    <div id="add-student-modal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center">
-        <div class="bg-white rounded-2xl p-6 w-96 shadow-xl border border-slate-200">
+    <div id="add-student-modal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-5 w-full max-w-sm shadow-xl border border-slate-200">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="font-bold text-slate-800 text-sm">Tambah Siswa Baru</h3>
-                <button onclick="closeAddStudentModal()" class="text-slate-400 hover:text-slate-600 text-xs"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="closeAddStudentModal()" class="text-slate-400 hover:text-slate-600 text-xs"><i class="fa-solid fa-xmark text-sm"></i></button>
             </div>
             <div class="space-y-3 text-xs mb-4">
                 <div>
@@ -781,14 +769,14 @@
             </div>
             <div class="flex justify-end gap-2 text-xs">
                 <button onclick="closeAddStudentModal()" class="px-3 py-2 font-semibold text-slate-600 hover:bg-slate-100 rounded-lg">Batal</button>
-                <button onclick="handleAddStudentSubmit()" class="px-4 py-2 font-semibold bg-tealbrand-700 hover:bg-tealbrand-800 text-white rounded-lg">Simpan Siswa</button>
+                <button onclick="handleAddStudentSubmit()" class="px-4 py-2 font-semibold bg-tealbrand-700 hover:bg-tealbrand-800 text-white rounded-lg">Simpan</button>
             </div>
         </div>
     </div>
 
     <!-- MODAL: SET API KEY -->
-    <div id="api-key-modal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center">
-        <div class="bg-white rounded-2xl p-6 w-96 shadow-xl border border-slate-200">
+    <div id="api-key-modal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-5 w-full max-w-sm shadow-xl border border-slate-200">
             <h3 class="font-bold text-slate-800 text-sm mb-2"><i class="fa-solid fa-key text-amber-500 mr-2"></i>Pengaturan Gemini API Key</h3>
             <p class="text-xs text-slate-500 mb-4">Masukkan API Key Google Gemini Anda.</p>
             <input type="password" id="input-api-key" placeholder="AIzaSy..." class="w-full p-2.5 border border-slate-300 rounded-lg text-xs mb-4 focus:ring-2 focus:ring-tealbrand-500">
@@ -799,12 +787,12 @@
         </div>
     </div>
 
-    <!-- MODAL: LOGIN / REGISTER (SUPABASE AUTH) -->
-    <div id="auth-modal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center">
-        <div class="bg-white rounded-2xl p-6 w-96 shadow-xl border border-slate-200">
+    <!-- MODAL: LOGIN / REGISTER (WITH SHOW/HIDE PASSWORD TOGGLE) -->
+    <div id="auth-modal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-5 w-full max-w-sm shadow-xl border border-slate-200">
             <div class="flex justify-between items-center mb-4">
                 <h3 id="auth-modal-title" class="font-bold text-slate-800 text-sm">Login Akun Rekan Ajar AI</h3>
-                <button onclick="closeAuthModal()" class="text-slate-400 hover:text-slate-600 text-xs"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="closeAuthModal()" class="text-slate-400 hover:text-slate-600 text-xs"><i class="fa-solid fa-xmark text-sm"></i></button>
             </div>
 
             <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-3 text-xs">
@@ -818,7 +806,13 @@
                 </div>
                 <div>
                     <label class="block font-semibold text-slate-700 mb-1">Password</label>
-                    <input type="password" id="auth-password" required minlength="6" placeholder="Minimal 6 karakter" class="w-full p-2 border border-slate-300 rounded-lg">
+                    <!-- Input Password dengan Tombol Eye Toggle -->
+                    <div class="relative">
+                        <input type="password" id="auth-password" required minlength="6" placeholder="Minimal 6 karakter" class="w-full p-2 pr-9 border border-slate-300 rounded-lg">
+                        <button type="button" onclick="togglePasswordVisibility()" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition p-1 cursor-pointer">
+                            <i id="password-toggle-icon" class="fa-solid fa-eye text-sm"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <button type="submit" id="btn-auth-submit" class="w-full bg-tealbrand-700 hover:bg-tealbrand-800 text-white font-bold py-2.5 rounded-lg transition mt-2">
@@ -880,9 +874,7 @@
         };
 
         document.addEventListener("DOMContentLoaded", async () => {
-            // Set today's date in workbook
             document.getElementById('workbook-date').valueAsDate = new Date();
-
             updateApiKeyUI();
             updateFaseMapping();
             updateCalculator();
@@ -890,6 +882,51 @@
             renderStudentsTable();
             await checkUserSession();
         });
+
+        // SHOW/HIDE PASSWORD TOGGLE
+        function togglePasswordVisibility() {
+            const passInput = document.getElementById('auth-password');
+            const icon = document.getElementById('password-toggle-icon');
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // MOBILE SIDEBAR TOGGLE
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('global-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        // MOBILE WORKSPACE TAB TOGGLE (Form vs Editor)
+        function switchMobileWorkspaceTab(tab) {
+            const formPanel = document.getElementById('panel-generator-form');
+            const editorPanel = document.getElementById('panel-generator-editor');
+            const btnForm = document.getElementById('btn-tab-mobile-form');
+            const btnEditor = document.getElementById('btn-tab-mobile-editor');
+
+            if (tab === 'form') {
+                formPanel.classList.remove('hidden');
+                editorPanel.classList.add('hidden');
+                editorPanel.classList.remove('flex');
+                btnForm.className = "flex-1 py-2 text-center rounded-lg bg-tealbrand-50 text-tealbrand-700 font-bold";
+                btnEditor.className = "flex-1 py-2 text-center rounded-lg text-slate-500 font-bold hover:bg-slate-50";
+            } else {
+                formPanel.classList.add('hidden');
+                editorPanel.classList.remove('hidden');
+                editorPanel.classList.add('flex');
+                btnEditor.className = "flex-1 py-2 text-center rounded-lg bg-tealbrand-50 text-tealbrand-700 font-bold";
+                btnForm.className = "flex-1 py-2 text-center rounded-lg text-slate-500 font-bold hover:bg-slate-50";
+            }
+        }
 
         // AUTHENTICATION LOGIC (SUPABASE)
         async function checkUserSession() {
@@ -916,7 +953,7 @@
         async function fetchProfileAndSync() {
             if (!currentUser) return;
 
-            let { data, error } = await _supabase
+            let { data } = await _supabase
                 .from('profiles')
                 .select('*')
                 .eq('id', currentUser.id)
@@ -924,17 +961,11 @@
 
             if (!data) {
                 const nameFromMetadata = currentUser.user_metadata?.full_name || currentUser.email.split('@')[0];
-                const { data: newProfile, error: insertErr } = await _supabase
+                const { data: newProfile } = await _supabase
                     .from('profiles')
-                    .upsert([{
-                        id: currentUser.id,
-                        email: currentUser.email,
-                        full_name: nameFromMetadata,
-                        tokens: 15
-                    }])
+                    .upsert([{ id: currentUser.id, email: currentUser.email, full_name: nameFromMetadata, tokens: 15 }])
                     .select()
                     .single();
-
                 if (newProfile) data = newProfile;
             }
 
@@ -952,8 +983,8 @@
             document.getElementById('user-avatar').innerText = (userProfile.full_name || currentUser.email).charAt(0).toUpperCase();
 
             document.getElementById('auth-btn-container').innerHTML = `
-                <button onclick="handleLogout()" class="bg-rose-800/80 hover:bg-rose-800 text-rose-100 text-xs px-3 py-1.5 rounded-xl border border-rose-700 transition flex items-center gap-1">
-                    <i class="fa-solid fa-right-from-bracket"></i> Keluar
+                <button onclick="handleLogout()" class="bg-rose-800/80 hover:bg-rose-800 text-rose-100 text-xs px-2.5 py-1.5 rounded-xl border border-rose-700 transition flex items-center gap-1">
+                    <i class="fa-solid fa-right-from-bracket"></i> <span class="hidden sm:inline">Keluar</span>
                 </button>
             `;
         }
@@ -967,12 +998,19 @@
             document.getElementById('auth-btn-container').innerHTML = `
                 <button onclick="openAuthModal()" class="bg-tealbrand-600 hover:bg-tealbrand-500 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition shadow flex items-center gap-1.5">
                     <i class="fa-solid fa-user-plus"></i>
-                    <span>Login / Daftar</span>
+                    <span class="hidden sm:inline">Login / Daftar</span>
                 </button>
             `;
         }
 
-        function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
+        function openAuthModal() { 
+            const passInput = document.getElementById('auth-password');
+            const icon = document.getElementById('password-toggle-icon');
+            if (passInput) passInput.type = 'password';
+            if (icon) { icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
+            document.getElementById('auth-modal').classList.remove('hidden'); 
+        }
+
         function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
 
         function toggleAuthMode() {
@@ -1028,6 +1066,12 @@
             const appWorkspace = document.getElementById('app-workspace');
             const tokenContainer = document.getElementById('header-token-container');
             const topupBtn = document.getElementById('header-topup-btn');
+
+            // Hide mobile drawer if open
+            const sidebar = document.getElementById('global-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (sidebar) sidebar.classList.add('-translate-x-full');
+            if (overlay) overlay.classList.add('hidden');
 
             document.getElementById('view-generator').classList.add('hidden');
             document.getElementById('view-workbook').classList.add('hidden');
@@ -1256,19 +1300,13 @@
             }
         }
 
-        // GENERATE ACTION WITH AI & SUPABASE
+        // GENERATE ACTION WITH SERVERLESS API ROUTE (/api/generate) & SUPABASE
         async function handleGenerate(e) {
             e.preventDefault();
 
             if (!currentUser) {
                 alert('Silakan Login/Daftar terlebih dahulu!');
                 openAuthModal();
-                return;
-            }
-
-            if (!apiKey) {
-                alert('Silakan masukkan Gemini API Key!');
-                openApiKeyModal();
                 return;
             }
 
@@ -1291,6 +1329,10 @@
             document.getElementById('editor-placeholder').classList.add('hidden');
             document.getElementById('editor-loading').classList.remove('hidden');
 
+            if (window.innerWidth < 1024) {
+                switchMobileWorkspaceTab('editor');
+            }
+
             let promptText = `Kamu adalah Pakar Kurikulum Merdeka Pendidikan Indonesia. 
 Buatkan dokumen resmi berstandar BSKAP: ${moduleTitles[activeModule]}.
 
@@ -1308,14 +1350,15 @@ PETUNJUK FORMATTING:
 3. OUTPUT HARUS HANYA DALAM FORMAT KODE HTML CLEAN (Tanpa markdown \`\`\`html).`;
 
             try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`, {
+                // MENGGUNAKAN SERVERLESS FUNCTION ROUTE /api/generate
+                const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
+                    body: JSON.stringify({ promptText: promptText })
                 });
 
                 const data = await response.json();
-                if (data.error) throw new Error(data.error.message || 'Gagal memproses API AI');
+                if (data.error) throw new Error(typeof data.error === 'string' ? data.error : (data.error.message || 'Gagal memproses API AI'));
 
                 let resultHtml = data.candidates[0].content.parts[0].text;
                 resultHtml = resultHtml.replace(/```html/g, '').replace(/```/g, '');
@@ -1393,6 +1436,7 @@ PETUNJUK FORMATTING:
                 switchTab('generator');
                 document.getElementById('editor-placeholder').classList.add('hidden');
                 document.getElementById('editorContent').innerHTML = doc.content;
+                if (window.innerWidth < 1024) switchMobileWorkspaceTab('editor');
             }
         }
 
