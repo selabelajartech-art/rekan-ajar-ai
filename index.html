@@ -217,10 +217,121 @@
                 page-break-after: avoid;
             }
         }
+
+        /* ================================================================
+           APP SHELL ISOLATION
+           The application chrome must always occupy the browser viewport.
+           Generated document HTML is never allowed to determine its width.
+        ================================================================= */
+        html, body {
+            width: 100%;
+            min-width: 0;
+            max-width: none !important;
+        }
+
+        #app-shell {
+            position: fixed !important;
+            inset: 0 !important;
+            width: 100vw !important;
+            max-width: 100vw !important;
+            min-width: 0 !important;
+            height: 100vh !important;
+            max-height: 100vh !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            overflow: hidden !important;
+            box-sizing: border-box !important;
+            isolation: isolate;
+        }
+
+        #app-shell > header {
+            width: 100vw !important;
+            max-width: none !important;
+            min-width: 0 !important;
+            flex: 0 0 auto !important;
+            box-sizing: border-box !important;
+        }
+
+        #app-shell > .flex.flex-1 {
+            width: 100% !important;
+            max-width: none !important;
+            min-width: 0 !important;
+            flex: 1 1 auto !important;
+            box-sizing: border-box !important;
+        }
+
+        #app-workspace,
+        #view-generator,
+        #view-workbook,
+        #view-pustaka,
+        #view-topup,
+        #view-generator > *,
+        #panel-generator-form,
+        #panel-generator-editor,
+        #printableArea,
+        #editorContent {
+            min-width: 0 !important;
+        }
+
+        #app-workspace {
+            width: 100% !important;
+            max-width: none !important;
+        }
+
+        #view-generator {
+            width: 100% !important;
+            max-width: none !important;
+        }
+
+        #panel-generator-form,
+        #panel-generator-editor {
+            min-width: 0 !important;
+            max-width: none !important;
+        }
+
+        #editorContent {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            overflow-wrap: anywhere !important;
+            word-break: break-word !important;
+            box-sizing: border-box !important;
+        }
+
+        /* Prevent generated tables from becoming flex/grid intrinsic-width drivers. */
+        #editorContent table {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            table-layout: fixed !important;
+            box-sizing: border-box !important;
+        }
+
+        #editorContent img,
+        #editorContent video,
+        #editorContent iframe {
+            max-width: 100% !important;
+            height: auto;
+        }
+
+        /* Explicitly neutralize common global layout payloads if a legacy
+           document is opened before sanitization completes. */
+        #app-shell {
+            left: 0 !important;
+            right: auto !important;
+            transform: none !important;
+            zoom: 1 !important;
+        }
+
     </style>
 </head>
 
 <body class="bg-slate-50 text-slate-800 font-sans antialiased h-screen flex flex-col overflow-hidden">
+
+    <!-- APP SHELL: isolated from landing/content max-width rules -->
+    <div id="app-shell" aria-label="Rekan Ajar AI application shell">
 
     <!-- HEADER / NAVIGATION TOP BAR -->
     <header
@@ -1102,6 +1213,9 @@
 
     </div>
 
+    </div>
+    <!-- END APP SHELL -->
+
     <!-- MODAL: ADD STUDENT -->
     <div id="add-student-modal"
         class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -1227,7 +1341,11 @@
             renderClassSelect();
             renderStudentsTable();
             await checkUserSession();
+            lockAppShell();
+            installEditorFirewall();
         });
+
+        window.addEventListener('resize', lockAppShell);
 
         // SHOW/HIDE PASSWORD TOGGLE
         function togglePasswordVisibility() {
@@ -1405,7 +1523,22 @@
         }
 
         // TAB & VIEW SWITCHER (LAYOUT APP WORKSPACE SHELL)
+        function lockAppShell() {
+            const shell = document.getElementById('app-shell');
+            if (!shell) return;
+            shell.style.setProperty('width', '100vw', 'important');
+            shell.style.setProperty('max-width', '100vw', 'important');
+            shell.style.setProperty('height', '100vh', 'important');
+            shell.style.setProperty('max-height', '100vh', 'important');
+            shell.style.setProperty('left', '0', 'important');
+            shell.style.setProperty('top', '0', 'important');
+            shell.style.setProperty('margin', '0', 'important');
+            shell.style.setProperty('transform', 'none', 'important');
+            shell.style.setProperty('zoom', '1', 'important');
+        }
+
         function switchTab(tabName) {
+            lockAppShell();
             activeTab = tabName;
 
             const landingView = document.getElementById('view-landing');
@@ -1741,6 +1874,26 @@
         }
 
         // =====================================================================
+        // Document firewall: generated/pasted document markup is sanitized again
+        // whenever the editor DOM changes. This protects against legacy documents
+        // and pasted HTML containing global CSS or scripts.
+        function installEditorFirewall() {
+            const editor = document.getElementById('editorContent');
+            if (!editor || editor.__firewallInstalled) return;
+            editor.__firewallInstalled = true;
+
+            const observer = new MutationObserver(() => {
+                const current = editor.innerHTML;
+                const cleaned = sanitizeDocumentHTML(current);
+                if (cleaned !== current) {
+                    editor.innerHTML = cleaned;
+                }
+                lockAppShell();
+            });
+
+            observer.observe(editor, { childList: true, subtree: true, attributes: true });
+        }
+
         // GENERATE ACTION WITH SERVERLESS API ROUTE (/api/generate) & SUPABASE
         // =====================================================================
         async function handleGenerate(e) {
@@ -1823,6 +1976,7 @@ PETUNJUK FORMATTING:
                 }
 
                 document.getElementById('editorContent').innerHTML = resultHtml;
+                lockAppShell();
 
             } catch (err) {
                 alert('Terjadi Kesalahan: ' + err.message);
@@ -1885,6 +2039,7 @@ PETUNJUK FORMATTING:
                 switchTab('generator');
                 document.getElementById('editor-placeholder').classList.add('hidden');
                 document.getElementById('editorContent').innerHTML = sanitizeDocumentHTML(doc.content);
+                lockAppShell();
                 if (window.innerWidth < 1024) switchMobileWorkspaceTab('editor');
             }
         }
