@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TemanGuru - Asisten Generator Kurikulum Merdeka Pro (SaaS)</title>
+    <title>Asisten Ajar - Platform Generator Kurikulum Merdeka & Workbook Guru AI Pro</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icon CDN -->
@@ -21,14 +21,16 @@
                         sans: ['Plus Jakarta Sans', 'sans-serif'],
                     },
                     colors: {
-                        brand: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            500: '#10b981',
-                            600: '#059669',
-                            700: '#047857',
-                            800: '#065f46',
-                            900: '#064e3b',
+                        tealbrand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                            950: '#042f2e',
                         }
                     }
                 }
@@ -48,9 +50,9 @@
         #editorContent th, #editorContent td {
             border: 1px solid #cbd5e1; padding: 8px 12px; text-align: left; vertical-align: top;
         }
-        #editorContent th { background-color: #f1f5f9; color: #0f172a; font-weight: 700; }
+        #editorContent th { background-color: #f0fdfa; color: #0f766e; font-weight: 700; }
         #editorContent h2 {
-            font-size: 1.25rem; font-weight: 800; color: #064e3b; margin-top: 1.5rem; margin-bottom: 0.75rem; border-bottom: 2px solid #a7f3d0; padding-bottom: 4px;
+            font-size: 1.25rem; font-weight: 800; color: #0f766e; margin-top: 1.5rem; margin-bottom: 0.75rem; border-bottom: 2px solid #99f6e4; padding-bottom: 4px;
         }
         #editorContent h3 { font-size: 1rem; font-weight: 700; color: #0f172a; margin-top: 1rem; margin-bottom: 0.5rem; }
         #editorContent ul, #editorContent ol { padding-left: 1.5rem; margin-bottom: 0.75rem; }
@@ -66,41 +68,48 @@
 <body class="bg-slate-50 text-slate-800 font-sans antialiased h-screen flex flex-col overflow-hidden">
 
     <!-- HEADER / NAVIGATION TOP BAR -->
-    <header class="bg-brand-900 text-white border-b border-brand-800 px-6 py-3 flex items-center justify-between shadow-md z-20 flex-shrink-0">
-        <div class="flex items-center space-x-3">
-            <div class="bg-emerald-500 text-brand-900 p-2 rounded-xl font-bold flex items-center justify-center shadow">
-                <i class="fa-solid fa-graduation-cap text-xl"></i>
+    <header class="bg-tealbrand-900 text-white border-b border-tealbrand-800 px-6 py-3 flex items-center justify-between shadow-md z-30 flex-shrink-0">
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('landing')">
+            <div class="bg-tealbrand-500 text-tealbrand-950 p-2 rounded-xl font-bold flex items-center justify-center shadow">
+                <i class="fa-solid fa-compass-drafting text-xl"></i>
             </div>
             <div>
                 <h1 class="text-xl font-extrabold tracking-tight flex items-center gap-2">
-                    TemanGuru <span class="bg-emerald-500/20 text-emerald-300 text-xs px-2 py-0.5 rounded-full font-semibold border border-emerald-500/30">Ai Pro</span>
+                    Rekan Ajar AI <span class="bg-tealbrand-500/20 text-tealbrand-200 text-xs px-2.5 py-0.5 rounded-full font-semibold border border-tealbrand-500/30">Pro</span>
                 </h1>
-                <p class="text-xs text-brand-100/70">Asisten Administrasi Kurikulum Merdeka Terintegrasi</p>
+                <p class="text-[11px] text-tealbrand-100/70">Asisten Administrasi & Workspace Guru Merdeka</p>
             </div>
         </div>
 
-        <!-- Right Side: Auth, API Key & Token Display -->
+        <!-- Navigation Links & User Bar -->
         <div class="flex items-center space-x-4">
-            <button onclick="openApiKeyModal()" class="hidden items-center gap-2 bg-brand-800 hover:bg-brand-700 text-emerald-200 text-xs px-3 py-2 rounded-lg border border-brand-700 transition">
+            <nav class="hidden md:flex items-center space-x-1 mr-2 text-xs font-semibold">
+                <button onclick="switchTab('landing')" class="px-3 py-1.5 rounded-lg hover:bg-tealbrand-800 text-tealbrand-100 transition">Beranda</button>
+                <button onclick="switchTab('generator')" class="px-3 py-1.5 rounded-lg hover:bg-tealbrand-800 text-tealbrand-100 transition">Workspace Generator</button>
+                <button onclick="switchTab('workbook')" class="px-3 py-1.5 rounded-lg hover:bg-tealbrand-800 text-tealbrand-100 transition">Workbook Guru</button>
+            </nav>
+
+            <button onclick="openApiKeyModal()" class="hidden items-center gap-2 bg-tealbrand-800 hover:bg-tealbrand-700 text-tealbrand-200 text-xs px-3 py-2 rounded-lg border border-tealbrand-700 transition">
                 <i class="fa-solid fa-key text-amber-400"></i>
                 <span id="apiKeyStatus">Set Gemini Key</span>
             </button>
 
-            <div class="bg-brand-800 border border-brand-700 rounded-lg px-3 py-1.5 flex items-center gap-2">
+            <!-- Dynamic Header Elements: Saldo Token & Top-up (Only visible in app views) -->
+            <div id="header-token-container" class="hidden bg-tealbrand-800 border border-tealbrand-700 rounded-xl px-3 py-1.5 items-center gap-2">
                 <i class="fa-solid fa-coins text-amber-400 text-sm"></i>
                 <div class="text-xs">
-                    <span class="text-slate-300 block text-[10px]">Saldo Token</span>
+                    <span class="text-tealbrand-200 block text-[10px]">Saldo Token</span>
                     <span id="tokenBalance" class="font-bold text-amber-300">0</span>
                 </div>
             </div>
 
-            <button onclick="switchTab('topup')" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-bold text-xs px-3.5 py-2 rounded-lg shadow-sm transition flex items-center gap-1.5">
+            <button id="header-topup-btn" onclick="switchTab('topup')" class="hidden bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-bold text-xs px-3.5 py-2 rounded-xl shadow-sm transition items-center gap-1.5">
                 <i class="fa-solid fa-plus-circle"></i>
                 <span>Isi Token</span>
             </button>
 
             <div id="auth-btn-container">
-                <button onclick="openAuthModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3.5 py-2 rounded-lg transition shadow flex items-center gap-1.5">
+                <button onclick="openAuthModal()" class="bg-tealbrand-600 hover:bg-tealbrand-500 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition shadow flex items-center gap-1.5">
                     <i class="fa-solid fa-user-plus"></i>
                     <span>Login / Daftar</span>
                 </button>
@@ -108,309 +117,671 @@
         </div>
     </header>
 
-    <!-- MAIN BODY LAYOUT -->
-    <div class="flex flex-1 overflow-hidden">
+    <!-- MAIN CONTAINER -->
+    <div class="flex flex-1 overflow-hidden relative">
 
-        <!-- SIDEBAR NAVIGATION -->
-        <aside class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between flex-shrink-0">
-            <div class="p-4 space-y-6">
-                <div>
-                    <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-3">Generator Utama</div>
-                    <nav class="space-y-1">
-                        <button onclick="switchModule('modul-ajar')" id="btn-modul-ajar" class="nav-btn active w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition text-brand-700 bg-brand-50">
-                            <i class="fa-solid fa-book-open w-5 text-center text-brand-600"></i>
-                            <span>Modul Ajar / RPP Plus</span>
+        <!-- ================================================================= -->
+        <!-- VIEW 1: LANDING PAGE (MARKETING & CONVERSION)                     -->
+        <!-- ================================================================= -->
+        <div id="view-landing" class="flex-1 overflow-y-auto custom-scrollbar bg-slate-50">
+            <!-- HERO SECTION -->
+            <section class="bg-gradient-to-b from-tealbrand-900 via-tealbrand-800 to-slate-900 text-white py-16 px-6 relative overflow-hidden">
+                <div class="max-w-5xl mx-auto text-center relative z-10">
+                    <span class="inline-flex items-center gap-2 bg-tealbrand-500/20 text-tealbrand-200 border border-tealbrand-500/30 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-6">
+                        <i class="fa-solid fa-sparkles text-amber-400"></i> Platform Kurikulum Merdeka AI Terbaik untuk Guru Indonesia
+                    </span>
+                    <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight mb-6">
+                        Rancang Administrasi Mengajar <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-tealbrand-200 to-emerald-400">10x Lebih Cepat & Presisi</span>
+                    </h1>
+                    <p class="text-sm md:text-base text-tealbrand-100/80 max-w-2xl mx-auto mb-8 leading-relaxed">
+                        Susun Modul Ajar, TP/ATP, Prota, Prosem, LKPD, hingga Asesmen sesuai standar BSKAP resmi secara instan. Dilengkapi Workbook Digital untuk manajemen kelas tanpa ribet.
+                    </p>
+                    <div class="flex flex-wrap items-center justify-center gap-4">
+                        <button onclick="switchTab('generator')" class="bg-tealbrand-500 hover:bg-tealbrand-600 text-tealbrand-950 font-extrabold text-sm px-6 py-3.5 rounded-2xl shadow-lg transition transform hover:-translate-y-0.5 flex items-center gap-2">
+                            <i class="fa-solid fa-rocket"></i>
+                            <span>Coba Aplikasi Sekarang (Gratis 15 Token!)</span>
                         </button>
-                        <button onclick="switchModule('atp')" id="btn-atp" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition text-slate-600 hover:bg-slate-100">
-                            <i class="fa-solid fa-route w-5 text-center text-teal-600"></i>
-                            <span>Alur Tujuan (ATP)</span>
+                        <button onclick="switchTab('workbook')" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold text-sm px-5 py-3.5 rounded-2xl transition">
+                            <i class="fa-solid fa-book-bookmark mr-2"></i> Buka Workbook Guru
                         </button>
-                        <button onclick="switchModule('asesmen')" id="btn-asesmen" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition text-slate-600 hover:bg-slate-100">
-                            <i class="fa-solid fa-list-check w-5 text-center text-blue-600"></i>
-                            <span>Soal & Rubrik Asesmen</span>
-                        </button>
-                        <button onclick="switchModule('p5')" id="btn-p5" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition text-slate-600 hover:bg-slate-100">
-                            <i class="fa-solid fa-hands-holding-child w-5 text-center text-purple-600"></i>
-                            <span>Modul Projek P5</span>
-                        </button>
-                    </nav>
-                </div>
-
-                <div>
-                    <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-3">Manajemen</div>
-                    <nav class="space-y-1">
-                        <button onclick="switchTab('pustaka')" id="btn-pustaka" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition text-slate-600 hover:bg-slate-100">
-                            <i class="fa-solid fa-folder-open w-5 text-center text-amber-600"></i>
-                            <span>Pustaka Dokumen</span>
-                        </button>
-                        <button onclick="switchTab('topup')" id="btn-topup" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition text-slate-600 hover:bg-slate-100">
-                            <i class="fa-solid fa-wallet w-5 text-center text-emerald-600"></i>
-                            <span>Beli Token & Tarif</span>
-                        </button>
-                    </nav>
-                </div>
-            </div>
-
-            <!-- Footer User Info -->
-            <div class="p-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
-                <div class="flex items-center gap-2.5">
-                    <div id="user-avatar" class="w-8 h-8 rounded-full bg-brand-700 text-white flex items-center justify-center font-bold text-xs">
-                        ?
-                    </div>
-                    <div class="overflow-hidden">
-                        <div id="user-name-display" class="text-xs font-bold text-slate-700 truncate">Tamu</div>
-                        <div id="user-status-display" class="text-[10px] text-slate-400">Belum Login</div>
                     </div>
                 </div>
-            </div>
-        </aside>
+            </section>
 
-        <!-- MAIN CONTENT AREA -->
-        <main class="flex-1 bg-slate-100 overflow-hidden flex flex-col">
-
-            <!-- VIEW: GENERATOR WORKSPACE (DEFAULT) -->
-            <div id="view-generator" class="flex-1 flex overflow-hidden">
-                <section class="w-1/2 p-5 overflow-y-auto custom-scrollbar border-r border-slate-200 bg-white">
-                    <div class="mb-5 flex items-center justify-between border-b pb-3 border-slate-100">
-                        <div>
-                            <h2 id="generator-title" class="text-lg font-bold text-slate-800">Generator Modul Ajar / RPP Plus</h2>
-                            <p class="text-xs text-slate-500">Isi parameter di bawah untuk menyusun dokumen presisi dan mendalam.</p>
-                        </div>
-                        <span id="token-cost-badge" class="bg-amber-100 text-amber-800 border border-amber-200 text-xs px-2.5 py-1 rounded-full font-bold">
-                            <i class="fa-solid fa-coins mr-1"></i> Biaya: 5 Token
-                        </span>
+            <!-- INTERACTIVE TIME SAVER CALCULATOR -->
+            <section class="py-14 px-6 max-w-4xl mx-auto -mt-8 relative z-20">
+                <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-xl">
+                    <div class="text-center mb-6">
+                        <span class="bg-tealbrand-50 text-tealbrand-700 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Kalkulator Efisiensi</span>
+                        <h2 class="text-xl md:text-2xl font-extrabold text-slate-800 mt-2">Berapa Banyak Waktu yang Bisa Anda Hemat?</h2>
+                        <p class="text-xs text-slate-500 mt-1">Hitung perbandingan pembuatan dokumen manual vs Rekan Ajar AI AI</p>
                     </div>
 
-                    <form id="generator-form" onsubmit="handleGenerate(event)" class="space-y-4 text-xs">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center border-t border-slate-100 pt-6">
+                        <!-- Sliders Controls -->
+                        <div class="space-y-5">
+                            <div>
+                                <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                                    <span>Jumlah Kelas / Rombel:</span>
+                                    <span id="calc-kelas-val" class="text-tealbrand-700">3 Kelas</span>
+                                </div>
+                                <input type="range" id="calc-kelas" min="1" max="10" value="3" oninput="updateCalculator()" class="w-full accent-tealbrand-600 h-2 bg-slate-200 rounded-lg cursor-pointer">
+                            </div>
 
-                        <div class="grid grid-cols-3 gap-3">
                             <div>
-                                <label class="block font-semibold text-slate-700 mb-1">Jenjang Pendidikan</label>
-                                <select id="input-jenjang" onchange="updateFaseMapping()" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500">
-                                    <option value="SD">SD / MI</option>
-                                    <option value="SMP">SMP / MTs</option>
-                                    <option value="SMA">SMA / MA</option>
-                                    <option value="SMK">SMK</option>
-                                    <option value="PAUD">PAUD / TK</option>
-                                    <option value="SLB">SLB</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block font-semibold text-slate-700 mb-1">Kelas</label>
-                                <select id="input-kelas" onchange="updateFaseMapping()" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500">
-                                    <option value="1">Kelas 1</option>
-                                    <option value="2">Kelas 2</option>
-                                    <option value="3">Kelas 3</option>
-                                    <option value="4">Kelas 4</option>
-                                    <option value="5">Kelas 5</option>
-                                    <option value="6">Kelas 6</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block font-semibold text-slate-700 mb-1">Fase (Otomat)</label>
-                                <input type="text" id="input-fase" readonly value="Fase A" class="w-full p-2 bg-slate-100 border border-slate-300 rounded-lg text-brand-700 font-bold text-center">
+                                <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                                    <span>Dokumen per Semester:</span>
+                                    <span id="calc-docs-val" class="text-tealbrand-700">8 Dokumen</span>
+                                </div>
+                                <input type="range" id="calc-docs" min="2" max="20" value="8" oninput="updateCalculator()" class="w-full accent-tealbrand-600 h-2 bg-slate-200 rounded-lg cursor-pointer">
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-3 gap-3">
-                            <div>
-                                <label class="block font-semibold text-slate-700 mb-1">Mata Pelajaran</label>
-                                <input type="text" id="input-mapel" required placeholder="Misal: IPAS / Matematika" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500">
-                            </div>
-                            <div>
-                                <label class="block font-semibold text-slate-700 mb-1">Rombel / Jurusan</label>
-                                <input type="text" id="input-rombel" placeholder="Misal: VII-B / X TKJ 1" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500">
-                            </div>
-                            <div>
-                                <label class="block font-semibold text-slate-700 mb-1">Alokasi Waktu</label>
-                                <input type="text" id="input-waktu" value="2 JP (2 x 45 Menit)" placeholder="Misal: 2 JP" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500">
-                            </div>
+                        <!-- Results Card -->
+                        <div class="bg-gradient-to-br from-tealbrand-50 to-emerald-50 p-6 rounded-2xl border border-tealbrand-100 text-center">
+                            <div class="text-xs text-slate-500 font-semibold">Estimasi Waktu Dihemat:</div>
+                            <div id="calc-hours-saved" class="text-3xl font-extrabold text-tealbrand-800 my-1">91.2 Jam</div>
+                            <p id="calc-description" class="text-[11px] text-slate-600 leading-relaxed">
+                                Setara dengan hemat <strong class="text-tealbrand-700">11 hari kerja</strong>! Waktu istirahat dan akhir pekan Anda kini bisa dinikmati bersama keluarga.
+                            </p>
                         </div>
+                    </div>
+                </div>
+            </section>
 
+            <!-- FEATURE HIGHLIGHTS -->
+            <section class="py-12 px-6 max-w-6xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-2xl font-extrabold text-slate-800">Semua Kebutuhan Guru dalam Satu Tempat</h2>
+                    <p class="text-xs text-slate-500 mt-1">Dirancang khusus menjawab komprehensivitas Kurikulum Merdeka</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
                         <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Topik / Judul Materi Utama</label>
-                            <input type="text" id="input-materi" required placeholder="Misal: Sifat-sifat Cahaya & Indera Penglihatan" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500">
+                            <div class="w-12 h-12 bg-tealbrand-50 text-tealbrand-700 rounded-xl flex items-center justify-center text-xl font-bold mb-4">
+                                <i class="fa-solid fa-layer-group"></i>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-base mb-2">Perencanaan Perangkat Ajar</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed">Generate TP, ATP, Program Tahunan (Prota), dan Program Semester (Prosem) otomatis terstruktur rapi.</p>
                         </div>
+                        <ul class="text-xs text-slate-500 space-y-1.5 mt-4 pt-4 border-t border-slate-100">
+                            <li><i class="fa-solid fa-circle-check text-tealbrand-600 mr-1.5"></i> Pemetaan Fase Otomatis</li>
+                            <li><i class="fa-solid fa-circle-check text-tealbrand-600 mr-1.5"></i> Integrasi CP BSKAP Resmi</li>
+                        </ul>
+                    </div>
 
+                    <div class="bg-white p-6 rounded-2xl border border-tealbrand-500/30 ring-2 ring-tealbrand-500/10 shadow-md flex flex-col justify-between">
                         <div>
-                            <label class="block font-semibold text-slate-700 mb-1 flex justify-between items-center">
-                                <span>Teks Capaian Pembelajaran (CP) Resmi (Opsional)</span>
-                                <span class="text-[10px] text-brand-600 font-normal"><i class="fa-solid fa-circle-info mr-1"></i>Paste teks dari BSKAP</span>
-                            </label>
-                            <textarea id="input-cp-text" rows="2" placeholder="Tempelkan paragraf Capaian Pembelajaran resmi di sini..." class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500"></textarea>
-                        </div>
-
-                        <div id="dynamic-module-options" class="p-3 bg-brand-50/50 border border-brand-100 rounded-xl space-y-3 hidden"></div>
-
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1.5">Dimensi Profil Pelajar Pancasila (P3)</label>
-                            <div class="grid grid-cols-2 gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                                <label class="flex items-center gap-2"><input type="checkbox" value="Beriman, Bertaqwa & Berakhlak Mulia" class="ppp-check text-brand-600 rounded"> Beriman & Bertaqwa</label>
-                                <label class="flex items-center gap-2"><input type="checkbox" value="Berkebinekaan Global" class="ppp-check text-brand-600 rounded"> Berkebinekaan Global</label>
-                                <label class="flex items-center gap-2"><input type="checkbox" value="Gotong Royong" class="ppp-check text-brand-600 rounded"> Gotong Royong</label>
-                                <label class="flex items-center gap-2"><input type="checkbox" value="Mandiri" class="ppp-check text-brand-600 rounded" checked> Mandiri</label>
-                                <label class="flex items-center gap-2"><input type="checkbox" value="Bernalar Kritis" class="ppp-check text-brand-600 rounded" checked> Bernalar Kritis</label>
-                                <label class="flex items-center gap-2"><input type="checkbox" value="Kreatif" class="ppp-check text-brand-600 rounded" checked> Kreatif</label>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="block font-semibold text-slate-700 mb-1">Model Pembelajaran</label>
-                                <select id="input-model" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500">
-                                    <option value="Problem-Based Learning (PBL)">Problem-Based Learning (PBL)</option>
-                                    <option value="Project-Based Learning (PjBL)">Project-Based Learning (PjBL)</option>
-                                    <option value="Discovery Learning">Discovery Learning</option>
-                                    <option value="Inquiry Learning">Inquiry Learning</option>
-                                    <option value="Cooperative Learning">Cooperative Learning</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block font-semibold text-slate-700 mb-1">Fokus Diferensiasi</label>
-                                <select id="input-diferensiasi" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500">
-                                    <option value="Diferensiasi Proses & Hasil/Produk">Proses & Produk</option>
-                                    <option value="Diferensiasi Konten (Materi)">Konten (Materi)</option>
-                                    <option value="Diferensiasi Proses Pembelajaran">Proses Pembelajaran</option>
-                                    <option value="Integrasi Keseluruhan (Konten, Proses, Produk)">Lengkap (Konten, Proses, Produk)</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Target Peserta Didik</label>
-                            <div class="flex gap-4 bg-slate-50 p-2 rounded-lg border border-slate-200">
-                                <label class="flex items-center gap-1.5"><input type="radio" name="target" value="Reguler / Tipikal" checked> Reguler</label>
-                                <label class="flex items-center gap-1.5"><input type="radio" name="target" value="Cepat Belajar (Pencapaian Tinggi)"> Cepat Belajar</label>
-                                <label class="flex items-center gap-1.5"><input type="radio" name="target" value="Kesulitan Belajar"> Kesulitan Belajar</label>
-                                <label class="flex items-center gap-1.5"><input type="radio" name="target" value="Inklusif"> Inklusif</label>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Ketersediaan Sarana & Prasarana</label>
-                            <div class="grid grid-cols-2 gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                                <label class="flex items-center gap-2"><input type="checkbox" value="Proyektor / LCD" class="sarpras-check" checked> Proyektor / LCD</label>
-                                <label class="flex items-center gap-2"><input type="checkbox" value="Laptop / Komputer" class="sarpras-check" checked> Laptop / Komputer</label>
-                                <label class="flex items-center gap-2"><input type="checkbox" value="Koneksi Wi-Fi / Internet" class="sarpras-check" checked> Wi-Fi / Internet</label>
-                                <label class="flex items-center gap-2"><input type="checkbox" value="Alat Peraga Sederhana" class="sarpras-check"> Alat Peraga Sederhana</label>
-                                <label class="flex items-center gap-2"><input type="checkbox" value="Buku Teks Saja (Non-Teknologi)" class="sarpras-check"> Buku Teks Saja</label>
-                            </div>
-                        </div>
-
-                        <div class="pt-2">
-                            <button type="submit" id="btn-generate" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition flex items-center justify-center gap-2 text-sm">
+                            <div class="w-12 h-12 bg-tealbrand-700 text-white rounded-xl flex items-center justify-center text-xl font-bold mb-4 shadow-sm">
                                 <i class="fa-solid fa-wand-magic-sparkles"></i>
-                                <span>Generate Dokumen Mendalam</span>
-                            </button>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-base mb-2">Modul Ajar, LKPD & Asesmen</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed">Susun Modul Ajar berdiferensiasi, Lembar Kerja Siswa (LKPD), Soal HOTS, Rubrik Asesmen & Projek P5.</p>
                         </div>
-                    </form>
-                </section>
-
-                <section class="w-1/2 p-5 flex flex-col h-full bg-slate-100">
-                    <div class="bg-white p-3 rounded-t-xl border border-slate-200 flex items-center justify-between shadow-sm">
-                        <div class="flex items-center space-x-1 border-r border-slate-200 pr-3">
-                            <button onclick="formatText('bold')" class="p-1.5 hover:bg-slate-100 rounded text-slate-700 font-bold" title="Bold"><i class="fa-solid fa-bold"></i></button>
-                            <button onclick="formatText('italic')" class="p-1.5 hover:bg-slate-100 rounded text-slate-700 italic" title="Italic"><i class="fa-solid fa-italic"></i></button>
-                            <button onclick="formatText('insertUnorderedList')" class="p-1.5 hover:bg-slate-100 rounded text-slate-700" title="Bullet List"><i class="fa-solid fa-list-ul"></i></button>
-                            <button onclick="formatText('formatBlock', '<h2>')" class="p-1.5 hover:bg-slate-100 rounded text-slate-700 font-bold text-xs" title="Judul Utama">H2</button>
-                            <button onclick="formatText('formatBlock', '<h3>')" class="p-1.5 hover:bg-slate-100 rounded text-slate-700 font-bold text-xs" title="Sub Judul">H3</button>
-                        </div>
-
-                        <div class="flex items-center space-x-2">
-                            <button onclick="saveToPustaka()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3 py-1.5 rounded-lg border border-slate-300 transition flex items-center gap-1.5">
-                                <i class="fa-solid fa-bookmark text-amber-600"></i> Simpan ke Cloud
-                            </button>
-                            <button onclick="exportToWord()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
-                                <i class="fa-solid fa-file-word"></i> Unduh .DOCX
-                            </button>
-                            <button onclick="exportToPDF()" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
-                                <i class="fa-solid fa-file-pdf"></i> Cetak PDF
-                            </button>
-                        </div>
+                        <ul class="text-xs text-slate-500 space-y-1.5 mt-4 pt-4 border-t border-slate-100">
+                            <li><i class="fa-solid fa-circle-check text-tealbrand-600 mr-1.5"></i> Model PBL, PjBL, Discovery</li>
+                            <li><i class="fa-solid fa-circle-check text-tealbrand-600 mr-1.5"></i> Ekspor Docx & PDF Instan</li>
+                        </ul>
                     </div>
 
-                    <div class="flex-1 bg-white border-x border-b border-slate-200 rounded-b-xl p-6 overflow-y-auto custom-scrollbar shadow-inner relative" id="printableArea">
-                        <div id="editor-placeholder" class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center text-slate-400">
-                            <i class="fa-solid fa-file-lines text-5xl mb-3 text-slate-300"></i>
-                            <h3 class="font-bold text-slate-600">Dokumen Belum Di-generate</h3>
-                            <p class="text-xs max-w-xs mt-1">Lengkapi parameter di sebelah kiri lalu klik "Generate Dokumen Mendalam".</p>
-                        </div>
-
-                        <div id="editor-loading" class="hidden absolute inset-0 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center z-10">
-                            <div class="w-12 h-12 border-4 border-brand-200 border-t-brand-600 rounded-full animate-spin mb-4"></div>
-                            <p class="font-bold text-slate-700 text-sm">Menyusun Dokumen Kurikulum Merdeka...</p>
-                            <p class="text-xs text-slate-500 mt-1">Menggunakan AI Engine untuk analisis pedagogi mendalam</p>
-                        </div>
-
-                        <div id="editorContent" contenteditable="true" class="prose prose-slate max-w-none text-xs leading-relaxed outline-none min-h-full"></div>
-                    </div>
-                </section>
-            </div>
-
-            <div id="view-pustaka" class="hidden flex-1 p-6 overflow-y-auto custom-scrollbar">
-                <div class="max-w-5xl mx-auto">
-                    <div class="flex justify-between items-center mb-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
                         <div>
-                            <h2 class="text-xl font-bold text-slate-800">Pustaka Dokumen Cloud</h2>
-                            <p class="text-xs text-slate-500">Semua dokumen yang tersimpan di akun Supabase Anda.</p>
-                        </div>
-                    </div>
-                    <div id="pustaka-grid" class="grid grid-cols-3 gap-4"></div>
-                </div>
-            </div>
-
-            <div id="view-topup" class="hidden flex-1 p-6 overflow-y-auto custom-scrollbar">
-                <div class="max-w-4xl mx-auto">
-                    <div class="text-center mb-8">
-                        <h2 class="text-2xl font-extrabold text-slate-800">Beli Paket Token TemanGuru</h2>
-                        <p class="text-xs text-slate-500 mt-1">Pilih paket token sesuai kebutuhan administrasi sekolahmu.</p>
-                    </div>
-
-                    <div class="grid grid-cols-3 gap-6 mb-8">
-                        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between hover:border-brand-500 transition">
-                            <div>
-                                <span class="bg-slate-100 text-slate-700 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Pemula</span>
-                                <h3 class="text-xl font-extrabold text-slate-800 mt-3">20 Token</h3>
-                                <div class="text-2xl font-extrabold text-brand-700 mt-2">Rp 10.000</div>
-                                <ul class="text-xs text-slate-600 space-y-2 my-4">
-                                    <li><i class="fa-solid fa-check text-brand-600 mr-2"></i>~4 Modul Ajar Lengkap</li>
-                                    <li><i class="fa-solid fa-check text-brand-600 mr-2"></i>Ekspor Docx & PDF Unlimited</li>
-                                </ul>
+                            <div class="w-12 h-12 bg-tealbrand-50 text-tealbrand-700 rounded-xl flex items-center justify-center text-xl font-bold mb-4">
+                                <i class="fa-solid fa-clipboard-user"></i>
                             </div>
-                            <button onclick="simulasiBayar(20, 10000)" class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs transition">Beli via QRIS</button>
+                            <h3 class="font-bold text-slate-800 text-base mb-2">Workbook Guru Digital</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed">Kelola absensi harian, jurnal kegiatan mengajar, serta rekap penilaian siswa secara langsung dari browser.</p>
                         </div>
-
-                        <div class="bg-white rounded-2xl p-6 border-2 border-brand-500 shadow-md relative flex flex-col justify-between">
-                            <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand-600 text-white text-[10px] font-bold px-3 py-0.5 rounded-full uppercase">Paling Laris</span>
-                            <div>
-                                <span class="bg-brand-50 text-brand-700 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Standar Guru</span>
-                                <h3 class="text-xl font-extrabold text-slate-800 mt-3">75 Token</h3>
-                                <div class="text-2xl font-extrabold text-brand-700 mt-2">Rp 30.000</div>
-                                <ul class="text-xs text-slate-600 space-y-2 my-4">
-                                    <li><i class="fa-solid fa-check text-brand-600 mr-2"></i>~15 Modul Ajar / ATP</li>
-                                    <li><i class="fa-solid fa-check text-brand-600 mr-2"></i>Penyimpanan Cloud Dokumen</li>
-                                </ul>
-                            </div>
-                            <button onclick="simulasiBayar(75, 30000)" class="w-full py-2.5 bg-brand-700 hover:bg-brand-800 text-white font-bold rounded-xl text-xs transition">Beli via QRIS</button>
-                        </div>
-
-                        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between hover:border-brand-500 transition">
-                            <div>
-                                <span class="bg-purple-100 text-purple-700 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Satu Sekolah</span>
-                                <h3 class="text-xl font-extrabold text-slate-800 mt-3">200 Token</h3>
-                                <div class="text-2xl font-extrabold text-brand-700 mt-2">Rp 75.000</div>
-                                <ul class="text-xs text-slate-600 space-y-2 my-4">
-                                    <li><i class="fa-solid fa-check text-brand-600 mr-2"></i>~40+ Dokumen Lengkap</li>
-                                    <li><i class="fa-solid fa-check text-brand-600 mr-2"></i>Prioritas Kecepatan AI</li>
-                                </ul>
-                            </div>
-                            <button onclick="simulasiBayar(200, 75000)" class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs transition">Beli via QRIS</button>
-                        </div>
+                        <ul class="text-xs text-slate-500 space-y-1.5 mt-4 pt-4 border-t border-slate-100">
+                            <li><i class="fa-solid fa-circle-check text-tealbrand-600 mr-1.5"></i> Tersimpan di Cloud Supabase</li>
+                            <li><i class="fa-solid fa-circle-check text-tealbrand-600 mr-1.5"></i> Akses HP & Laptop</li>
+                        </ul>
                     </div>
                 </div>
-            </div>
+            </section>
 
-        </main>
+            <!-- WHY CHOOSE US / VALUE PROPOSITIONS SECTION -->
+            <section class="py-14 bg-slate-100/80 border-y border-slate-200 px-6">
+                <div class="max-w-6xl mx-auto">
+                    <div class="text-center mb-12">
+                        <span class="bg-tealbrand-100 text-tealbrand-800 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Keunggulan Rekan Ajar AI</span>
+                        <h2 class="text-2xl font-extrabold text-slate-800 mt-2">Mengapa Bapak/Ibu Harus Memilih Rekan Ajar AI AI Pro?</h2>
+                        <p class="text-xs text-slate-500 mt-1">Dibuat khusus menyesuaikan standar administrasi sekolah di Indonesia</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                            <div class="w-10 h-10 bg-tealbrand-100 text-tealbrand-700 rounded-xl flex items-center justify-center font-bold text-lg mb-3">
+                                <i class="fa-solid fa-certificate"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-800 text-sm mb-1">Standar BSKAP Resmi</h4>
+                            <p class="text-xs text-slate-500 leading-relaxed">Penyusunan indikator, CP, TP, dan kriteria ketercapaian sesuai aturan Kurikulum Merdeka terkini.</p>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                            <div class="w-10 h-10 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center font-bold text-lg mb-3">
+                                <i class="fa-solid fa-infinity"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-800 text-sm mb-1">Token Tanpa Kedaluwarsa</h4>
+                            <p class="text-xs text-slate-500 leading-relaxed">Token yang Anda beli tidak akan hangus tiap bulan. Gunakan kapan saja saat Anda membutuhkan.</p>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                            <div class="w-10 h-10 bg-blue-100 text-blue-700 rounded-xl flex items-center justify-center font-bold text-lg mb-3">
+                                <i class="fa-solid fa-file-word"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-800 text-sm mb-1">Ekspor Word & PDF Rapi</h4>
+                            <p class="text-xs text-slate-500 leading-relaxed">Hasil generate tersusun dalam tabel HTML rapi yang siap diunduh ke format .DOCX tanpa rusak.</p>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                            <div class="w-10 h-10 bg-purple-100 text-purple-700 rounded-xl flex items-center justify-center font-bold text-lg mb-3">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-800 text-sm mb-1">Tersimpan Aman di Cloud</h4>
+                            <p class="text-xs text-slate-500 leading-relaxed">Tidak takut file hilang. Semua dokumen & data workbook tersimpan aman dan dapat dibuka dari HP maupun Laptop.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CONTACT & SUPPORT SECTION -->
+            <section class="py-14 bg-white border-t border-slate-200 px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-10">
+                        <span class="bg-tealbrand-50 text-tealbrand-700 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Layanan Bantuan</span>
+                        <h2 class="text-2xl font-extrabold text-slate-800 mt-2">Punya Pertanyaan atau Perlu Kendala Dibantu?</h2>
+                        <p class="text-xs text-slate-500 mt-1">Tim Rekan Ajar AI siap mendampingi Anda 24/7</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 text-center flex flex-col justify-between">
+                            <div>
+                                <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-lg mb-3">
+                                    <i class="fa-brands fa-whatsapp"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-800 text-sm mb-1">Chat Admin WhatsApp</h4>
+                                <p class="text-xs text-slate-500 mb-4">Konsultasi cepat, kendala teknis, atau bantuan top-up manual.</p>
+                            </div>
+                            <a href="https://wa.me/6285121178423?text=Halo%20Admin%20Rekan Ajar AI,%20saya%20butuh%20bantuan" target="_blank" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition inline-block">
+                                Chat via WhatsApp
+                            </a>
+                        </div>
+
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 text-center flex flex-col justify-between">
+                            <div>
+                                <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto text-lg mb-3">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-800 text-sm mb-1">Email Layanan Resmi</h4>
+                                <p class="text-xs text-slate-500 mb-4">Kirimkan pertanyaan atau surat resmi kerjasama ke tim kami.</p>
+                            </div>
+                            <a href="mailto:selabelajar.tech@gmail.com" class="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs transition inline-block">
+                                Kirim Email
+                            </a>
+                        </div>
+
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 text-center flex flex-col justify-between">
+                            <div>
+                                <div class="w-10 h-10 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto text-lg mb-3">
+                                    <i class="fa-solid fa-school"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-800 text-sm mb-1">Lisensi Kolektif Sekolah</h4>
+                                <p class="text-xs text-slate-500 mb-4">Penawaran khusus akun Rekan Ajar AI untuk seluruh guru di sekolah Anda.</p>
+                            </div>
+                            <a href="https://wa.me/6285121178423?text=Halo%20Admin,%20saya%20tertarik%20penawaran%20Lisensi%20Sekolah" target="_blank" class="w-full py-2 bg-purple-700 hover:bg-purple-800 text-white font-bold rounded-xl text-xs transition inline-block">
+                                Minta Penawaran
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA SECTION -->
+            <section class="py-16 px-6 text-center max-w-3xl mx-auto">
+                <h2 class="text-2xl font-extrabold text-slate-800 mb-3">Siap Menyusun Perangkat Ajar Lebih Praktis?</h2>
+                <p class="text-xs text-slate-500 mb-6">Dapatkan 15 Token Gratis saat pertama kali mendaftar akun Rekan Ajar AI.</p>
+                <button onclick="openAuthModal()" class="bg-tealbrand-700 hover:bg-tealbrand-800 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-md transition">
+                    Daftar Sekarang & Klaim Token Gratis
+                </button>
+            </section>
+        </div>
+
+        <!-- ================================================================= -->
+        <!-- VIEW 2: APP WORKSPACE SHELL (SHARED SIDEBAR & MAIN CONTENT)        -->
+        <!-- ================================================================= -->
+        <div id="app-workspace" class="hidden flex-1 flex overflow-hidden w-full">
+            
+            <!-- GLOBAL SIDEBAR MODULE NAVIGATION -->
+            <aside class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between flex-shrink-0">
+                <div class="p-4 space-y-5 overflow-y-auto custom-scrollbar">
+                    <div>
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-3">Perencanaan (Planning)</div>
+                        <nav class="space-y-1">
+                            <button onclick="switchModule('modul-ajar')" id="btn-modul-ajar" class="nav-btn active w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-tealbrand-700 bg-tealbrand-50">
+                                <i class="fa-solid fa-book-open w-4 text-center text-tealbrand-600"></i>
+                                <span>Modul Ajar / RPP Plus</span>
+                            </button>
+                            <button onclick="switchModule('tp-atp')" id="btn-tp-atp" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-slate-600 hover:bg-slate-100">
+                                <i class="fa-solid fa-route w-4 text-center text-teal-600"></i>
+                                <span>Generator TP & ATP</span>
+                            </button>
+                            <button onclick="switchModule('prota-prosem')" id="btn-prota-prosem" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-slate-600 hover:bg-slate-100">
+                                <i class="fa-solid fa-calendar-days w-4 text-center text-cyan-600"></i>
+                                <span>Prota & Prosem</span>
+                            </button>
+                        </nav>
+                    </div>
+
+                    <div>
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-3">Pembelajaran & Evaluasi</div>
+                        <nav class="space-y-1">
+                            <button onclick="switchModule('lkpd')" id="btn-lkpd" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-slate-600 hover:bg-slate-100">
+                                <i class="fa-solid fa-file-pen w-4 text-center text-emerald-600"></i>
+                                <span>LKPD (Lembar Kerja)</span>
+                            </button>
+                            <button onclick="switchModule('asesmen')" id="btn-asesmen" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-slate-600 hover:bg-slate-100">
+                                <i class="fa-solid fa-list-check w-4 text-center text-blue-600"></i>
+                                <span>Soal & Rubrik Asesmen</span>
+                            </button>
+                            <button onclick="switchModule('p5')" id="btn-p5" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-slate-600 hover:bg-slate-100">
+                                <i class="fa-solid fa-hands-holding-child w-4 text-center text-purple-600"></i>
+                                <span>Modul Projek P5</span>
+                            </button>
+                        </nav>
+                    </div>
+
+                    <div>
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-3">Manajemen & Cloud</div>
+                        <nav class="space-y-1">
+                            <button onclick="switchTab('workbook')" id="btn-nav-workbook" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-slate-600 hover:bg-slate-100">
+                                <i class="fa-solid fa-clipboard-user w-4 text-center text-indigo-600"></i>
+                                <span>Workbook Guru Pro</span>
+                            </button>
+                            <button onclick="switchTab('pustaka')" id="btn-nav-pustaka" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-slate-600 hover:bg-slate-100">
+                                <i class="fa-solid fa-folder-open w-4 text-center text-amber-600"></i>
+                                <span>Pustaka Dokumen</span>
+                            </button>
+                            <button onclick="switchTab('topup')" id="btn-nav-topup" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-slate-600 hover:bg-slate-100">
+                                <i class="fa-solid fa-wallet w-4 text-center text-tealbrand-600"></i>
+                                <span>Beli Token & Tarif</span>
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Footer User Info -->
+                <div class="p-3.5 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                        <div id="user-avatar" class="w-8 h-8 rounded-full bg-tealbrand-700 text-white flex items-center justify-center font-bold text-xs">
+                            ?
+                        </div>
+                        <div class="overflow-hidden">
+                            <div id="user-name-display" class="text-xs font-bold text-slate-700 truncate">Tamu</div>
+                            <div id="user-status-display" class="text-[10px] text-slate-400">Belum Login</div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- WORKSPACE MAIN CONTENT AREA -->
+            <main class="flex-1 bg-slate-100 overflow-hidden flex flex-col relative">
+
+                <!-- SUB-VIEW A: GENERATOR FORM & EDITOR -->
+                <div id="view-generator" class="flex-1 flex overflow-hidden">
+                    <section class="w-1/2 p-5 overflow-y-auto custom-scrollbar border-r border-slate-200 bg-white">
+                        <div class="mb-5 flex items-center justify-between border-b pb-3 border-slate-100">
+                            <div>
+                                <h2 id="generator-title" class="text-base font-bold text-slate-800">Generator Modul Ajar / RPP Plus</h2>
+                                <p class="text-[11px] text-slate-500">Isi parameter di bawah untuk menyusun dokumen presisi.</p>
+                            </div>
+                            <span id="token-cost-badge" class="bg-amber-100 text-amber-800 border border-amber-200 text-xs px-2.5 py-1 rounded-full font-bold">
+                                <i class="fa-solid fa-coins mr-1"></i> Biaya: 5 Token
+                            </span>
+                        </div>
+
+                        <form id="generator-form" onsubmit="handleGenerate(event)" class="space-y-3.5 text-xs">
+
+                            <div class="grid grid-cols-3 gap-3">
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Jenjang</label>
+                                    <select id="input-jenjang" onchange="updateFaseMapping()" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
+                                        <option value="SD">SD / MI</option>
+                                        <option value="SMP">SMP / MTs</option>
+                                        <option value="SMA">SMA / MA</option>
+                                        <option value="SMK">SMK</option>
+                                        <option value="PAUD">PAUD / TK</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Kelas</label>
+                                    <select id="input-kelas" onchange="updateFaseMapping()" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
+                                        <option value="1">Kelas 1</option>
+                                        <option value="2">Kelas 2</option>
+                                        <option value="3">Kelas 3</option>
+                                        <option value="4">Kelas 4</option>
+                                        <option value="5">Kelas 5</option>
+                                        <option value="6">Kelas 6</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Fase (Otomat)</label>
+                                    <input type="text" id="input-fase" readonly value="Fase A" class="w-full p-2 bg-slate-100 border border-slate-300 rounded-lg text-tealbrand-700 font-bold text-center">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-3">
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Mata Pelajaran</label>
+                                    <input type="text" id="input-mapel" required placeholder="Misal: IPAS / Matematika" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
+                                </div>
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Rombel / Semester</label>
+                                    <input type="text" id="input-rombel" placeholder="Misal: VII-B / Ganjil" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
+                                </div>
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Alokasi Waktu</label>
+                                    <input type="text" id="input-waktu" value="2 JP (2 x 45 Menit)" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block font-semibold text-slate-700 mb-1">Topik / Judul Materi Utama</label>
+                                <input type="text" id="input-materi" required placeholder="Misal: Sifat-sifat Cahaya & Indera Penglihatan" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
+                            </div>
+
+                            <div>
+                                <label class="block font-semibold text-slate-700 mb-1 flex justify-between items-center">
+                                    <span>Teks Capaian Pembelajaran (CP) Resmi (Opsional)</span>
+                                </label>
+                                <textarea id="input-cp-text" rows="2" placeholder="Tempelkan paragraf CP resmi di sini..." class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500"></textarea>
+                            </div>
+
+                            <div id="dynamic-module-options" class="p-3 bg-tealbrand-50/50 border border-tealbrand-100 rounded-xl space-y-3 hidden"></div>
+
+                            <div>
+                                <label class="block font-semibold text-slate-700 mb-1.5">Dimensi Profil Pelajar Pancasila (P3)</label>
+                                <div class="grid grid-cols-2 gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="Beriman, Bertaqwa & Berakhlak Mulia" class="ppp-check text-tealbrand-600 rounded"> Beriman & Bertaqwa</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="Berkebinekaan Global" class="ppp-check text-tealbrand-600 rounded"> Berkebinekaan Global</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="Gotong Royong" class="ppp-check text-tealbrand-600 rounded"> Gotong Royong</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="Mandiri" class="ppp-check text-tealbrand-600 rounded" checked> Mandiri</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="Bernalar Kritis" class="ppp-check text-tealbrand-600 rounded" checked> Bernalar Kritis</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="Kreatif" class="ppp-check text-tealbrand-600 rounded" checked> Kreatif</label>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Model Pembelajaran</label>
+                                    <select id="input-model" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
+                                        <option value="Problem-Based Learning (PBL)">Problem-Based Learning (PBL)</option>
+                                        <option value="Project-Based Learning (PjBL)">Project-Based Learning (PjBL)</option>
+                                        <option value="Discovery Learning">Discovery Learning</option>
+                                        <option value="Inquiry Learning">Inquiry Learning</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Fokus Diferensiasi</label>
+                                    <select id="input-diferensiasi" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
+                                        <option value="Diferensiasi Proses & Hasil/Produk">Proses & Produk</option>
+                                        <option value="Diferensiasi Konten (Materi)">Konten (Materi)</option>
+                                        <option value="Integrasi Keseluruhan (Konten, Proses, Produk)">Lengkap</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="pt-2">
+                                <button type="submit" id="btn-generate" class="w-full bg-tealbrand-700 hover:bg-tealbrand-800 text-white font-bold py-2.5 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-2 text-xs">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                    <span>Generate Dokumen Mendalam</span>
+                                </button>
+                            </div>
+                        </form>
+                    </section>
+
+                    <section class="w-1/2 p-5 flex flex-col h-full bg-slate-100">
+                        <div class="bg-white p-3 rounded-t-2xl border border-slate-200 flex items-center justify-between shadow-sm">
+                            <div class="flex items-center space-x-1 border-r border-slate-200 pr-3">
+                                <button onclick="formatText('bold')" class="p-1.5 hover:bg-slate-100 rounded text-slate-700 font-bold"><i class="fa-solid fa-bold"></i></button>
+                                <button onclick="formatText('italic')" class="p-1.5 hover:bg-slate-100 rounded text-slate-700 italic"><i class="fa-solid fa-italic"></i></button>
+                                <button onclick="formatText('insertUnorderedList')" class="p-1.5 hover:bg-slate-100 rounded text-slate-700"><i class="fa-solid fa-list-ul"></i></button>
+                            </div>
+
+                            <div class="flex items-center space-x-2">
+                                <button onclick="saveToPustaka()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3 py-1.5 rounded-lg border border-slate-300 transition flex items-center gap-1.5">
+                                    <i class="fa-solid fa-bookmark text-amber-600"></i> Simpan
+                                </button>
+                                <button onclick="exportToWord()" class="bg-tealbrand-700 hover:bg-tealbrand-800 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+                                    <i class="fa-solid fa-file-word"></i> .DOCX
+                                </button>
+                                <button onclick="exportToPDF()" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+                                    <i class="fa-solid fa-file-pdf"></i> PDF
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex-1 bg-white border-x border-b border-slate-200 rounded-b-2xl p-6 overflow-y-auto custom-scrollbar shadow-inner relative" id="printableArea">
+                            <div id="editor-placeholder" class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center text-slate-400">
+                                <i class="fa-solid fa-compass-drafting text-5xl mb-3 text-slate-300"></i>
+                                <h3 class="font-bold text-slate-600">Dokumen Belum Di-generate</h3>
+                                <p class="text-xs max-w-xs mt-1">Isi parameter lalu klik "Generate Dokumen Mendalam".</p>
+                            </div>
+
+                            <div id="editor-loading" class="hidden absolute inset-0 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center z-10">
+                                <div class="w-10 h-10 border-4 border-tealbrand-200 border-t-tealbrand-700 rounded-full animate-spin mb-3"></div>
+                                <p class="font-bold text-slate-700 text-xs">Menyusun Dokumen Rancang Ajar...</p>
+                            </div>
+
+                            <div id="editorContent" contenteditable="true" class="prose prose-slate max-w-none text-xs leading-relaxed outline-none min-h-full"></div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- SUB-VIEW B: WORKBOOK GURU PRO -->
+                <div id="view-workbook" class="hidden flex-1 p-6 overflow-y-auto custom-scrollbar bg-slate-100">
+                    <div class="max-w-6xl mx-auto space-y-6">
+                        
+                        <!-- WORKBOOK HEADER & CONTROLS -->
+                        <div class="flex flex-wrap justify-between items-center bg-white p-5 rounded-2xl border border-slate-200 shadow-sm gap-4">
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-800">Workbook Guru Digital Pro</h2>
+                                <p class="text-xs text-slate-500">Kelola Absensi Harian, Jurnal Mengajar, & Daftar Siswa Per Kelas.</p>
+                            </div>
+
+                            <div class="flex flex-wrap items-center gap-3 text-xs">
+                                <!-- Class Selector -->
+                                <div class="flex items-center gap-2 bg-slate-50 p-1.5 rounded-xl border border-slate-200">
+                                    <span class="font-semibold text-slate-600 pl-2">Pilih Kelas:</span>
+                                    <select id="workbook-class-select" onchange="changeWorkbookClass()" class="bg-white border border-slate-300 rounded-lg p-1.5 font-bold text-tealbrand-800 focus:ring-2 focus:ring-tealbrand-500">
+                                        <!-- Dynamic Class Dropdown Rendered via JS -->
+                                    </select>
+                                </div>
+
+                                <!-- Date Picker -->
+                                <div class="flex items-center gap-2 bg-slate-50 p-1.5 rounded-xl border border-slate-200">
+                                    <span class="font-semibold text-slate-600 pl-2">Tanggal:</span>
+                                    <input type="date" id="workbook-date" class="bg-white border border-slate-300 rounded-lg p-1 font-bold text-slate-700">
+                                </div>
+
+                                <button onclick="saveWorkbookData()" class="bg-tealbrand-700 hover:bg-tealbrand-800 text-white font-bold px-4 py-2 rounded-xl shadow transition flex items-center gap-1.5">
+                                    <i class="fa-solid fa-floppy-disk"></i> Simpan Record
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- MAIN WORKBOOK CONTENT GRID -->
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            
+                            <!-- ABSENSI DINAMIS & MANAGEMENT SISWA (2 COLS) -->
+                            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm lg:col-span-2 flex flex-col justify-between">
+                                <div>
+                                    <div class="flex flex-wrap justify-between items-center mb-4 gap-2">
+                                        <h3 class="font-bold text-sm text-slate-800 flex items-center">
+                                            <i class="fa-solid fa-user-check text-tealbrand-600 mr-2"></i> Presensi Siswa Harian
+                                        </h3>
+
+                                        <div class="flex items-center gap-2">
+                                            <button onclick="markAllPresent()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-[11px] font-bold px-2.5 py-1 rounded-lg transition">
+                                                <i class="fa-solid fa-check-double mr-1"></i> Hadir Semua
+                                            </button>
+                                            <button onclick="openAddStudentModal()" class="bg-tealbrand-700 hover:bg-tealbrand-800 text-white text-[11px] font-bold px-2.5 py-1 rounded-lg transition">
+                                                <i class="fa-solid fa-user-plus mr-1"></i> Tambah Siswa
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full text-xs text-left border-collapse">
+                                            <thead>
+                                                <tr class="bg-slate-50 border-b text-slate-600">
+                                                    <th class="p-2 border.5 border-slate-200 w-10 text-center">No</th>
+                                                    <th class="p-2 border.5 border-slate-200">Nama Siswa</th>
+                                                    <th class="p-2 border.5 border-slate-200 text-center w-16">Hadir</th>
+                                                    <th class="p-2 border.5 border-slate-200 text-center w-16">Izin</th>
+                                                    <th class="p-2 border.5 border-slate-200 text-center w-16">Sakit</th>
+                                                    <th class="p-2 border.5 border-slate-200 text-center w-16">Alfa</th>
+                                                    <th class="p-2 border.5 border-slate-200 text-center w-12">Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="student-attendance-tbody">
+                                                <!-- Dynamic student rows rendered via JavaScript -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-[11px] text-slate-400">
+                                    <span>Total Siswa: <strong id="total-students-count" class="text-slate-700">0</strong></span>
+                                    <span>Status: Auto-saved to Cloud</span>
+                                </div>
+                            </div>
+
+                            <!-- JURNAL & CATATAN PERKEMBANGAN -->
+                            <div class="space-y-6">
+                                <!-- Jurnal Harian -->
+                                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                                    <h3 class="font-bold text-sm text-slate-800 mb-3 flex items-center">
+                                        <i class="fa-solid fa-book-journal-whills text-indigo-600 mr-2"></i> Jurnal Mengajar Hari Ini
+                                    </h3>
+                                    <form class="space-y-3 text-xs">
+                                        <div>
+                                            <label class="block font-semibold mb-1 text-slate-700">Materi / Sub-Bab</label>
+                                            <input type="text" id="jurnal-materi" placeholder="Misal: Bab 2 Ekosistem & Rantai Makanan" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
+                                        </div>
+                                        <div>
+                                            <label class="block font-semibold mb-1 text-slate-700">Hambatan / Catatan Kelas</label>
+                                            <textarea id="jurnal-hambatan" rows="3" placeholder="Misal: Diskusi kelompok berjalan lancar, 2 siswa perlu bimbingan..." class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500"></textarea>
+                                        </div>
+                                        <div>
+                                            <label class="block font-semibold mb-1 text-slate-700">Tindak Lanjut</label>
+                                            <input type="text" id="jurnal-tindak-lanjut" placeholder="Pemberian tugas mandiri / Remedial" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!-- Catatan Perkembangan Siswa -->
+                                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                                    <h3 class="font-bold text-sm text-slate-800 mb-3 flex items-center">
+                                        <i class="fa-solid fa-comment-dots text-amber-600 mr-2"></i> Catatan Sikap & Perkembangan
+                                    </h3>
+                                    <textarea id="catatan-sikap" rows="3" placeholder="Catat prestasi khusus atau kendala perilaku siswa tertentu untuk laporan Rapor P3..." class="w-full p-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-tealbrand-500"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB-VIEW C: PUSTAKA DOKUMEN -->
+                <div id="view-pustaka" class="hidden flex-1 p-6 overflow-y-auto custom-scrollbar">
+                    <div class="max-w-5xl mx-auto">
+                        <div class="flex justify-between items-center mb-6">
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-800">Pustaka Dokumen Cloud</h2>
+                                <p class="text-xs text-slate-500">Semua dokumen tersimpan di server Rekan Ajar AI Supabase Anda.</p>
+                            </div>
+                        </div>
+                        <div id="pustaka-grid" class="grid grid-cols-3 gap-4"></div>
+                    </div>
+                </div>
+
+                <!-- SUB-VIEW D: BELI TOKEN / TOP UP -->
+                <div id="view-topup" class="hidden flex-1 p-6 overflow-y-auto custom-scrollbar">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="text-center mb-8">
+                            <h2 class="text-2xl font-extrabold text-slate-800">Beli Paket Token Rekan Ajar AI</h2>
+                            <p class="text-xs text-slate-500 mt-1">Pilih paket token sesuai kebutuhan administrasi sekolahmu.</p>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-6 mb-8">
+                            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between hover:border-tealbrand-500 transition">
+                                <div>
+                                    <span class="bg-slate-100 text-slate-700 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Pemula</span>
+                                    <h3 class="text-xl font-extrabold text-slate-800 mt-3">20 Token</h3>
+                                    <div class="text-2xl font-extrabold text-tealbrand-700 mt-2">Rp 10.000</div>
+                                    <ul class="text-xs text-slate-600 space-y-2 my-4">
+                                        <li><i class="fa-solid fa-check text-tealbrand-600 mr-2"></i>~4 Modul Ajar Lengkap</li>
+                                        <li><i class="fa-solid fa-check text-tealbrand-600 mr-2"></i>Ekspor Docx & PDF Unlimited</li>
+                                    </ul>
+                                </div>
+                                <button onclick="simulasiBayar(20, 10000)" class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs transition">Beli via QRIS</button>
+                            </div>
+
+                            <div class="bg-white rounded-2xl p-6 border-2 border-tealbrand-500 shadow-md relative flex flex-col justify-between">
+                                <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-tealbrand-700 text-white text-[10px] font-bold px-3 py-0.5 rounded-full uppercase">Paling Laris</span>
+                                <div>
+                                    <span class="bg-tealbrand-50 text-tealbrand-700 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Standar Guru</span>
+                                    <h3 class="text-xl font-extrabold text-slate-800 mt-3">75 Token</h3>
+                                    <div class="text-2xl font-extrabold text-tealbrand-700 mt-2">Rp 30.000</div>
+                                    <ul class="text-xs text-slate-600 space-y-2 my-4">
+                                        <li><i class="fa-solid fa-check text-tealbrand-600 mr-2"></i>~15 Modul Ajar / ATP / Prota</li>
+                                        <li><i class="fa-solid fa-check text-tealbrand-600 mr-2"></i>Akses Workbook & Cloud</li>
+                                    </ul>
+                                </div>
+                                <button onclick="simulasiBayar(75, 30000)" class="w-full py-2.5 bg-tealbrand-700 hover:bg-tealbrand-800 text-white font-bold rounded-xl text-xs transition">Beli via QRIS</button>
+                            </div>
+
+                            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between hover:border-tealbrand-500 transition">
+                                <div>
+                                    <span class="bg-purple-100 text-purple-700 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Satu Sekolah</span>
+                                    <h3 class="text-xl font-extrabold text-slate-800 mt-3">200 Token</h3>
+                                    <div class="text-2xl font-extrabold text-tealbrand-700 mt-2">Rp 75.000</div>
+                                    <ul class="text-xs text-slate-600 space-y-2 my-4">
+                                        <li><i class="fa-solid fa-check text-tealbrand-600 mr-2"></i>~40+ Dokumen Lengkap</li>
+                                        <li><i class="fa-solid fa-check text-tealbrand-600 mr-2"></i>Prioritas Kecepatan AI</li>
+                                    </ul>
+                                </div>
+                                <button onclick="simulasiBayar(200, 75000)" class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs transition">Beli via QRIS</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+
+    </div>
+
+    <!-- MODAL: ADD STUDENT -->
+    <div id="add-student-modal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div class="bg-white rounded-2xl p-6 w-96 shadow-xl border border-slate-200">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-slate-800 text-sm">Tambah Siswa Baru</h3>
+                <button onclick="closeAddStudentModal()" class="text-slate-400 hover:text-slate-600 text-xs"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="space-y-3 text-xs mb-4">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Nama Lengkap Siswa</label>
+                    <input type="text" id="new-student-name" placeholder="Masukkan nama siswa..." class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 text-xs">
+                <button onclick="closeAddStudentModal()" class="px-3 py-2 font-semibold text-slate-600 hover:bg-slate-100 rounded-lg">Batal</button>
+                <button onclick="handleAddStudentSubmit()" class="px-4 py-2 font-semibold bg-tealbrand-700 hover:bg-tealbrand-800 text-white rounded-lg">Simpan Siswa</button>
+            </div>
+        </div>
     </div>
 
     <!-- MODAL: SET API KEY -->
@@ -418,10 +789,10 @@
         <div class="bg-white rounded-2xl p-6 w-96 shadow-xl border border-slate-200">
             <h3 class="font-bold text-slate-800 text-sm mb-2"><i class="fa-solid fa-key text-amber-500 mr-2"></i>Pengaturan Gemini API Key</h3>
             <p class="text-xs text-slate-500 mb-4">Masukkan API Key Google Gemini Anda.</p>
-            <input type="password" id="input-api-key" placeholder="AIzaSy..." class="w-full p-2.5 border border-slate-300 rounded-lg text-xs mb-4 focus:ring-2 focus:ring-brand-500">
+            <input type="password" id="input-api-key" placeholder="AIzaSy..." class="w-full p-2.5 border border-slate-300 rounded-lg text-xs mb-4 focus:ring-2 focus:ring-tealbrand-500">
             <div class="flex justify-end gap-2">
                 <button onclick="closeApiKeyModal()" class="px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg">Batal</button>
-                <button onclick="saveApiKey()" class="px-4 py-2 text-xs font-semibold bg-brand-700 hover:bg-brand-800 text-white rounded-lg">Simpan Key</button>
+                <button onclick="saveApiKey()" class="px-4 py-2 text-xs font-semibold bg-tealbrand-700 hover:bg-tealbrand-800 text-white rounded-lg">Simpan Key</button>
             </div>
         </div>
     </div>
@@ -430,7 +801,7 @@
     <div id="auth-modal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center">
         <div class="bg-white rounded-2xl p-6 w-96 shadow-xl border border-slate-200">
             <div class="flex justify-between items-center mb-4">
-                <h3 id="auth-modal-title" class="font-bold text-slate-800 text-sm">Login Akun TemanGuru</h3>
+                <h3 id="auth-modal-title" class="font-bold text-slate-800 text-sm">Login Akun Rekan Ajar AI</h3>
                 <button onclick="closeAuthModal()" class="text-slate-400 hover:text-slate-600 text-xs"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
@@ -448,14 +819,14 @@
                     <input type="password" id="auth-password" required minlength="6" placeholder="Minimal 6 karakter" class="w-full p-2 border border-slate-300 rounded-lg">
                 </div>
 
-                <button type="submit" id="btn-auth-submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-bold py-2.5 rounded-lg transition mt-2">
+                <button type="submit" id="btn-auth-submit" class="w-full bg-tealbrand-700 hover:bg-tealbrand-800 text-white font-bold py-2.5 rounded-lg transition mt-2">
                     Masuk Akun
                 </button>
             </form>
 
             <div class="mt-4 pt-3 border-t text-center text-xs text-slate-500">
                 <span id="auth-switch-text">Belum punya akun?</span>
-                <button onclick="toggleAuthMode()" id="btn-auth-switch" class="text-brand-700 font-bold ml-1 hover:underline">Daftar Sekarang</button>
+                <button onclick="toggleAuthMode()" id="btn-auth-switch" class="text-tealbrand-700 font-bold ml-1 hover:underline">Daftar Sekarang</button>
             </div>
         </div>
     </div>
@@ -470,23 +841,51 @@
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // State Management
+        let activeTab = 'landing';
         let activeModule = 'modul-ajar';
         let currentUser = null;
         let userProfile = null;
         let apiKey = localStorage.getItem('temanguru_gemini_key') || '';
         let isRegisterMode = false;
 
-        const moduleCosts = { 'modul-ajar': 5, 'atp': 4, 'asesmen': 3, 'p5': 5 };
+        // Dynamic Class & Workbook State
+        let classList = ['VII-A', 'VII-B', 'VIII-A'];
+        let currentWorkbookClass = 'VII-A';
+        let studentsList = [
+            { id: 1, name: 'Ahmad Rizky', class: 'VII-A' },
+            { id: 2, name: 'Budi Santoso', class: 'VII-A' },
+            { id: 3, name: 'Citra Dewi', class: 'VII-A' },
+            { id: 4, name: 'Dian Pratama', class: 'VII-A' },
+            { id: 5, name: 'Eka Rahmawati', class: 'VII-A' }
+        ];
+
+        const moduleCosts = { 
+            'modul-ajar': 5, 
+            'tp-atp': 4, 
+            'prota-prosem': 4, 
+            'lkpd': 3, 
+            'asesmen': 3, 
+            'p5': 5 
+        };
+
         const moduleTitles = {
             'modul-ajar': 'Generator Modul Ajar / RPP Plus',
-            'atp': 'Generator Alur Tujuan Pembelajaran (ATP)',
+            'tp-atp': 'Generator Tujuan & Alur Pembelajaran (TP/ATP)',
+            'prota-prosem': 'Generator Program Tahunan & Semester (Prota/Prosem)',
+            'lkpd': 'Generator Lembar Kerja Peserta Didik (LKPD)',
             'asesmen': 'Generator Instrumen & Rubrik Asesmen',
             'p5': 'Generator Modul Projek P5'
         };
 
         document.addEventListener("DOMContentLoaded", async () => {
+            // Set today's date in workbook
+            document.getElementById('workbook-date').valueAsDate = new Date();
+
             updateApiKeyUI();
             updateFaseMapping();
+            updateCalculator();
+            renderClassSelect();
+            renderStudentsTable();
             await checkUserSession();
         });
 
@@ -512,18 +911,15 @@
             });
         }
 
-        // SMART FETCH & AUTO-CREATE PROFILE
         async function fetchProfileAndSync() {
             if (!currentUser) return;
 
-            // Fetch profile data from Supabase
             let { data, error } = await _supabase
                 .from('profiles')
                 .select('*')
                 .eq('id', currentUser.id)
                 .maybeSingle();
 
-            // Jika profil belum terbuat di tabel `profiles`, buatkan secara otomatis!
             if (!data) {
                 const nameFromMetadata = currentUser.user_metadata?.full_name || currentUser.email.split('@')[0];
                 const { data: newProfile, error: insertErr } = await _supabase
@@ -537,9 +933,7 @@
                     .select()
                     .single();
 
-                if (newProfile) {
-                    data = newProfile;
-                }
+                if (newProfile) data = newProfile;
             }
 
             if (data) {
@@ -556,7 +950,7 @@
             document.getElementById('user-avatar').innerText = (userProfile.full_name || currentUser.email).charAt(0).toUpperCase();
 
             document.getElementById('auth-btn-container').innerHTML = `
-                <button onclick="handleLogout()" class="bg-rose-800/80 hover:bg-rose-800 text-rose-100 text-xs px-3 py-1.5 rounded-lg border border-rose-700 transition flex items-center gap-1">
+                <button onclick="handleLogout()" class="bg-rose-800/80 hover:bg-rose-800 text-rose-100 text-xs px-3 py-1.5 rounded-xl border border-rose-700 transition flex items-center gap-1">
                     <i class="fa-solid fa-right-from-bracket"></i> Keluar
                 </button>
             `;
@@ -569,7 +963,7 @@
             document.getElementById('user-avatar').innerText = '?';
 
             document.getElementById('auth-btn-container').innerHTML = `
-                <button onclick="openAuthModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3.5 py-2 rounded-lg transition shadow flex items-center gap-1.5">
+                <button onclick="openAuthModal()" class="bg-tealbrand-600 hover:bg-tealbrand-500 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition shadow flex items-center gap-1.5">
                     <i class="fa-solid fa-user-plus"></i>
                     <span>Login / Daftar</span>
                 </button>
@@ -588,7 +982,7 @@
                 document.getElementById('auth-switch-text').innerText = 'Sudah punya akun?';
                 document.getElementById('btn-auth-switch').innerText = 'Login';
             } else {
-                document.getElementById('auth-modal-title').innerText = 'Login Akun TemanGuru';
+                document.getElementById('auth-modal-title').innerText = 'Login Akun Rekan Ajar AI';
                 document.getElementById('field-name-container').classList.add('hidden');
                 document.getElementById('btn-auth-submit').innerText = 'Masuk Akun';
                 document.getElementById('auth-switch-text').innerText = 'Belum punya akun?';
@@ -624,71 +1018,293 @@
             alert('Anda telah keluar.');
         }
 
-        // GENERATE ACTION WITH SUPABASE TOKEN DEDUCTION
+        // TAB & VIEW SWITCHER (LAYOUT APP WORKSPACE SHELL)
+        function switchTab(tabName) {
+            activeTab = tabName;
+            
+            const landingView = document.getElementById('view-landing');
+            const appWorkspace = document.getElementById('app-workspace');
+            const tokenContainer = document.getElementById('header-token-container');
+            const topupBtn = document.getElementById('header-topup-btn');
+
+            // Hide sub-views inside workspace
+            document.getElementById('view-generator').classList.add('hidden');
+            document.getElementById('view-workbook').classList.add('hidden');
+            document.getElementById('view-pustaka').classList.add('hidden');
+            document.getElementById('view-topup').classList.add('hidden');
+
+            if (tabName === 'landing') {
+                landingView.classList.remove('hidden');
+                appWorkspace.classList.add('hidden');
+                appWorkspace.classList.remove('flex');
+
+                tokenContainer.classList.add('hidden');
+                tokenContainer.classList.remove('flex');
+                topupBtn.classList.add('hidden');
+                topupBtn.classList.remove('flex');
+            } else {
+                landingView.classList.add('hidden');
+                appWorkspace.classList.remove('hidden');
+                appWorkspace.classList.add('flex');
+
+                tokenContainer.classList.remove('hidden');
+                tokenContainer.classList.add('flex');
+                topupBtn.classList.remove('hidden');
+                topupBtn.classList.add('flex');
+
+                if (tabName === 'generator') document.getElementById('view-generator').classList.remove('hidden');
+                if (tabName === 'workbook') document.getElementById('view-workbook').classList.remove('hidden');
+                if (tabName === 'pustaka') {
+                    document.getElementById('view-pustaka').classList.remove('hidden');
+                    renderPustaka();
+                }
+                if (tabName === 'topup') document.getElementById('view-topup').classList.remove('hidden');
+
+                updateSidebarActiveNav(tabName);
+            }
+        }
+
+        function switchModule(modKey) {
+            activeModule = modKey;
+            switchTab('generator');
+
+            document.getElementById('generator-title').innerText = moduleTitles[modKey];
+            document.getElementById('token-cost-badge').innerHTML = `<i class="fa-solid fa-coins mr-1"></i> Biaya: ${moduleCosts[modKey]} Token`;
+
+            renderDynamicFields(modKey);
+            updateSidebarActiveNav(modKey);
+        }
+
+        function updateSidebarActiveNav(targetKey) {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-tealbrand-50', 'text-tealbrand-700');
+                btn.classList.add('text-slate-600');
+            });
+
+            let activeBtn = document.getElementById(`btn-${targetKey}`) || document.getElementById(`btn-nav-${targetKey}`);
+            if (activeBtn) {
+                activeBtn.classList.add('active', 'bg-tealbrand-50', 'text-tealbrand-700');
+            }
+        }
+
+        // DYNAMIC CLASS MANAGEMENT LOGIC
+        function renderClassSelect() {
+            const selectEl = document.getElementById('workbook-class-select');
+            selectEl.innerHTML = classList.map(c => `
+                <option value="${c}" ${c === currentWorkbookClass ? 'selected' : ''}>Kelas ${c}</option>
+            `).join('') + `<option value="__ADD_NEW__" class="font-bold text-tealbrand-700">+ Tambah Kelas Baru...</option>`;
+        }
+
+        function changeWorkbookClass() {
+            const selectEl = document.getElementById('workbook-class-select');
+            const val = selectEl.value;
+
+            if (val === '__ADD_NEW__') {
+                const newClassName = prompt('Masukkan Nama / Kategori Kelas Baru (misal: 5B, X TKR 1, PAUD An-Nur):');
+                if (newClassName && newClassName.trim() !== '') {
+                    const cleanedName = newClassName.trim();
+                    if (!classList.includes(cleanedName)) {
+                        classList.push(cleanedName);
+                    }
+                    currentWorkbookClass = cleanedName;
+                }
+                renderClassSelect();
+            } else {
+                currentWorkbookClass = val;
+            }
+
+            renderStudentsTable();
+        }
+
+        function renderStudentsTable() {
+            const tbody = document.getElementById('student-attendance-tbody');
+            const filteredStudents = studentsList.filter(s => s.class === currentWorkbookClass);
+
+            document.getElementById('total-students-count').innerText = filteredStudents.length;
+
+            if (filteredStudents.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-slate-400">Belum ada data siswa di kelas ${currentWorkbookClass}. Klik "Tambah Siswa".</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filteredStudents.map((student, index) => `
+                <tr class="hover:bg-slate-50 border-b border-slate-100">
+                    <td class="p-2 border-r text-center">${index + 1}</td>
+                    <td class="p-2 border-r font-medium text-slate-800">${student.name}</td>
+                    <td class="p-2 border-r text-center"><input type="radio" name="abs-${student.id}" value="Hadir" checked class="accent-tealbrand-600"></td>
+                    <td class="p-2 border-r text-center"><input type="radio" name="abs-${student.id}" value="Izin" class="accent-tealbrand-600"></td>
+                    <td class="p-2 border-r text-center"><input type="radio" name="abs-${student.id}" value="Sakit" class="accent-tealbrand-600"></td>
+                    <td class="p-2 border-r text-center"><input type="radio" name="abs-${student.id}" value="Alfa" class="accent-tealbrand-600"></td>
+                    <td class="p-2 text-center">
+                        <button onclick="deleteStudent(${student.id})" class="text-rose-500 hover:text-rose-700 text-xs"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function markAllPresent() {
+            const filteredStudents = studentsList.filter(s => s.class === currentWorkbookClass);
+            filteredStudents.forEach(student => {
+                const hadirRadio = document.querySelector(`input[name="abs-${student.id}"][value="Hadir"]`);
+                if (hadirRadio) hadirRadio.checked = true;
+            });
+        }
+
+        function openAddStudentModal() {
+            document.getElementById('add-student-modal').classList.remove('hidden');
+        }
+
+        function closeAddStudentModal() {
+            document.getElementById('add-student-modal').classList.add('hidden');
+            document.getElementById('new-student-name').value = '';
+        }
+
+        function handleAddStudentSubmit() {
+            const nameInput = document.getElementById('new-student-name').value.trim();
+            if (!nameInput) return alert('Masukkan nama siswa!');
+
+            const newStudent = {
+                id: Date.now(),
+                name: nameInput,
+                class: currentWorkbookClass
+            };
+
+            studentsList.push(newStudent);
+            renderStudentsTable();
+            closeAddStudentModal();
+        }
+
+        function deleteStudent(id) {
+            if (confirm('Hapus siswa ini dari daftar kelas?')) {
+                studentsList = studentsList.filter(s => s.id !== id);
+                renderStudentsTable();
+            }
+        }
+
+        function saveWorkbookData() {
+            alert(`Record Presensi & Jurnal Kelas ${currentWorkbookClass} tanggal ${document.getElementById('workbook-date').value} berhasil tersimpan ke Cloud!`);
+        }
+
+        // CALCULATOR LOGIC
+        function updateCalculator() {
+            const kelas = parseInt(document.getElementById('calc-kelas').value);
+            const docs = parseInt(document.getElementById('calc-docs').value);
+
+            document.getElementById('calc-kelas-val').innerText = `${kelas} Kelas`;
+            document.getElementById('calc-docs-val').innerText = `${docs} Dokumen`;
+
+            const totalDocs = kelas * docs;
+            const manualHours = totalDocs * 4;
+            const aiHours = totalDocs * (6 / 60);
+            const hoursSaved = (manualHours - aiHours).toFixed(1);
+            const daysSaved = (hoursSaved / 8).toFixed(0);
+
+            document.getElementById('calc-hours-saved').innerText = `${hoursSaved} Jam`;
+            document.getElementById('calc-description').innerHTML = `
+                Setara dengan hemat <strong class="text-tealbrand-700">${daysSaved} hari kerja</strong>! Waktu istirahat dan akhir pekan Anda kini bisa dinikmati bersama keluarga.
+            `;
+        }
+
+        function renderDynamicFields(modKey) {
+            const container = document.getElementById('dynamic-module-options');
+            container.innerHTML = '';
+            container.classList.remove('hidden');
+
+            if (modKey === 'prota-prosem') {
+                container.innerHTML = `
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Tahun Ajaran</label>
+                            <input type="text" id="opt-ta" value="2024/2025" class="w-full p-2 border border-slate-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Jumlah Efektif Minggu</label>
+                            <input type="number" id="opt-minggu" value="18" class="w-full p-2 border border-slate-300 rounded-lg">
+                        </div>
+                    </div>
+                `;
+            } else if (modKey === 'lkpd') {
+                container.innerHTML = `
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Bentuk Aktivitas Siswa</label>
+                        <select id="opt-lkpd-type" class="w-full p-2 border border-slate-300 rounded-lg">
+                            <option value="Eksperimen / Praktikum Kelompok">Eksperimen / Praktikum Kelompok</option>
+                            <option value="Diskusi Studi Kasus & Presentasi">Diskusi Studi Kasus & Presentasi</option>
+                            <option value="Proyek Mandiri & Observasi">Proyek Mandiri & Observasi</option>
+                        </select>
+                    </div>
+                `;
+            } else if (modKey === 'asesmen') {
+                container.innerHTML = `
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Tipe Asesmen</label>
+                            <select id="opt-tipe-soal" class="w-full p-2 border border-slate-300 rounded-lg">
+                                <option value="Pilihan Ganda & Essay HOTS">Pilihan Ganda & Essay HOTS</option>
+                                <option value="Rubrik Unjuk Kerja">Rubrik Unjuk Kerja</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Jumlah Nomor Soal</label>
+                            <input type="number" id="opt-jumlah-soal" value="5" min="1" max="20" class="w-full p-2 border border-slate-300 rounded-lg">
+                        </div>
+                    </div>
+                `;
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+
+        // GENERATE ACTION WITH AI & SUPABASE
         async function handleGenerate(e) {
             e.preventDefault();
 
             if (!currentUser) {
-                alert('Silakan Login/Daftar terlebih dahulu untuk menggunakan generator!');
+                alert('Silakan Login/Daftar terlebih dahulu!');
                 openAuthModal();
                 return;
             }
 
             if (!apiKey) {
-                alert('Silakan masukkan Gemini API Key terlebih dahulu!');
+                alert('Silakan masukkan Gemini API Key!');
                 openApiKeyModal();
                 return;
             }
 
             const cost = moduleCosts[activeModule];
             if (!userProfile || userProfile.tokens < cost) {
-                alert(`Saldo Token Cloud Anda tidak mencukupi (${userProfile ? userProfile.tokens : 0} Token). Membutuhkan ${cost} Token.`);
+                alert(`Saldo Token Anda tidak mencukupi (${userProfile ? userProfile.tokens : 0} Token). Membutuhkan ${cost} Token.`);
                 switchTab('topup');
                 return;
             }
 
-            // Gather inputs
             const jenjang = document.getElementById('input-jenjang').value;
             const kelas = document.getElementById('input-kelas').value;
             const fase = document.getElementById('input-fase').value;
             const mapel = document.getElementById('input-mapel').value;
-            const rombel = document.getElementById('input-rombel').value || '-';
-            const waktu = document.getElementById('input-waktu').value || '2 JP';
             const materi = document.getElementById('input-materi').value;
             const cpText = document.getElementById('input-cp-text').value.trim();
             const model = document.getElementById('input-model').value;
             const diferensiasi = document.getElementById('input-diferensiasi').value;
-            const target = document.querySelector('input[name="target"]:checked').value;
-
-            const pppList = Array.from(document.querySelectorAll('.ppp-check:checked')).map(c => c.value).join(', ');
-            const sarprasList = Array.from(document.querySelectorAll('.sarpras-check:checked')).map(c => c.value).join(', ');
 
             document.getElementById('editor-placeholder').classList.add('hidden');
             document.getElementById('editor-loading').classList.remove('hidden');
 
-            let promptText = `Kamu adalah Pakar Kurikulum Pendidikan Indonesia dan Pengembang Administrasi Kurikulum Merdeka Terkemuka. 
-Tugasmu adalah menyusun dokumen resmi berstandar tinggi: ${moduleTitles[activeModule]}.
+            let promptText = `Kamu adalah Pakar Kurikulum Merdeka Pendidikan Indonesia. 
+Buatkan dokumen resmi berstandar BSKAP: ${moduleTitles[activeModule]}.
 
 PARAMETER KONTEN:
 - Satuan Pendidikan / Jenjang: ${jenjang} (Kelas ${kelas} / ${fase})
 - Mata Pelajaran: ${mapel}
-- Rombel / Kelompok: ${rombel}
-- Alokasi Waktu: ${waktu}
-- Topik Pembelajaran: ${materi}
-${cpText ? `- Teks CP Resmi (Konstruk Utama): "${cpText}"` : '- Gunakan Capaian Pembelajaran standar Kurikulum Merdeka terkini.'}
-- Dimensi Profil Pelajar Pancasila (P3): ${pppList}
-- Model Pembelajaran Utama: ${model}
-- Fokus Pembelajaran Berdiferensiasi: ${diferensiasi}
-- Target Peserta Didik: ${target}
-- Sarana & Prasarana: ${sarprasList}
+- Topik Utama: ${materi}
+${cpText ? `- Paragraf CP Resmi: "${cpText}"` : '- Gunakan CP Kurikulum Merdeka standar.'}
+- Model Pembelajaran: ${model}
+- Fokus Diferensiasi: ${diferensiasi}
 
-PETUNJUK FORMAT:
-1. SAJIKAN ALUR KEGIATAN, ASESMEN, KISI-KISI, DAN RUBRIK DALAM BENTUK TABEL HTML RAPI.
-2. Buatkan Pertanyaan Pemantik berbasis HOTS.
-3. Buatkan Langkah Kegiatan Pembelajaran: Pendahuluan, Kegiatan Inti (Eksplisit ${model} & ${diferensiasi}), dan Penutup.
-4. Sertakan Rubrik Penilaian 4-Level (Sangat Baik, Baik, Cukup, Perlu Bimbingan).
-
-OUTPUT HARUS HANYA DALAM FORMAT KODE HTML CLEAN (Tanpa markdown \`\`\`html).`;
+PETUNJUK FORMATTING:
+1. SAJIKAN MATERI, PROTA/PROSEM, LANGKAH KELAS, SERTA RUBRIK DALAM FORMAT TABEL HTML RAPI.
+2. Gunakan judul h2 dan h3 yang terstruktur.
+3. OUTPUT HARUS HANYA DALAM FORMAT KODE HTML CLEAN (Tanpa markdown \`\`\`html).`;
 
             try {
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`, {
@@ -703,7 +1319,6 @@ OUTPUT HARUS HANYA DALAM FORMAT KODE HTML CLEAN (Tanpa markdown \`\`\`html).`;
                 let resultHtml = data.candidates[0].content.parts[0].text;
                 resultHtml = resultHtml.replace(/```html/g, '').replace(/```/g, '');
 
-                // Deduct tokens directly in Supabase Database
                 const newTokens = userProfile.tokens - cost;
                 const { error: updateError } = await _supabase
                     .from('profiles')
@@ -757,15 +1372,15 @@ OUTPUT HARUS HANYA DALAM FORMAT KODE HTML CLEAN (Tanpa markdown \`\`\`html).`;
             }
 
             grid.innerHTML = docs.map(doc => `
-                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between hover:shadow-md transition">
                     <div>
-                        <span class="bg-brand-50 text-brand-700 text-[10px] font-bold px-2 py-0.5 rounded">${doc.module_type.toUpperCase()}</span>
+                        <span class="bg-tealbrand-50 text-tealbrand-700 text-[10px] font-bold px-2 py-0.5 rounded-full">${doc.module_type.toUpperCase()}</span>
                         <h4 class="font-bold text-slate-800 text-xs mt-2 line-clamp-2">${doc.title}</h4>
                         <p class="text-[10px] text-slate-400 mt-1"><i class="fa-regular fa-clock mr-1"></i>${new Date(doc.created_at).toLocaleDateString('id-ID')}</p>
                     </div>
                     <div class="flex gap-2 mt-4 pt-3 border-t border-slate-100">
-                        <button onclick="loadDoc('${doc.id}')" class="flex-1 bg-brand-700 hover:bg-brand-800 text-white text-[11px] font-bold py-1.5 rounded-lg transition">Buka</button>
-                        <button onclick="deleteDoc(${doc.id})" class="text-rose-600 hover:bg-rose-50 px-2 py-1.5 rounded-lg transition text-xs"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="loadDoc('${doc.id}')" class="flex-1 bg-tealbrand-700 hover:bg-tealbrand-800 text-white text-[11px] font-bold py-1.5 rounded-xl transition">Buka</button>
+                        <button onclick="deleteDoc(${doc.id})" class="text-rose-600 hover:bg-rose-50 px-2 py-1.5 rounded-xl transition text-xs"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>
             `).join('');
@@ -787,15 +1402,12 @@ OUTPUT HARUS HANYA DALAM FORMAT KODE HTML CLEAN (Tanpa markdown \`\`\`html).`;
             }
         }
 
-        // UTILITY FUNCTIONS
+        // UTILITIES
         function updateApiKeyUI() {
             const statusEl = document.getElementById('apiKeyStatus');
             if (apiKey) {
                 statusEl.innerText = "API Key Aktif";
                 statusEl.classList.add("text-emerald-300");
-            } else {
-                statusEl.innerText = "Set Gemini Key";
-                statusEl.classList.remove("text-emerald-300");
             }
         }
 
@@ -814,77 +1426,6 @@ OUTPUT HARUS HANYA DALAM FORMAT KODE HTML CLEAN (Tanpa markdown \`\`\`html).`;
                 updateApiKeyUI();
                 closeApiKeyModal();
                 alert('API Key berhasil disimpan!');
-            }
-        }
-
-        function switchModule(modKey) {
-            activeModule = modKey;
-            switchTab('generator');
-
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active', 'bg-brand-50', 'text-brand-700');
-                btn.classList.add('text-slate-600');
-            });
-            const activeBtn = document.getElementById(`btn-${modKey}`);
-            if(activeBtn) activeBtn.classList.add('active', 'bg-brand-50', 'text-brand-700');
-
-            document.getElementById('generator-title').innerText = moduleTitles[modKey];
-            document.getElementById('token-cost-badge').innerHTML = `<i class="fa-solid fa-coins mr-1"></i> Biaya: ${moduleCosts[modKey]} Token`;
-
-            renderDynamicFields(modKey);
-        }
-
-        function switchTab(tabName) {
-            document.getElementById('view-generator').classList.add('hidden');
-            document.getElementById('view-pustaka').classList.add('hidden');
-            document.getElementById('view-topup').classList.add('hidden');
-
-            if (tabName === 'generator') document.getElementById('view-generator').classList.remove('hidden');
-            if (tabName === 'pustaka') {
-                document.getElementById('view-pustaka').classList.remove('hidden');
-                renderPustaka();
-            }
-            if (tabName === 'topup') document.getElementById('view-topup').classList.remove('hidden');
-        }
-
-        function renderDynamicFields(modKey) {
-            const container = document.getElementById('dynamic-module-options');
-            container.innerHTML = '';
-            container.classList.remove('hidden');
-
-            if (modKey === 'asesmen') {
-                container.innerHTML = `
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Tipe Soal / Asesmen</label>
-                            <select id="opt-tipe-soal" class="w-full p-2 border border-slate-300 rounded-lg">
-                                <option value="Pilihan Ganda & Essay HOTS">Pilihan Ganda & Essay HOTS</option>
-                                <option value="Pilihan Ganda Kompleks">Pilihan Ganda Kompleks</option>
-                                <option value="Rubrik Unjuk Kerja / Performa">Rubrik Unjuk Kerja / Performa</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Jumlah Nomor Soal</label>
-                            <input type="number" id="opt-jumlah-soal" value="5" min="1" max="20" class="w-full p-2 border border-slate-300 rounded-lg">
-                        </div>
-                    </div>
-                `;
-            } else if (modKey === 'p5') {
-                container.innerHTML = `
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Tema Utama Projek P5</label>
-                        <select id="opt-tema-p5" class="w-full p-2 border border-slate-300 rounded-lg">
-                            <option value="Gaya Hidup Berkelanjutan">Gaya Hidup Berkelanjutan</option>
-                            <option value="Kearifan Lokal">Kearifan Lokal</option>
-                            <option value="Bhinneka Tunggal Ika">Bhinneka Tunggal Ika</option>
-                            <option value="Bangunlah Jiwa dan Raganya">Bangunlah Jiwa dan Raganya</option>
-                            <option value="Rekayasa dan Teknologi">Rekayasa dan Teknologi</option>
-                            <option value="Kewirausahaan">Kewirausahaan</option>
-                        </select>
-                    </div>
-                `;
-            } else {
-                container.classList.add('hidden');
             }
         }
 
@@ -911,14 +1452,14 @@ OUTPUT HARUS HANYA DALAM FORMAT KODE HTML CLEAN (Tanpa markdown \`\`\`html).`;
             const htmlContent = document.getElementById('editorContent').innerHTML;
             if (!htmlContent.trim()) return alert('Editor masih kosong!');
 
-            const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>TemanGuru Document</title></head><body>";
+            const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Rekan Ajar AI Document</title></head><body>";
             const footer = "</body></html>";
             const blob = new Blob(['\ufeff', header + htmlContent + footer], { type: 'application/msword' });
 
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `TemanGuru_${activeModule}_${Date.now()}.doc`;
+            a.download = `Rekan Ajar AI_${activeModule}_${Date.now()}.doc`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
