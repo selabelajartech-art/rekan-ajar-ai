@@ -114,21 +114,39 @@
             margin-bottom: 0.25rem;
         }
 
-        /* Memastikan editor dan isinya tetap di dalam batas yang aman */
+        /* LAYOUT GUARD: hasil AI tidak boleh memaksa ukuran workspace */
+        #view-generator,
+        #panel-generator-form,
+        #panel-generator-editor,
+        #printableArea,
         #editorContent {
+            min-width: 0;
             max-width: 100%;
-            overflow-x: auto;
-            /* Memunculkan scrollbar horizontal jika tabel terlalu lebar, agar tidak merusak layout */
-            word-break: break-word;
         }
 
-        /* Memastikan tabel dari AI responsif dan tidak memaksa layar mengecil */
+        /* Editor tetap menjadi area scroll, bukan sumber pelebaran halaman */
+        #editorContent {
+            width: 100%;
+            overflow-x: auto;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            box-sizing: border-box;
+        }
+
+        /* Tabel hasil AI responsif dan tidak boleh memperlebar flex layout */
         #editorContent table {
             width: 100% !important;
             max-width: 100% !important;
             table-layout: fixed;
-            /* Mencegah kolom tabel melebar secara paksa */
             word-wrap: break-word;
+            overflow-wrap: anywhere;
+        }
+
+        #editorContent img,
+        #editorContent iframe,
+        #editorContent video {
+            max-width: 100% !important;
+            height: auto;
         }
 
         #editorContent th,
@@ -1628,7 +1646,103 @@
             }
         }
 
+        // =====================================================================
+        // DOCUMENT HTML SANITIZER
+        // Hasil AI hanya boleh menjadi FRAGMENT DOKUMEN.
+        // CSS/JS/global markup dari AI tidak boleh masuk ke aplikasi utama.
+        // =====================================================================
+        function sanitizeDocumentHTML(rawHtml) {
+            if (!rawHtml) return '';
+
+            const cleanedRaw = String(rawHtml)
+                .replace(/```html/gi, '')
+                .replace(/```/g, '')
+                .trim();
+
+            // Jika model tetap mengirim wrapper HTML, ambil hanya isi <body>
+            // agar seluruh dokumen tidak ikut terhapus oleh sanitizer.
+            let sourceHtml = cleanedRaw;
+            if (/<\/?html\b|<body\b/i.test(cleanedRaw)) {
+                const parsed = new DOMParser().parseFromString(cleanedRaw, 'text/html');
+                sourceHtml = parsed.body ? parsed.body.innerHTML : cleanedRaw;
+            }
+
+            const template = document.createElement('template');
+            template.innerHTML = sourceHtml;
+
+            const forbiddenTags = new Set([
+                'SCRIPT', 'STYLE', 'LINK', 'META', 'BASE', 'TITLE',
+                'HTML', 'HEAD', 'BODY', 'IFRAME', 'OBJECT', 'EMBED',
+                'FORM', 'INPUT', 'BUTTON', 'TEXTAREA', 'SELECT', 'OPTION'
+            ]);
+
+            const allowedTags = new Set([
+                'DIV', 'SPAN', 'P', 'BR', 'HR',
+                'H1', 'H2', 'H3', 'H4', 'H5', 'H6',
+                'STRONG', 'B', 'EM', 'I', 'U', 'S', 'MARK',
+                'UL', 'OL', 'LI',
+                'TABLE', 'THEAD', 'TBODY', 'TFOOT', 'TR', 'TH', 'TD', 'CAPTION',
+                'BLOCKQUOTE', 'PRE', 'CODE', 'SUP', 'SUB',
+                'A'
+            ]);
+
+            const allowedAttributes = new Set([
+                'colspan', 'rowspan', 'scope', 'align', 'valign',
+                'href', 'target', 'rel', 'title'
+            ]);
+
+            const nodes = Array.from(template.content.querySelectorAll('*'));
+            nodes.forEach(node => {
+                const tag = node.tagName.toUpperCase();
+
+                if (forbiddenTags.has(tag)) {
+                    node.remove();
+                    return;
+                }
+
+                // Tag tak dikenal diubah menjadi DIV agar teks/konten tidak hilang.
+                if (!allowedTags.has(tag)) {
+                    const replacement = document.createElement('div');
+                    while (node.firstChild) replacement.appendChild(node.firstChild);
+                    for (const attr of Array.from(node.attributes)) {
+                        if (allowedAttributes.has(attr.name.toLowerCase())) {
+                            replacement.setAttribute(attr.name, attr.value);
+                        }
+                    }
+                    node.replaceWith(replacement);
+                    return;
+                }
+
+                // Jangan izinkan CSS inline, event handler, class/id, atau atribut
+                // yang berpotensi mengubah layout aplikasi induk.
+                for (const attr of Array.from(node.attributes)) {
+                    const name = attr.name.toLowerCase();
+                    const value = attr.value || '';
+
+                    if (name === 'style' || name === 'id' || name === 'class' ||
+                        name.startsWith('on') || !allowedAttributes.has(name)) {
+                        node.removeAttribute(attr.name);
+                        continue;
+                    }
+
+                    if (name === 'href' && !/^(https?:|mailto:|#)/i.test(value)) {
+                        node.removeAttribute(attr.name);
+                    }
+                }
+
+                // Tautan tetap boleh, tetapi tidak boleh menjalankan JS.
+                if (tag === 'A' && node.hasAttribute('href')) {
+                    node.setAttribute('rel', 'noopener noreferrer');
+                    node.setAttribute('target', '_blank');
+                }
+            });
+
+            return template.innerHTML.trim();
+        }
+
+        // =====================================================================
         // GENERATE ACTION WITH SERVERLESS API ROUTE (/api/generate) & SUPABASE
+        // =====================================================================
         async function handleGenerate(e) {
             e.preventDefault();
 
@@ -1675,7 +1789,10 @@ ${cpText ? `- Paragraf CP Resmi: "${cpText}"` : '- Gunakan CP Kurikulum Merdeka 
 PETUNJUK FORMATTING:
 1. SAJIKAN MATERI, PROTA/PROSEM, LANGKAH KELAS, SERTA RUBRIK DALAM FORMAT TABEL HTML RAPI.
 2. Gunakan judul h2 dan h3 yang terstruktur.
-3. OUTPUT HARUS HANYA DALAM FORMAT KODE HTML CLEAN (Tanpa markdown \`\`\`html).`;
+3. OUTPUT HARUS HANYA FRAGMENT HTML ISI DOKUMEN, tanpa markdown dan tanpa wrapper HTML.
+4. DILARANG menghasilkan tag <html>, <head>, <body>, <style>, <script>, <link>, <meta>, <base>, <iframe>, <form>, <input>, atau <button>.
+5. DILARANG menggunakan atribut style, class, id, onclick, onload, atau event handler HTML apa pun.
+6. Jangan membuat atau mengubah CSS aplikasi. Gunakan hanya struktur HTML semantik seperti h1-h6, p, ul, ol, li, table, thead, tbody, tr, th, td, strong, em, div, dan br.`;
 
             try {
                 // MENGGUNAKAN SERVERLESS FUNCTION ROUTE /api/generate
@@ -1689,7 +1806,10 @@ PETUNJUK FORMATTING:
                 if (data.error) throw new Error(typeof data.error === 'string' ? data.error : (data.error.message || 'Gagal memproses API AI'));
 
                 let resultHtml = data.candidates[0].content.parts[0].text;
-                resultHtml = resultHtml.replace(/```html/g, '').replace(/```/g, '');
+                resultHtml = sanitizeDocumentHTML(resultHtml);
+                if (!resultHtml.trim()) {
+                    throw new Error('AI menghasilkan dokumen kosong setelah proses keamanan HTML. Silakan Generate ulang.');
+                }
 
                 const newTokens = userProfile.tokens - cost;
                 const { error: updateError } = await _supabase
@@ -1714,8 +1834,9 @@ PETUNJUK FORMATTING:
         // SUPABASE DATABASE DOCUMENT SAVING
         async function saveToPustaka() {
             if (!currentUser) return alert('Silakan login terlebih dahulu untuk menyimpan ke Cloud!');
-            const content = document.getElementById('editorContent').innerHTML;
+            const content = sanitizeDocumentHTML(document.getElementById('editorContent').innerHTML);
             if (!content.trim()) return alert('Tidak ada dokumen untuk disimpan.');
+            document.getElementById('editorContent').innerHTML = content;
 
             const docTitle = `${moduleTitles[activeModule]} - ${document.getElementById('input-mapel').value || 'Dokumen'}`;
 
@@ -1763,7 +1884,7 @@ PETUNJUK FORMATTING:
             if (doc) {
                 switchTab('generator');
                 document.getElementById('editor-placeholder').classList.add('hidden');
-                document.getElementById('editorContent').innerHTML = doc.content;
+                document.getElementById('editorContent').innerHTML = sanitizeDocumentHTML(doc.content);
                 if (window.innerWidth < 1024) switchMobileWorkspaceTab('editor');
             }
         }
@@ -1797,7 +1918,7 @@ PETUNJUK FORMATTING:
 
         // PERBAIKAN EKSPOR WORD (MS Word Print Layout XML Template)
         function exportToWord() {
-            const htmlContent = document.getElementById('editorContent').innerHTML;
+            const htmlContent = sanitizeDocumentHTML(document.getElementById('editorContent').innerHTML);
             if (!htmlContent.trim()) return alert('Editor masih kosong!');
 
             const mapel = document.getElementById('input-mapel').value || 'Dokumen';
@@ -1898,14 +2019,38 @@ PETUNJUK FORMATTING:
 
         // PERBAIKAN EKSPOR PDF (Menggunakan html2pdf.js dengan fallback window.print)
         function exportToPDF() {
-            const htmlContent = document.getElementById('editorContent').innerHTML;
+            const htmlContent = sanitizeDocumentHTML(document.getElementById('editorContent').innerHTML);
             if (!htmlContent.trim()) return alert('Editor masih kosong!');
 
             const mapel = document.getElementById('input-mapel').value || 'Dokumen';
             const filename = `RekanAjar_${activeModule}_${mapel.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
 
             if (typeof html2pdf !== 'undefined') {
-                const element = document.getElementById('editorContent');
+                const element = document.createElement('div');
+                element.innerHTML = htmlContent;
+                element.style.width = '170mm';
+                element.style.maxWidth = '170mm';
+                element.style.boxSizing = 'border-box';
+                element.style.background = '#ffffff';
+                element.style.padding = '0';
+                element.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
+                element.style.fontSize = '11pt';
+                element.style.lineHeight = '1.5';
+                element.style.color = '#1e293b';
+
+                // html2pdf bekerja pada node sementara agar proses export tidak
+                // mengubah ukuran/layout editor utama.
+                const exportHost = document.createElement('div');
+                exportHost.style.position = 'fixed';
+                exportHost.style.left = '-100000px';
+                exportHost.style.top = '0';
+                exportHost.style.width = '170mm';
+                exportHost.style.maxWidth = '170mm';
+                exportHost.style.background = '#ffffff';
+                exportHost.style.zIndex = '-1';
+                exportHost.appendChild(element);
+                document.body.appendChild(exportHost);
+
                 const opt = {
                     margin: [15, 15, 15, 15],
                     filename: filename,
@@ -1914,7 +2059,13 @@ PETUNJUK FORMATTING:
                     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
                     pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
                 };
-                html2pdf().set(opt).from(element).save();
+                html2pdf().set(opt).from(element).save().then(() => {
+                    exportHost.remove();
+                }).catch(err => {
+                    exportHost.remove();
+                    console.error('PDF export error:', err);
+                    alert('Gagal membuat PDF: ' + (err.message || err));
+                });
             } else {
                 window.print();
             }
