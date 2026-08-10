@@ -5,6 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rekan Ajar AI - Platform Generator Kurikulum Merdeka & Workbook Guru AI Pro</title>
+    
+    <!-- Favicon / Ikon Tab Browser -->
+    <link rel="icon" type="image/png" href="logo.png">
+
+    <!-- OPEN GRAPH META TAGS (Preview Link WhatsApp, Facebook, Telegram) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Rekan Ajar AI Pro - Asisten Administrasi & Workspace Guru Merdeka">
+    <meta property="og:description" content="Susun Modul Ajar, TP/ATP, Prota, Prosem, LKPD, hingga Asesmen sesuai standar BSKAP resmi secara instan. Dilengkapi Workbook Digital Guru.">
+    <meta property="og:image" content="logo.png">
+    <meta property="og:url" content="https://rekan-ajar-ai.vercel.app">
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icon CDN -->
@@ -114,7 +125,7 @@
             margin-bottom: 0.25rem;
         }
 
-        /* LAYOUT GUARD: hasil AI tidak boleh memaksa ukuran workspace */
+        /* LAYOUT GUARD */
         #view-generator,
         #panel-generator-form,
         #panel-generator-editor,
@@ -124,7 +135,6 @@
             max-width: 100%;
         }
 
-        /* Editor tetap menjadi area scroll, bukan sumber pelebaran halaman */
         #editorContent {
             width: 100%;
             overflow-x: auto;
@@ -133,7 +143,6 @@
             box-sizing: border-box;
         }
 
-        /* Tabel hasil AI responsif dan tidak boleh memperlebar flex layout */
         #editorContent table {
             width: 100% !important;
             max-width: 100% !important;
@@ -155,9 +164,8 @@
             overflow-wrap: break-word;
         }
 
-        /* PERBAIKAN CSS PRINT (Agar PDF Tidak Terpotong) */
+        /* PERBAIKAN CSS PRINT */
         @media print {
-
             html,
             body {
                 height: auto !important;
@@ -218,9 +226,7 @@
             }
         }
 
-        /* ================================================================
-           APP SHELL ISOLATION
-        ================================================================= */
+        /* APP SHELL ISOLATION */
         html, body {
             width: 100%;
             min-width: 0;
@@ -319,13 +325,15 @@
             transform: none !important;
             zoom: 1 !important;
         }
-
     </style>
 </head>
 
 <body class="bg-slate-50 text-slate-800 font-sans antialiased h-screen flex flex-col overflow-hidden">
 
-    <!-- APP SHELL: isolated from landing/content max-width rules -->
+    <!-- TOAST NOTIFICATION CONTAINER (MODERN NOTIFICATION UI) -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- APP SHELL -->
     <div id="app-shell" aria-label="Rekan Ajar AI application shell">
 
     <!-- HEADER / NAVIGATION TOP BAR -->
@@ -452,7 +460,6 @@
 
                     <div
                         class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center border-t border-slate-100 pt-6">
-                        <!-- Sliders Controls -->
                         <div class="space-y-5">
                             <div>
                                 <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
@@ -475,7 +482,6 @@
                             </div>
                         </div>
 
-                        <!-- Results Card -->
                         <div
                             class="bg-gradient-to-br from-tealbrand-50 to-emerald-50 p-5 md:p-6 rounded-2xl border border-tealbrand-100 text-center">
                             <div class="text-xs text-slate-500 font-semibold">Estimasi Waktu Dihemat:</div>
@@ -702,12 +708,11 @@
         <!-- ================================================================= -->
         <div id="app-workspace" class="hidden flex-1 flex overflow-hidden w-full relative">
 
-            <!-- GLOBAL SIDEBAR MODULE NAVIGATION (DRAWER IN MOBILE, FIXED IN DESKTOP) -->
+            <!-- GLOBAL SIDEBAR MODULE NAVIGATION -->
             <aside id="global-sidebar"
                 class="fixed lg:static inset-y-0 left-0 w-64 bg-white border-r border-slate-200 flex flex-col justify-between z-40 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out flex-shrink-0 shadow-lg lg:shadow-none">
                 <div class="p-4 space-y-5 overflow-y-auto custom-scrollbar">
 
-                    <!-- Mobile Close Sidebar Header -->
                     <div class="flex items-center justify-between lg:hidden border-b pb-3 border-slate-100">
                         <span class="font-bold text-xs text-slate-700">Menu Navigasi</span>
                         <button onclick="toggleMobileSidebar()"
@@ -803,10 +808,9 @@
             <!-- WORKSPACE MAIN CONTENT AREA -->
             <main class="flex-1 bg-slate-100 overflow-hidden flex flex-col relative w-full">
 
-                <!-- SUB-VIEW A: GENERATOR FORM & EDITOR (RESPONSIVE SINGLE/TWO COLUMN) -->
+                <!-- SUB-VIEW A: GENERATOR FORM & EDITOR -->
                 <div id="view-generator" class="flex-1 flex flex-col lg:flex-row overflow-hidden">
 
-                    <!-- MOBILE TAB TOGGLE BUTTONS (Visible only on mobile) -->
                     <div class="lg:hidden bg-white border-b border-slate-200 p-2 flex text-xs font-bold">
                         <button onclick="switchMobileWorkspaceTab('form')" id="btn-tab-mobile-form"
                             class="flex-1 py-2 text-center rounded-lg bg-tealbrand-50 text-tealbrand-700">
@@ -1332,6 +1336,41 @@
             'p5': 'Generator Modul Projek P5'
         };
 
+        // FUNGSI TOAST NOTIFIKASI MODERN (Pengganti alert bawaan browser)
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            let bgBg = 'bg-slate-800 text-white';
+            let icon = '<i class="fa-solid fa-circle-info text-tealbrand-400 mr-2"></i>';
+
+            if (type === 'success') {
+                bgBg = 'bg-emerald-800 text-white';
+                icon = '<i class="fa-solid fa-circle-check text-emerald-300 mr-2"></i>';
+            } else if (type === 'error') {
+                bgBg = 'bg-rose-800 text-white';
+                icon = '<i class="fa-solid fa-triangle-exclamation text-rose-300 mr-2"></i>';
+            } else if (type === 'warning') {
+                bgBg = 'bg-amber-800 text-white';
+                icon = '<i class="fa-solid fa-coins text-amber-300 mr-2"></i>';
+            }
+
+            toast.className = `${bgBg} px-4 py-3 rounded-xl shadow-xl text-xs font-semibold flex items-center transition-all duration-300 transform translate-y-2 opacity-0 pointer-events-auto border border-white/10`;
+            toast.innerHTML = `${icon}<span>${message}</span>`;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 50);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
         document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById('workbook-date').valueAsDate = new Date();
             updateFaseMapping();
@@ -1346,7 +1385,7 @@
 
         window.addEventListener('resize', lockAppShell);
 
-        // AUTO-FILL SAMPLE DATA (1-KLIK CONTOH DATA)
+        // AUTO-FILL SAMPLE DATA
         function autoFillSampleData() {
             document.getElementById('input-jenjang').value = 'SD';
             document.getElementById('input-kelas').value = '5';
@@ -1360,12 +1399,10 @@
             document.getElementById('input-model').value = 'Problem-Based Learning (PBL)';
             document.getElementById('input-diferensiasi').value = 'Diferensiasi Proses & Hasil/Produk';
 
-            // Checkbox P3
             document.querySelectorAll('.ppp-check').forEach(cb => {
                 cb.checked = (cb.value === 'Bernalar Kritis' || cb.value === 'Mandiri' || cb.value === 'Gotong Royong' || cb.value === 'Kreatif');
             });
 
-            // Isi field dinamis jika ada
             if (document.getElementById('opt-sarpras')) {
                 document.getElementById('opt-sarpras').value = 'LCD Proyektor, Cermin, Senter, Lensa, LKPD Cetak';
             }
@@ -1378,6 +1415,8 @@
             if (document.getElementById('opt-p5-produk')) {
                 document.getElementById('opt-p5-produk').value = 'Alat Peraga Sederhana Daur Ulang Pemanfaatan Cahaya';
             }
+
+            showToast('Contoh data sampel berhasil terisi!', 'success');
         }
 
         // SHOW/HIDE PASSWORD TOGGLE
@@ -1538,13 +1577,14 @@
                     email, password,
                     options: { data: { full_name: fullName } }
                 });
-                if (error) return alert('Gagal Mendaftar: ' + error.message);
-                alert('Pendaftaran berhasil!');
+                if (error) return showToast('Gagal Mendaftar: ' + error.message, 'error');
+                showToast('Pendaftaran berhasil! Silakan login.', 'success');
                 closeAuthModal();
                 await checkUserSession();
             } else {
                 const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
-                if (error) return alert('Gagal Login: ' + error.message);
+                if (error) return showToast('Gagal Login: ' + error.message, 'error');
+                showToast('Selamat datang kembali!', 'success');
                 closeAuthModal();
                 await checkUserSession();
             }
@@ -1552,7 +1592,7 @@
 
         async function handleLogout() {
             await _supabase.auth.signOut();
-            alert('Anda telah keluar.');
+            showToast('Anda telah keluar dari akun.', 'info');
         }
 
         function lockAppShell() {
@@ -1703,6 +1743,7 @@
                 const hadirRadio = document.querySelector(`input[name="abs-${student.id}"][value="Hadir"]`);
                 if (hadirRadio) hadirRadio.checked = true;
             });
+            showToast('Semua siswa ditandai Hadir!', 'success');
         }
 
         function openAddStudentModal() {
@@ -1716,7 +1757,7 @@
 
         function handleAddStudentSubmit() {
             const nameInput = document.getElementById('new-student-name').value.trim();
-            if (!nameInput) return alert('Masukkan nama siswa!');
+            if (!nameInput) return showToast('Masukkan nama siswa!', 'warning');
 
             const newStudent = {
                 id: Date.now(),
@@ -1727,17 +1768,19 @@
             studentsList.push(newStudent);
             renderStudentsTable();
             closeAddStudentModal();
+            showToast('Siswa baru berhasil ditambahkan!', 'success');
         }
 
         function deleteStudent(id) {
             if (confirm('Hapus siswa ini dari daftar kelas?')) {
                 studentsList = studentsList.filter(s => s.id !== id);
                 renderStudentsTable();
+                showToast('Siswa berhasil dihapus dari daftar.', 'info');
             }
         }
 
         function saveWorkbookData() {
-            alert(`Record Presensi & Jurnal Kelas ${currentWorkbookClass} tanggal ${document.getElementById('workbook-date').value} berhasil tersimpan ke Cloud!`);
+            showToast(`Data Presensi & Jurnal Kelas ${currentWorkbookClass} berhasil tersimpan ke Cloud!`, 'success');
         }
 
         // CALCULATOR LOGIC
@@ -1760,7 +1803,7 @@
             `;
         }
 
-        // RENDER DYNAMIC FORM FIELDS UNTUK TIAP MODUL (BOX-BOX INPUT BARU)
+        // RENDER DYNAMIC FORM FIELDS UNTUK TIAP MODUL
         function renderDynamicFields(modKey) {
             const container = document.getElementById('dynamic-module-options');
             container.innerHTML = '';
@@ -1972,14 +2015,14 @@
             e.preventDefault();
 
             if (!currentUser) {
-                alert('Silakan Login/Daftar terlebih dahulu!');
+                showToast('Silakan Login/Daftar terlebih dahulu!', 'warning');
                 openAuthModal();
                 return;
             }
 
             const cost = moduleCosts[activeModule];
             if (!userProfile || userProfile.tokens < cost) {
-                alert(`Saldo Token Anda tidak mencukupi (${userProfile ? userProfile.tokens : 0} Token). Membutuhkan ${cost} Token.`);
+                showToast(`Saldo Token Anda tidak mencukupi (${userProfile ? userProfile.tokens : 0} Token). Membutuhkan ${cost} Token.`, 'warning');
                 switchTab('topup');
                 return;
             }
@@ -1995,10 +2038,8 @@
             const model = document.getElementById('input-model').value;
             const diferensiasi = document.getElementById('input-diferensiasi').value;
 
-            // Kumpulkan Profil Pelajar Pancasila yang dicentang
             const selectedP3 = Array.from(document.querySelectorAll('.ppp-check:checked')).map(cb => cb.value).join(', ');
 
-            // Nilai dari box-box input dinamis baru
             const targetSiswa = document.getElementById('opt-target-siswa')?.value || 'Peserta Didik Reguler';
             const sarpras = document.getElementById('opt-sarpras')?.value || 'LCD Proyektor, Laptop, LKPD Cetak';
             const lkpdGroup = document.getElementById('opt-lkpd-group')?.value || 'Kelompok Kecil (4-5 Siswa)';
@@ -2013,7 +2054,6 @@
                 switchMobileWorkspaceTab('editor');
             }
 
-            // INSTRUKSI SPESIFIK STRUKTUR BSKAP BERDASARKAN MODUL YANG DIPILIH
             let modulePromptSpec = '';
 
             if (activeModule === 'modul-ajar') {
@@ -2174,9 +2214,10 @@ PETUNJUK FORMATTING WAJIB:
 
                 document.getElementById('editorContent').innerHTML = resultHtml;
                 lockAppShell();
+                showToast('Dokumen berhasil di-generate!', 'success');
 
             } catch (err) {
-                alert('Terjadi Kesalahan: ' + err.message);
+                showToast('Terjadi Kesalahan: ' + err.message, 'error');
             } finally {
                 document.getElementById('editor-loading').classList.add('hidden');
             }
@@ -2184,9 +2225,9 @@ PETUNJUK FORMATTING WAJIB:
 
         // SUPABASE DATABASE DOCUMENT SAVING
         async function saveToPustaka() {
-            if (!currentUser) return alert('Silakan login terlebih dahulu untuk menyimpan ke Cloud!');
+            if (!currentUser) return showToast('Silakan login terlebih dahulu untuk menyimpan ke Cloud!', 'warning');
             const content = sanitizeDocumentHTML(document.getElementById('editorContent').innerHTML);
-            if (!content.trim()) return alert('Tidak ada dokumen untuk disimpan.');
+            if (!content.trim()) return showToast('Tidak ada dokumen untuk disimpan.', 'warning');
             document.getElementById('editorContent').innerHTML = content;
 
             const docTitle = `${moduleTitles[activeModule]} - ${document.getElementById('input-mapel').value || 'Dokumen'}`;
@@ -2195,8 +2236,8 @@ PETUNJUK FORMATTING WAJIB:
                 .from('documents')
                 .insert([{ user_id: currentUser.id, title: docTitle, module_type: activeModule, content }]);
 
-            if (error) return alert('Gagal menyimpan ke Cloud: ' + error.message);
-            alert('Dokumen berhasil disimpan ke Pustaka Cloud!');
+            if (error) return showToast('Gagal menyimpan ke Cloud: ' + error.message, 'error');
+            showToast('Dokumen berhasil disimpan ke Pustaka Cloud!', 'success');
             renderPustaka();
         }
 
@@ -2237,6 +2278,7 @@ PETUNJUK FORMATTING WAJIB:
                 document.getElementById('editor-placeholder').classList.add('hidden');
                 document.getElementById('editorContent').innerHTML = sanitizeDocumentHTML(doc.content);
                 lockAppShell();
+                showToast('Dokumen berhasil dimuat!', 'info');
                 if (window.innerWidth < 1024) switchMobileWorkspaceTab('editor');
             }
         }
@@ -2245,6 +2287,7 @@ PETUNJUK FORMATTING WAJIB:
             if (confirm('Hapus dokumen ini dari Pustaka Cloud?')) {
                 await _supabase.from('documents').delete().eq('id', id);
                 renderPustaka();
+                showToast('Dokumen berhasil dihapus dari Cloud.', 'info');
             }
         }
 
@@ -2271,7 +2314,7 @@ PETUNJUK FORMATTING WAJIB:
         // EKSPOR WORD
         function exportToWord() {
             const htmlContent = sanitizeDocumentHTML(document.getElementById('editorContent').innerHTML);
-            if (!htmlContent.trim()) return alert('Editor masih kosong!');
+            if (!htmlContent.trim()) return showToast('Editor masih kosong!', 'warning');
 
             const mapel = document.getElementById('input-mapel').value || 'Dokumen';
             const filename = `RekanAjar_${activeModule}_${mapel.replace(/\s+/g, '_')}_${Date.now()}.doc`;
@@ -2367,17 +2410,19 @@ PETUNJUK FORMATTING WAJIB:
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
+            showToast('Mengunduh dokumen Word (.DOCX)...', 'info');
         }
 
         // EKSPOR PDF
         function exportToPDF() {
             const htmlContent = sanitizeDocumentHTML(document.getElementById('editorContent').innerHTML);
-            if (!htmlContent.trim()) return alert('Editor masih kosong!');
+            if (!htmlContent.trim()) return showToast('Editor masih kosong!', 'warning');
 
             const mapel = document.getElementById('input-mapel').value || 'Dokumen';
             const filename = `RekanAjar_${activeModule}_${mapel.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
 
             if (typeof html2pdf !== 'undefined') {
+                showToast('Menyiapkan file PDF...', 'info');
                 const element = document.createElement('div');
                 element.innerHTML = htmlContent;
                 element.style.width = '170mm';
@@ -2411,10 +2456,11 @@ PETUNJUK FORMATTING WAJIB:
                 };
                 html2pdf().set(opt).from(element).save().then(() => {
                     exportHost.remove();
+                    showToast('PDF berhasil diunduh!', 'success');
                 }).catch(err => {
                     exportHost.remove();
                     console.error('PDF export error:', err);
-                    alert('Gagal membuat PDF: ' + (err.message || err));
+                    showToast('Gagal membuat PDF: ' + (err.message || err), 'error');
                 });
             } else {
                 window.print();
@@ -2422,14 +2468,14 @@ PETUNJUK FORMATTING WAJIB:
         }
 
         async function simulasiBayar(amount, price) {
-            if (!currentUser) return alert('Silakan login terlebih dahulu untuk membeli token!');
+            if (!currentUser) return showToast('Silakan login terlebih dahulu untuk membeli token!', 'warning');
             if (confirm(`Simulasi Pembayaran QRIS:\nTotal: Rp ${price.toLocaleString('id-ID')}\nTambah: ${amount} Token?\n\nKlik OK untuk menyelesaikan pembayaran.`)) {
                 const newTokens = userProfile.tokens + amount;
                 const { error } = await _supabase.from('profiles').update({ tokens: newTokens }).eq('id', currentUser.id);
                 if (!error) {
                     userProfile.tokens = newTokens;
                     document.getElementById('tokenBalance').innerText = newTokens;
-                    alert(`Pembayaran Berhasil! ${amount} Token telah ditambahkan ke akun Anda.`);
+                    showToast(`Pembayaran Berhasil! ${amount} Token ditambahkan ke akun.`, 'success');
                 }
             }
         }
