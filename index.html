@@ -220,8 +220,6 @@
 
         /* ================================================================
            APP SHELL ISOLATION
-           The application chrome must always occupy the browser viewport.
-           Generated document HTML is never allowed to determine its width.
         ================================================================= */
         html, body {
             width: 100%;
@@ -300,7 +298,6 @@
             box-sizing: border-box !important;
         }
 
-        /* Prevent generated tables from becoming flex/grid intrinsic-width drivers. */
         #editorContent table {
             width: 100% !important;
             max-width: 100% !important;
@@ -316,8 +313,6 @@
             height: auto;
         }
 
-        /* Explicitly neutralize common global layout payloads if a legacy
-           document is opened before sanitization completes. */
         #app-shell {
             left: 0 !important;
             right: auto !important;
@@ -826,17 +821,22 @@
                     <!-- LEFT FORM PANEL -->
                     <section id="panel-generator-form"
                         class="w-full lg:w-1/2 p-4 md:p-5 overflow-y-auto custom-scrollbar border-r border-slate-200 bg-white flex-1 pb-24 lg:pb-5">
-                        <div class="mb-4 md:mb-5 flex items-center justify-between border-b pb-3 border-slate-100">
+                        <div class="mb-4 md:mb-5 flex flex-wrap items-center justify-between border-b pb-3 border-slate-100 gap-2">
                             <div>
                                 <h2 id="generator-title" class="text-sm md:text-base font-bold text-slate-800">Generator
                                     Modul Ajar / RPP Plus</h2>
                                 <p class="text-[11px] text-slate-500">Isi parameter di bawah untuk menyusun dokumen
                                     presisi.</p>
                             </div>
-                            <span id="token-cost-badge"
-                                class="bg-amber-100 text-amber-800 border border-amber-200 text-[11px] px-2.5 py-1 rounded-full font-bold whitespace-nowrap">
-                                <i class="fa-solid fa-coins mr-1"></i> 5 Token
-                            </span>
+                            <div class="flex items-center gap-2">
+                                <button type="button" onclick="autoFillSampleData()" class="bg-tealbrand-50 hover:bg-tealbrand-100 text-tealbrand-700 border border-tealbrand-200 text-[11px] px-2.5 py-1 rounded-full font-bold transition flex items-center gap-1">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i> Contoh Data
+                                </button>
+                                <span id="token-cost-badge"
+                                    class="bg-amber-100 text-amber-800 border border-amber-200 text-[11px] px-2.5 py-1 rounded-full font-bold whitespace-nowrap">
+                                    <i class="fa-solid fa-coins mr-1"></i> 5 Token
+                                </span>
+                            </div>
                         </div>
 
                         <form id="generator-form" onsubmit="handleGenerate(event)" class="space-y-3.5 text-xs relative">
@@ -906,7 +906,7 @@
                             </div>
 
                             <div id="dynamic-module-options"
-                                class="p-3 bg-tealbrand-50/50 border border-tealbrand-100 rounded-xl space-y-3 hidden">
+                                class="p-3 bg-tealbrand-50/50 border border-tealbrand-100 rounded-xl space-y-3">
                             </div>
 
                             <div>
@@ -957,7 +957,7 @@
                                 </div>
                             </div>
 
-                            <!-- STICKY GENERATE BUTTON UNTUK MOBILE (SELALU TERLIHAT DI BAGIAN BAWAH HP) -->
+                            <!-- STICKY GENERATE BUTTON UNTUK MOBILE -->
                             <div
                                 class="sticky bottom-0 bg-white/95 backdrop-blur-sm pt-3 pb-2 border-t border-slate-200 lg:static lg:bg-transparent lg:border-0 lg:pt-2 lg:pb-0 z-20">
                                 <button type="submit" id="btn-generate"
@@ -1004,7 +1004,6 @@
 
                         <div class="flex-1 bg-white border-x border-b border-slate-200 rounded-b-2xl p-4 md:p-6 overflow-y-auto custom-scrollbar shadow-inner relative"
                             id="printableArea">
-                            <!-- PLACEHOLDER LOGO BARU DENGAN OPACITY 25% -->
                             <div id="editor-placeholder"
                                 class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-slate-400">
                                 <img src="logo.png" alt="Rekan Ajar AI Logo"
@@ -1241,7 +1240,7 @@
         </div>
     </div>
 
-    <!-- MODAL: LOGIN / REGISTER (WITH SHOW/HIDE PASSWORD TOGGLE) -->
+    <!-- MODAL: LOGIN / REGISTER -->
     <div id="auth-modal"
         class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl p-5 w-full max-w-sm shadow-xl border border-slate-200">
@@ -1264,7 +1263,6 @@
                 </div>
                 <div>
                     <label class="block font-semibold text-slate-700 mb-1">Password</label>
-                    <!-- Input Password dengan Tombol Eye Toggle -->
                     <div class="relative">
                         <input type="password" id="auth-password" required minlength="6"
                             placeholder="Minimal 6 karakter" class="w-full p-2 pr-9 border border-slate-300 rounded-lg">
@@ -1340,12 +1338,47 @@
             updateCalculator();
             renderClassSelect();
             renderStudentsTable();
+            renderDynamicFields('modul-ajar');
             await checkUserSession();
             lockAppShell();
             installEditorFirewall();
         });
 
         window.addEventListener('resize', lockAppShell);
+
+        // AUTO-FILL SAMPLE DATA (1-KLIK CONTOH DATA)
+        function autoFillSampleData() {
+            document.getElementById('input-jenjang').value = 'SD';
+            document.getElementById('input-kelas').value = '5';
+            updateFaseMapping();
+
+            document.getElementById('input-mapel').value = 'IPAS (Ilmu Pengetahuan Alam & Sosial)';
+            document.getElementById('input-rombel').value = 'V-A / Semester 1';
+            document.getElementById('input-waktu').value = '2 JP (2 x 35 Menit)';
+            document.getElementById('input-materi').value = 'Sifat-Sifat Cahaya & Indera Penglihatan Manusia';
+            document.getElementById('input-cp-text').value = 'Peserta didik menganalisis hubungan antara sifat-sifat cahaya dengan sistem indera penglihatan manusia serta penerapannya dalam kehidupan sehari-hari.';
+            document.getElementById('input-model').value = 'Problem-Based Learning (PBL)';
+            document.getElementById('input-diferensiasi').value = 'Diferensiasi Proses & Hasil/Produk';
+
+            // Checkbox P3
+            document.querySelectorAll('.ppp-check').forEach(cb => {
+                cb.checked = (cb.value === 'Bernalar Kritis' || cb.value === 'Mandiri' || cb.value === 'Gotong Royong' || cb.value === 'Kreatif');
+            });
+
+            // Isi field dinamis jika ada
+            if (document.getElementById('opt-sarpras')) {
+                document.getElementById('opt-sarpras').value = 'LCD Proyektor, Cermin, Senter, Lensa, LKPD Cetak';
+            }
+            if (document.getElementById('opt-target-siswa')) {
+                document.getElementById('opt-target-siswa').value = 'Peserta Didik Reguler / Tipikal';
+            }
+            if (document.getElementById('opt-p5-tema')) {
+                document.getElementById('opt-p5-tema').value = 'Gaya Hidup Berkelanjutan';
+            }
+            if (document.getElementById('opt-p5-produk')) {
+                document.getElementById('opt-p5-produk').value = 'Alat Peraga Sederhana Daur Ulang Pemanfaatan Cahaya';
+            }
+        }
 
         // SHOW/HIDE PASSWORD TOGGLE
         function togglePasswordVisibility() {
@@ -1370,7 +1403,7 @@
             overlay.classList.toggle('hidden');
         }
 
-        // MOBILE WORKSPACE TAB TOGGLE (Form vs Editor)
+        // MOBILE WORKSPACE TAB TOGGLE
         function switchMobileWorkspaceTab(tab) {
             const formPanel = document.getElementById('panel-generator-form');
             const editorPanel = document.getElementById('panel-generator-editor');
@@ -1392,7 +1425,7 @@
             }
         }
 
-        // AUTHENTICATION LOGIC (SUPABASE)
+        // AUTHENTICATION LOGIC
         async function checkUserSession() {
             const { data: { session } } = await _supabase.auth.getSession();
             if (session) {
@@ -1522,7 +1555,6 @@
             alert('Anda telah keluar.');
         }
 
-        // TAB & VIEW SWITCHER (LAYOUT APP WORKSPACE SHELL)
         function lockAppShell() {
             const shell = document.getElementById('app-shell');
             if (!shell) return;
@@ -1546,7 +1578,6 @@
             const tokenContainer = document.getElementById('header-token-container');
             const topupBtn = document.getElementById('header-topup-btn');
 
-            // Hide mobile drawer if open
             const sidebar = document.getElementById('global-sidebar');
             const overlay = document.getElementById('sidebar-overlay');
             if (sidebar) sidebar.classList.add('-translate-x-full');
@@ -1729,12 +1760,31 @@
             `;
         }
 
+        // RENDER DYNAMIC FORM FIELDS UNTUK TIAP MODUL (BOX-BOX INPUT BARU)
         function renderDynamicFields(modKey) {
             const container = document.getElementById('dynamic-module-options');
             container.innerHTML = '';
             container.classList.remove('hidden');
 
-            if (modKey === 'prota-prosem') {
+            if (modKey === 'modul-ajar') {
+                container.innerHTML = `
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Target Peserta Didik</label>
+                            <select id="opt-target-siswa" class="w-full p-2 border border-slate-300 rounded-lg">
+                                <option value="Peserta Didik Reguler / Tipikal">Reguler / Tipikal</option>
+                                <option value="Peserta Didik Cepat Belajar (Cerdas Istimewa)">Cepat Belajar (HOTS)</option>
+                                <option value="Peserta Didik dengan Hambatan Belajar">Hambatan / Butuh Bimbingan</option>
+                                <option value="Heterogen (Inklusif / Campuran)">Heterogen / Campuran</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Utama Sarana & Prasarana</label>
+                            <input type="text" id="opt-sarpras" placeholder="Misal: LCD Proyektor, Laptop, Alat Praktikum" value="LCD Proyektor, Laptop, Internet, LKPD Cetak" class="w-full p-2 border border-slate-300 rounded-lg">
+                        </div>
+                    </div>
+                `;
+            } else if (modKey === 'prota-prosem') {
                 container.innerHTML = `
                     <div class="grid grid-cols-2 gap-2">
                         <div>
@@ -1749,28 +1799,65 @@
                 `;
             } else if (modKey === 'lkpd') {
                 container.innerHTML = `
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Bentuk Aktivitas Siswa</label>
-                        <select id="opt-lkpd-type" class="w-full p-2 border border-slate-300 rounded-lg">
-                            <option value="Eksperimen / Praktikum Kelompok">Eksperimen / Praktikum Kelompok</option>
-                            <option value="Diskusi Studi Kasus & Presentasi">Diskusi Studi Kasus & Presentasi</option>
-                            <option value="Proyek Mandiri & Observasi">Proyek Mandiri & Observasi</option>
-                        </select>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Bentuk Aktivitas Siswa</label>
+                            <select id="opt-lkpd-type" class="w-full p-2 border border-slate-300 rounded-lg">
+                                <option value="Eksperimen / Praktikum Kelompok">Eksperimen / Praktikum Kelompok</option>
+                                <option value="Diskusi Studi Kasus & Presentasi">Diskusi Studi Kasus & Presentasi</option>
+                                <option value="Proyek Mandiri & Observasi">Proyek Mandiri & Observasi</option>
+                                <option value="Permainan Edukatif & Teka-Teki">Permainan Edukatif / Quiz</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Setting Kelompok Siswa</label>
+                            <input type="text" id="opt-lkpd-group" value="Kelompok Kecil (4-5 Siswa)" class="w-full p-2 border border-slate-300 rounded-lg">
+                        </div>
                     </div>
                 `;
             } else if (modKey === 'asesmen') {
                 container.innerHTML = `
-                    <div class="grid grid-cols-2 gap-2">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
                         <div>
                             <label class="block font-semibold text-slate-700 mb-1">Tipe Asesmen</label>
                             <select id="opt-tipe-soal" class="w-full p-2 border border-slate-300 rounded-lg">
                                 <option value="Pilihan Ganda & Essay HOTS">Pilihan Ganda & Essay HOTS</option>
-                                <option value="Rubrik Unjuk Kerja">Rubrik Unjuk Kerja</option>
+                                <option value="Pilihan Ganda Kompleks & Menjodohkan">Pilihan Ganda Kompleks & Menjodohkan</option>
+                                <option value="Rubrik Unjuk Kerja & Praktik">Rubrik Unjuk Kerja & Praktik</option>
                             </select>
                         </div>
                         <div>
                             <label class="block font-semibold text-slate-700 mb-1">Jumlah Nomor Soal</label>
                             <input type="number" id="opt-jumlah-soal" value="5" min="1" max="20" class="w-full p-2 border border-slate-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Kunci & Pembahasan</label>
+                            <select id="opt-kunci-soal" class="w-full p-2 border border-slate-300 rounded-lg">
+                                <option value="Lengkap dengan Kunci Jawaban & Pembahasan">Tampilkan Lengkap</option>
+                                <option value="Tanpa Kunci Jawaban (Khusus Lembar Siswa)">Tanpa Kunci Jawaban</option>
+                            </select>
+                        </div>
+                    </div>
+                `;
+            } else if (modKey === 'p5') {
+                container.innerHTML = `
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Tema Resmi P5 BSKAP</label>
+                            <select id="opt-p5-tema" class="w-full p-2 border border-slate-300 rounded-lg">
+                                <option value="Kewirausahaan">Kewirausahaan</option>
+                                <option value="Gaya Hidup Berkelanjutan">Gaya Hidup Berkelanjutan</option>
+                                <option value="Bhinneka Tunggal Ika">Bhinneka Tunggal Ika</option>
+                                <option value="Bangunlah Jiwa dan Raganya">Bangunlah Jiwa dan Raganya</option>
+                                <option value="Rekayasa dan Teknologi">Rekayasa dan Teknologi</option>
+                                <option value="Kearifan Lokal">Kearifan Lokal</option>
+                                <option value="Suara Demokrasi">Suara Demokrasi</option>
+                                <option value="Kebekerjaan (Khusus SMK)">Kebekerjaan (SMK)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Target Produk / Hasil P5</label>
+                            <input type="text" id="opt-p5-produk" placeholder="Misal: Olahan Pangan Lokal, Pameran Karya" value="Produk Olahan Kreatif & Pameran Karya" class="w-full p-2 border border-slate-300 rounded-lg">
                         </div>
                     </div>
                 `;
@@ -1779,11 +1866,7 @@
             }
         }
 
-        // =====================================================================
-        // DOCUMENT HTML SANITIZER
-        // Hasil AI hanya boleh menjadi FRAGMENT DOKUMEN.
-        // CSS/JS/global markup dari AI tidak boleh masuk ke aplikasi utama.
-        // =====================================================================
+        // SANITIZE HTML DOKUMEN AI
         function sanitizeDocumentHTML(rawHtml) {
             if (!rawHtml) return '';
 
@@ -1792,8 +1875,6 @@
                 .replace(/```/g, '')
                 .trim();
 
-            // Jika model tetap mengirim wrapper HTML, ambil hanya isi <body>
-            // agar seluruh dokumen tidak ikut terhapus oleh sanitizer.
             let sourceHtml = cleanedRaw;
             if (/<\/?html\b|<body\b/i.test(cleanedRaw)) {
                 const parsed = new DOMParser().parseFromString(cleanedRaw, 'text/html');
@@ -1833,7 +1914,6 @@
                     return;
                 }
 
-                // Tag tak dikenal diubah menjadi DIV agar teks/konten tidak hilang.
                 if (!allowedTags.has(tag)) {
                     const replacement = document.createElement('div');
                     while (node.firstChild) replacement.appendChild(node.firstChild);
@@ -1846,8 +1926,6 @@
                     return;
                 }
 
-                // Jangan izinkan CSS inline, event handler, class/id, atau atribut
-                // yang berpotensi mengubah layout aplikasi induk.
                 for (const attr of Array.from(node.attributes)) {
                     const name = attr.name.toLowerCase();
                     const value = attr.value || '';
@@ -1863,7 +1941,6 @@
                     }
                 }
 
-                // Tautan tetap boleh, tetapi tidak boleh menjalankan JS.
                 if (tag === 'A' && node.hasAttribute('href')) {
                     node.setAttribute('rel', 'noopener noreferrer');
                     node.setAttribute('target', '_blank');
@@ -1873,10 +1950,6 @@
             return template.innerHTML.trim();
         }
 
-        // =====================================================================
-        // Document firewall: generated/pasted document markup is sanitized again
-        // whenever the editor DOM changes. This protects against legacy documents
-        // and pasted HTML containing global CSS or scripts.
         function installEditorFirewall() {
             const editor = document.getElementById('editorContent');
             if (!editor || editor.__firewallInstalled) return;
@@ -1895,7 +1968,6 @@
         }
 
         // GENERATE ACTION WITH SERVERLESS API ROUTE (/api/generate) & SUPABASE
-        // =====================================================================
         async function handleGenerate(e) {
             e.preventDefault();
 
@@ -1917,9 +1989,22 @@
             const fase = document.getElementById('input-fase').value;
             const mapel = document.getElementById('input-mapel').value;
             const materi = document.getElementById('input-materi').value;
+            const rombel = document.getElementById('input-rombel').value || '1 / Ganjil';
+            const alokasiWaktu = document.getElementById('input-waktu').value || '2 JP (2 x 45 Menit)';
             const cpText = document.getElementById('input-cp-text').value.trim();
             const model = document.getElementById('input-model').value;
             const diferensiasi = document.getElementById('input-diferensiasi').value;
+
+            // Kumpulkan Profil Pelajar Pancasila yang dicentang
+            const selectedP3 = Array.from(document.querySelectorAll('.ppp-check:checked')).map(cb => cb.value).join(', ');
+
+            // Nilai dari box-box input dinamis baru
+            const targetSiswa = document.getElementById('opt-target-siswa')?.value || 'Peserta Didik Reguler';
+            const sarpras = document.getElementById('opt-sarpras')?.value || 'LCD Proyektor, Laptop, LKPD Cetak';
+            const lkpdGroup = document.getElementById('opt-lkpd-group')?.value || 'Kelompok Kecil (4-5 Siswa)';
+            const kunciSoalSetting = document.getElementById('opt-kunci-soal')?.value || 'Lengkap dengan Kunci Jawaban';
+            const temaP5Setting = document.getElementById('opt-p5-tema')?.value || 'Kewirausahaan';
+            const produkP5Setting = document.getElementById('opt-p5-produk')?.value || 'Produk Kreatif Siswa';
 
             document.getElementById('editor-placeholder').classList.add('hidden');
             document.getElementById('editor-loading').classList.remove('hidden');
@@ -1928,27 +2013,139 @@
                 switchMobileWorkspaceTab('editor');
             }
 
-            let promptText = `Kamu adalah Pakar Kurikulum Merdeka Pendidikan Indonesia. 
-Buatkan dokumen resmi berstandar BSKAP: ${moduleTitles[activeModule]}.
+            // INSTRUKSI SPESIFIK STRUKTUR BSKAP BERDASARKAN MODUL YANG DIPILIH
+            let modulePromptSpec = '';
 
-PARAMETER KONTEN:
-- Satuan Pendidikan / Jenjang: ${jenjang} (Kelas ${kelas} / ${fase})
-- Mata Pelajaran: ${mapel}
-- Topik Utama: ${materi}
-${cpText ? `- Paragraf CP Resmi: "${cpText}"` : '- Gunakan CP Kurikulum Merdeka standar.'}
-- Model Pembelajaran: ${model}
-- Fokus Diferensiasi: ${diferensiasi}
+            if (activeModule === 'modul-ajar') {
+                modulePromptSpec = `
+Susun MODUL AJAR / RPP PLUS Kurikulum Merdeka berstandar BSKAP Kemendikbudristek secara sangat rinci dan komprehensif dengan struktur berikut:
 
-PETUNJUK FORMATTING:
-1. SAJIKAN MATERI, PROTA/PROSEM, LANGKAH KELAS, SERTA RUBRIK DALAM FORMAT TABEL HTML RAPI.
-2. Gunakan judul h2 dan h3 yang terstruktur.
-3. OUTPUT HARUS HANYA FRAGMENT HTML ISI DOKUMEN, tanpa markdown dan tanpa wrapper HTML.
+1. <h2>I. INFORMASI UMUM</h2>
+   Tampilkan TABEL IDENTITAS MODUL: Satuan Pendidikan/Jenjang (${jenjang}), Kelas/Semester (${kelas} / ${rombel}), Mata Pelajaran (${mapel}), Alokasi Waktu (${alokasiWaktu}), Elemen/Materi Utama (${materi}).
+   Sebutkan juga:
+   - Kompetensi Awal
+   - Dimensi Profil Pelajar Pancasila (${selectedP3})
+   - Sarana & Prasarana Utama (${sarpras})
+   - Target Peserta Didik (${targetSiswa})
+   - Model Pembelajaran (${model}) & Fokus Diferensiasi (${diferensiasi})
+
+2. <h2>II. KOMPONEN INTI</h2>
+   - <h3>A. Tujuan Pembelajaran (TP) & Indikator (KKTP)</h3>
+   - <h3>B. Pemahaman Bermakna</h3>
+   - <h3>C. Pertanyaan Pemantik (3-5 Pertanyaan HOTS)</h3>
+   - <h3>D. Kegiatan Pembelajaran Sistematis</h3>
+     Buat TABEL KEGIATAN PEMBELAJARAN rinci berisikan Pendahuluan (10%), Kegiatan Inti sesuai Sintaks Model ${model} dengan Pendekatan Diferensiasi (${diferensiasi}) (80%), dan Penutup (10%) beserta Alokasi Waktu tiap langkah.
+   - <h3>E. Asesmen Pembelajaran</h3>
+     Jelaskan Rencana Asesmen Awal (Diagnostik), Formatif (Proses), dan Sumatif (Akhir).
+   - <h3>F. Pengayaan & Remedial</h3>
+   - <h3>G. Refleksi Guru & Peserta Didik</h3>
+
+3. <h2>III. LAMPIRAN DOKUMEN</h2>
+   - <h3>A. Ringkasan Lembar Kerja Peserta Didik (LKPD)</h3>
+   - <h3>B. Bahan Bacaan Guru & Peserta Didik</h3>
+   - <h3>C. Glosarium Istilah Penting</h3>
+   - <h3>D. Daftar Pustaka / Referensi Resmi</h3>`;
+            } 
+            else if (activeModule === 'tp-atp') {
+                modulePromptSpec = `
+Susun DOKUMEN TUJUAN PEMBELAJARAN (TP) DAN ALUR TUJUAN PEMBELAJARAN (ATP) Kurikulum Merdeka BSKAP secara sistematis:
+
+1. <h2>I. HEADING & PEMETAAN CAPAIAN PEMBELAJARAN (CP)</h2>
+   Sajikan Tabel Identitas (${jenjang}, Kelas ${kelas}, ${fase}, Mapel ${mapel}, Materi ${materi}).
+   ${cpText ? `Sajikan Paragraf CP Resmi: "${cpText}"` : 'Sajikan deskripsi Capaian Pembelajaran (CP) standar BSKAP untuk materi ini.'}
+
+2. <h2>II. TABEL ALUR TUJUAN PEMBELAJARAN (ATP)</h2>
+   Buat TABEL MATRIKS ATP lengkap dengan kolom:
+   | No | Elemen / Capaian Pembelajaran | Tujuan Pembelajaran (TP) | Indikator Ketercapaian (KKTP) | Alokasi Waktu (JP) | Dimensi P3 | Kata Kunci / Glosarium |
+
+3. <h2>III. RASIONALISASI DAN ALUR URUTAN PEMBELAJARAN</h2>
+   Jelaskan Alur Pengurutan Pembelajaran dari LOTS (Konsep Dasar) menuju HOTS (Penerapan/Analisis) secara logis dan runtut.`;
+            } 
+            else if (activeModule === 'prota-prosem') {
+                const ta = document.getElementById('opt-ta')?.value || '2024/2025';
+                const minggu = document.getElementById('opt-minggu')?.value || '18';
+                modulePromptSpec = `
+Susun PROGRAM TAHUNAN (PROTA) DAN PROGRAM SEMESTER (PROSEM) Kurikulum Merdeka resmi BSKAP:
+
+1. <h2>I. HEADING IDENTITAS & DISTRIBUSI ALOKASI WAKTU</h2>
+   Satuan Pendidikan: ${jenjang}, Kelas: ${kelas} (${fase}), Mapel: ${mapel}, Tahun Ajaran: ${ta}, Minggu Efektif: ${minggu} Minggu.
+
+2. <h2>II. MATRIKS PROGRAM TAHUNAN (PROTA)</h2>
+   Buat TABEL PROTA dengan kolom:
+   | No | Semester | Bab / Elemen Pembelajaran | Tujuan Pembelajaran (TP) | Alokasi Waktu (JP) | Keterangan |
+
+3. <h2>III. MATRIKS PROGRAM SEMESTER (PROSEM)</h2>
+   Buat TABEL PROSEM mendatar dengan pembagian alokasi waktu per Bulan (Juli s.d. Desember atau Januari s.d. Juni) dan Minggu Efektif, mencakup alokasi materi utama ${materi}, Cadangan Asesmen Sumatif, dan Projek P5.`;
+            } 
+            else if (activeModule === 'lkpd') {
+                const lkpdType = document.getElementById('opt-lkpd-type')?.value || 'Eksperimen / Praktikum Kelompok';
+                modulePromptSpec = `
+Susun LEMBAR KERJA PESERTA DIDIK (LKPD) DIGITAL BERBASIS AKTIVITAS MENARIK:
+
+1. <h2>I. IDENTITAS & PETUNJUK KERJA LKPD</h2>
+   Sajikan Header LKPD (${mapel} - ${materi}, Kelas ${kelas} / ${fase}, Bentuk Aktivitas: ${lkpdType}, Format: ${lkpdGroup}).
+   Tuliskan Tujuan Pembelajaran dan Petunjuk Umum Pengerjaan untuk Siswa/Kelompok.
+
+2. <h2>II. ALAT, BAHAN & STIMULUS LITERASI</h2>
+   Sebutkan Alat/Bahan yang dibutuhkan. Sertakan Teks / Cerita Studi Kasus / Gambar Stimulus untuk memancing rasa ingin tahu siswa.
+
+3. <h2>III. LANGKAH-LANGKAH AKTIVITAS SISTEMATIS</h2>
+   Uraikan Langkah Kerja Pengerjaan Tahap demi Tahap sesuai sintaks ${model}.
+
+4. <h2>IV. TABEL PENGAMATAN & RUANG DISKUSI</h2>
+   Sajikan TABEL ISIAN LKPD / TABEL PENGAMATAN kosong yang siap diisi siswa.
+
+5. <h2>V. PERTANYAAN ANALISIS HOTS & KESIMPULAN</h2>
+   Sajikan 3-5 Pertanyaan Analisis Kritis HOTS berbasis materi ${materi} dan Kotak Kesimpulan Akhir.`;
+            } 
+            else if (activeModule === 'asesmen') {
+                const tipeSoal = document.getElementById('opt-tipe-soal')?.value || 'Pilihan Ganda & Essay HOTS';
+                const jumlahSoal = document.getElementById('opt-jumlah-soal')?.value || '5';
+                modulePromptSpec = `
+Susun INSTRUMEN DAN RUBRIK ASESMEN PEMBELAJARAN LENGKAP:
+
+1. <h2>I. KISI-KISI DOKUMEN ASESMEN</h2>
+   Buat TABEL KISI-KISI SOAL dengan kolom:
+   | No | Capaian / TP | Materi | Indikator Soal | Level Kognitif (L1/L2/L3) | Bentuk Soal | No Soal |
+
+2. <h2>II. NASKAH SOAL EVALUASI (${tipeSoal}, ${jumlahSoal} Nomor)</h2>
+   Sajikan Naskah Soal HOTS berkualitas tinggi berbasis stimulus bacaan/studi kasus kontekstual seputar ${materi}.
+
+3. <h2>III. KUNCI JAWABAN & PEDOMAN PEMBAHASAN</h2>
+   Sajikan Kunci Jawaban rinci beserta Pembahasan Konseptual tiap nomor soal (${kunciSoalSetting}).
+
+4. <h2>IV. RUBRIK ASESMEN ANALITIK (SKOR 1 - 4)</h2>
+   Buat TABEL RUBRIK UNJUK KERJA / PENILAIAN ANALITIK lengkap dengan Kriteria Penilaian, Indikator Perolehan Skor (1: Perlu Bimbingan, 2: Cukup, 3: Baik, 4: Sangat Baik), serta Formula Penentuan Nilai Akhir.`;
+            } 
+            else if (activeModule === 'p5') {
+                modulePromptSpec = `
+Susun MODUL PROJEK PENGUATAN PROFIL PELAJAR PANCASILA (P5) RESMI BSKAP:
+
+1. <h2>I. INFORMASI UMUM PROJEK P5</h2>
+   Identitas Projek (${jenjang}, Kelas ${kelas} / ${fase}, Tema Utama: ${temaP5Setting}, Judul Projek Kreatif Berbasis Materi ${materi}, Target Produk: ${produkP5Setting}, Alokasi Waktu Total JP).
+
+2. <h2>II. MATRIKS DIMENSI, ELEMEN & SUBELEMEN P3</h2>
+   Buat TABEL TARGET PERKEMBANGAN dengan Dimensi: ${selectedP3}, Elemen, Subelemen, dan Target Capaian Akhir Fase.
+
+3. <h2>III. TAHAPAN ALUR AKTIVITAS PROJEK</h2>
+   Uraikan Rencana Aktivitas Tahap demi Tahap: Tahap Pengenalan, Tahap Kontekstualisasi, Tahap Aksi Nyata, Tahap Refleksi, dan Tahap Tindak Lanjut.
+
+4. <h2>IV. RUBRIK ASESMEN PERKEMBANGAN KARAKTER</h2>
+   Buat TABEL RUBRIK EVALUASI P5 dengan kategori Kriteria: Belum Berkembang (BB), Mulai Berkembang (MB), Berkembang Sesuai Harapan (BSH), dan Sangat Berkembang (SB).`;
+            }
+
+            let promptText = `Kamu adalah Pakar Kurikulum Merdeka Pendidikan Indonesia BSKAP Kemendikbudristek.
+${modulePromptSpec}
+
+PETUNJUK FORMATTING WAJIB:
+1. SAJIKAN SELURUH TABEL DENGAN BORDER BSKAP RAPI (` + '<table><thead><tr><th>...</th></tr></thead><tbody><tr><td>...</td></tr></tbody></table>' + `).
+2. Gunakan tag h2 dan h3 secara terstruktur.
+3. OUTPUT HARUS HANYA FRAGMENT HTML ISI DOKUMEN, tanpa markdown \`\`\`html dan tanpa wrapper HTML.
 4. DILARANG menghasilkan tag <html>, <head>, <body>, <style>, <script>, <link>, <meta>, <base>, <iframe>, <form>, <input>, atau <button>.
-5. DILARANG menggunakan atribut style, class, id, onclick, onload, atau event handler HTML apa pun.
+5. DILARANG menggunakan atribut style, class, id, onclick, atau event handler HTML apa pun.
 6. Jangan membuat atau mengubah CSS aplikasi. Gunakan hanya struktur HTML semantik seperti h1-h6, p, ul, ol, li, table, thead, tbody, tr, th, td, strong, em, div, dan br.`;
 
             try {
-                // MENGGUNAKAN SERVERLESS FUNCTION ROUTE /api/generate
                 const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -2071,7 +2268,7 @@ PETUNJUK FORMATTING:
 
         function formatText(cmd, value = null) { document.execCommand(cmd, false, value); }
 
-        // PERBAIKAN EKSPOR WORD (MS Word Print Layout XML Template)
+        // EKSPOR WORD
         function exportToWord() {
             const htmlContent = sanitizeDocumentHTML(document.getElementById('editorContent').innerHTML);
             if (!htmlContent.trim()) return alert('Editor masih kosong!');
@@ -2172,7 +2369,7 @@ PETUNJUK FORMATTING:
             URL.revokeObjectURL(url);
         }
 
-        // PERBAIKAN EKSPOR PDF (Menggunakan html2pdf.js dengan fallback window.print)
+        // EKSPOR PDF
         function exportToPDF() {
             const htmlContent = sanitizeDocumentHTML(document.getElementById('editorContent').innerHTML);
             if (!htmlContent.trim()) return alert('Editor masih kosong!');
@@ -2193,8 +2390,6 @@ PETUNJUK FORMATTING:
                 element.style.lineHeight = '1.5';
                 element.style.color = '#1e293b';
 
-                // html2pdf bekerja pada node sementara agar proses export tidak
-                // mengubah ukuran/layout editor utama.
                 const exportHost = document.createElement('div');
                 exportHost.style.position = 'fixed';
                 exportHost.style.left = '-100000px';
