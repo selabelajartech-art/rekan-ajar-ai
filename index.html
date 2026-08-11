@@ -75,26 +75,44 @@
             outline: none;
         }
 
+        /* PERBAIKAN STYLING EDITOR & TABEL (PENCEGAH TEKS MENUMPUK VERTIKAL) */
+        #editorContent {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            word-break: normal !important;
+            overflow-wrap: break-word !important;
+            box-sizing: border-box !important;
+            line-height: 1.6;
+        }
+
         #editorContent table {
-            width: 100%;
-            border-collapse: collapse;
+            width: 100% !important;
+            min-width: 550px !important;
+            max-width: 100% !important;
+            table-layout: auto !important;
+            border-collapse: collapse !important;
             margin-top: 1rem;
             margin-bottom: 1rem;
             font-size: 0.85rem;
+            box-sizing: border-box !important;
         }
 
         #editorContent th,
         #editorContent td {
-            border: 1px solid #cbd5e1;
-            padding: 8px 12px;
+            border: 1px solid #cbd5e1 !important;
+            padding: 8px 12px !important;
             text-align: left;
             vertical-align: top;
+            word-break: normal !important;
+            overflow-wrap: break-word !important;
+            white-space: normal !important;
         }
 
         #editorContent th {
-            background-color: #f0fdfa;
-            color: #0f766e;
-            font-weight: 700;
+            background-color: #f0fdfa !important;
+            color: #0f766e !important;
+            font-weight: 700 !important;
         }
 
         #editorContent h2 {
@@ -129,26 +147,9 @@
         #view-generator,
         #panel-generator-form,
         #panel-generator-editor,
-        #printableArea,
-        #editorContent {
+        #printableArea {
             min-width: 0;
             max-width: 100%;
-        }
-
-        #editorContent {
-            width: 100%;
-            overflow-x: auto;
-            word-break: break-word;
-            overflow-wrap: anywhere;
-            box-sizing: border-box;
-        }
-
-        #editorContent table {
-            width: 100% !important;
-            max-width: 100% !important;
-            table-layout: fixed;
-            word-wrap: break-word;
-            overflow-wrap: anywhere;
         }
 
         #editorContent img,
@@ -156,12 +157,6 @@
         #editorContent video {
             max-width: 100% !important;
             height: auto;
-        }
-
-        #editorContent th,
-        #editorContent td {
-            word-break: break-word;
-            overflow-wrap: break-word;
         }
 
         /* PERBAIKAN CSS PRINT */
@@ -274,8 +269,7 @@
         #view-generator > *,
         #panel-generator-form,
         #panel-generator-editor,
-        #printableArea,
-        #editorContent {
+        #printableArea {
             min-width: 0 !important;
         }
 
@@ -293,30 +287,6 @@
         #panel-generator-editor {
             min-width: 0 !important;
             max-width: none !important;
-        }
-
-        #editorContent {
-            width: 100% !important;
-            max-width: 100% !important;
-            overflow-x: auto !important;
-            overflow-wrap: anywhere !important;
-            word-break: break-word !important;
-            box-sizing: border-box !important;
-        }
-
-        #editorContent table {
-            width: 100% !important;
-            max-width: 100% !important;
-            min-width: 0 !important;
-            table-layout: fixed !important;
-            box-sizing: border-box !important;
-        }
-
-        #editorContent img,
-        #editorContent video,
-        #editorContent iframe {
-            max-width: 100% !important;
-            height: auto;
         }
 
         #app-shell {
@@ -621,7 +591,7 @@
                 </div>
             </section>
 
-            <!-- CONTACT & SUPPORT SECTION -->
+            <!-- CONTACT & SUPPORT SECTION (EMAIL & WHATSAPP DITAMPILKAN LENGKAP) -->
             <section class="py-12 md:py-14 bg-white border-t border-slate-200 px-4 md:px-6">
                 <div class="max-w-5xl mx-auto">
                     <div class="text-center mb-10">
@@ -686,6 +656,59 @@
                                 Minta Penawaran
                             </a>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FAQ SECTION (PERTANYAAN UMUM GURU) -->
+            <section class="py-12 md:py-16 bg-slate-100/60 border-t border-slate-200 px-4 md:px-6">
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <span class="bg-tealbrand-100 text-tealbrand-800 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Tanya Jawab</span>
+                        <h2 class="text-2xl font-extrabold text-slate-800 mt-2">Pertanyaan Sering Diajukan (FAQ)</h2>
+                        <p class="text-xs text-slate-500 mt-1">Informasi penting seputar penggunaan platform Rekan Ajar AI</p>
+                    </div>
+
+                    <div class="space-y-3 text-xs md:text-sm">
+                        <details class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm group cursor-pointer">
+                            <summary class="font-bold text-slate-800 flex justify-between items-center list-none">
+                                <span>Apakah dokumen hasil generate sesuai standar BSKAP resmi?</span>
+                                <i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition-transform"></i>
+                            </summary>
+                            <p class="text-slate-600 mt-2.5 leading-relaxed text-xs">
+                                Ya, 100% sesuai. Seluruh template prompt dirancang khusus mematuhi struktur BSKAP Kemendikbudristek Kurikulum Merdeka terkini, mencakup pemetaan CP, TP/ATP, Capaian Dimensi Profil Pelajar Pancasila (P3), hingga Rubrik Asesmen Analitik.
+                            </p>
+                        </details>
+
+                        <details class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm group cursor-pointer">
+                            <summary class="font-bold text-slate-800 flex justify-between items-center list-none">
+                                <span>Apakah Saldo Token memiliki masa kedaluwarsa?</span>
+                                <i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition-transform"></i>
+                            </summary>
+                            <p class="text-slate-600 mt-2.5 leading-relaxed text-xs">
+                                Tidak ada. Token yang Anda miliki atau beli bersifat **permanen** dan tanpa tanggal kedaluwarsa. Anda dapat menggunakannya kapan saja sesuai kebutuhan penyusunan administrasi sekolah.
+                            </p>
+                        </details>
+
+                        <details class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm group cursor-pointer">
+                            <summary class="font-bold text-slate-800 flex justify-between items-center list-none">
+                                <span>Bagaimana cara mengedit hasil dokumen di Microsoft Word?</span>
+                                <i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition-transform"></i>
+                            </summary>
+                            <p class="text-slate-600 mt-2.5 leading-relaxed text-xs">
+                                Cukup klik tombol **.DOCX** pada panel editor. Dokumen akan terunduh otomatis dalam format tabel Word yang rapi, utuh, dan siap diedit sesuai kebutuhan sekolah Anda.
+                            </p>
+                        </details>
+
+                        <details class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm group cursor-pointer">
+                            <summary class="font-bold text-slate-800 flex justify-between items-center list-none">
+                                <span>Apakah data siswa dan dokumen saya aman tersimpan?</span>
+                                <i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition-transform"></i>
+                            </summary>
+                            <p class="text-slate-600 mt-2.5 leading-relaxed text-xs">
+                                Sangat aman. Seluruh data tersimpan di server Cloud Supabase terenkripsi dengan perlindungan *Row Level Security* (RLS). Hanya akun Anda yang memiliki hak akses untuk membaca dan mengelola dokumen tersebut.
+                            </p>
+                        </details>
                     </div>
                 </div>
             </section>
@@ -1336,7 +1359,7 @@
             'p5': 'Generator Modul Projek P5'
         };
 
-        // FUNGSI TOAST NOTIFIKASI MODERN (Pengganti alert bawaan browser)
+        // TOAST NOTIFIKASI
         function showToast(message, type = 'info') {
             const container = document.getElementById('toast-container');
             if (!container) return;
@@ -1682,7 +1705,7 @@
             }
         }
 
-        // DYNAMIC CLASS MANAGEMENT LOGIC
+        // WORKBOOK CLASS MANAGEMENT
         function renderClassSelect() {
             const selectEl = document.getElementById('workbook-class-select');
             selectEl.innerHTML = classList.map(c => `
@@ -1803,7 +1826,7 @@
             `;
         }
 
-        // RENDER DYNAMIC FORM FIELDS UNTUK TIAP MODUL
+        // RENDER DYNAMIC FORM FIELDS
         function renderDynamicFields(modKey) {
             const container = document.getElementById('dynamic-module-options');
             container.innerHTML = '';
@@ -2178,7 +2201,7 @@ Susun MODUL PROJEK PENGUATAN PROFIL PELAJAR PANCASILA (P5) RESMI BSKAP:
 ${modulePromptSpec}
 
 PETUNJUK FORMATTING WAJIB:
-1. SAJIKAN SELURUH TABEL DENGAN BORDER BSKAP RAPI (` + '<table><thead><tr><th>...</th></tr></thead><tbody><tr><td>...</td></tr></tbody></table>' + `).
+1. SAJIKAN SELURUH TABEL DENGAN BORDER BSKAP RAPI (<table><thead><tr><th>...</th></tr></thead><tbody><tr><td>...</td></tr></tbody></table>).
 2. Gunakan tag h2 dan h3 secara terstruktur.
 3. OUTPUT HARUS HANYA FRAGMENT HTML ISI DOKUMEN, tanpa markdown \`\`\`html dan tanpa wrapper HTML.
 4. DILARANG menghasilkan tag <html>, <head>, <body>, <style>, <script>, <link>, <meta>, <base>, <iframe>, <form>, <input>, atau <button>.
@@ -2311,13 +2334,17 @@ PETUNJUK FORMATTING WAJIB:
 
         function formatText(cmd, value = null) { document.execCommand(cmd, false, value); }
 
-        // EKSPOR WORD
+        // EKSPOR WORD (SMART LANDSCAPE DETECTION)
         function exportToWord() {
             const htmlContent = sanitizeDocumentHTML(document.getElementById('editorContent').innerHTML);
             if (!htmlContent.trim()) return showToast('Editor masih kosong!', 'warning');
 
             const mapel = document.getElementById('input-mapel').value || 'Dokumen';
             const filename = `RekanAjar_${activeModule}_${mapel.replace(/\s+/g, '_')}_${Date.now()}.doc`;
+
+            const isLandscape = (activeModule === 'prota-prosem' || activeModule === 'tp-atp');
+            const pageSize = isLandscape ? '297mm 210mm' : '210mm 297mm';
+            const pageOrientation = isLandscape ? 'landscape' : 'portrait';
 
             const wordHeader = `
                 <html xmlns:o='urn:schemas-microsoft-com:office:office' 
@@ -2337,60 +2364,56 @@ PETUNJUK FORMATTING WAJIB:
                     <![endif]-->
                     <style>
                         @page Section1 {
-                            size: 210mm 297mm;
-                            margin: 20mm 20mm 20mm 20mm;
+                            size: ${pageSize};
+                            margin: 15mm 15mm 15mm 15mm;
+                            mso-page-orientation: ${pageOrientation};
                             mso-header-margin: 35.4pt;
                             mso-footer-margin: 35.4pt;
-                            mso-paper-source: 0;
                         }
                         div.Section1 { page: Section1; }
                         body {
                             font-family: 'Plus Jakarta Sans', Arial, sans-serif;
-                            font-size: 11pt;
+                            font-size: 10.5pt;
                             line-height: 1.5;
-                            color: #1e293b;
+                            color: #0f172a;
                         }
                         table {
-                            width: 100%;
-                            border-collapse: collapse;
-                            margin-top: 12pt;
-                            margin-bottom: 12pt;
+                            width: 100% !important;
+                            border-collapse: collapse !important;
+                            margin-top: 10pt;
+                            margin-bottom: 10pt;
                         }
                         th, td {
-                            border: 1px solid #cbd5e1;
-                            padding: 6pt 8pt;
+                            border: 1px solid #64748b !important;
+                            padding: 6pt 8pt !important;
                             text-align: left;
                             vertical-align: top;
-                            font-size: 10pt;
+                            font-size: 9.5pt;
+                            word-wrap: break-word !important;
                         }
                         th {
-                            background-color: #f0fdfa;
-                            color: #0f766e;
+                            background-color: #f0fdfa !important;
+                            color: #0f766e !important;
                             font-weight: bold;
                         }
                         h2 {
-                            font-size: 14pt;
+                            font-size: 13pt;
                             font-weight: bold;
                             color: #0f766e;
                             border-bottom: 2pt solid #99f6e4;
                             padding-bottom: 4pt;
-                            margin-top: 16pt;
-                            margin-bottom: 8pt;
-                        }
-                        h3 {
-                            font-size: 12pt;
-                            font-weight: bold;
-                            color: #0f172a;
-                            margin-top: 12pt;
+                            margin-top: 14pt;
                             margin-bottom: 6pt;
                         }
-                        ul, ol {
-                            margin-left: 18pt;
-                            margin-bottom: 8pt;
+                        h3 {
+                            font-size: 11pt;
+                            font-weight: bold;
+                            color: #0f172a;
+                            margin-top: 10pt;
+                            margin-bottom: 4pt;
                         }
-                        li {
-                            margin-bottom: 3pt;
-                        }
+                        ul, ol { margin-left: 18pt; margin-bottom: 6pt; }
+                        li { margin-bottom: 2pt; }
                     </style>
                 </head>
                 <body>
@@ -2410,10 +2433,10 @@ PETUNJUK FORMATTING WAJIB:
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            showToast('Mengunduh dokumen Word (.DOCX)...', 'info');
+            showToast(`Mengunduh Word (${isLandscape ? 'Landscape' : 'Portrait'})...`, 'info');
         }
 
-        // EKSPOR PDF
+        // EKSPOR PDF (DYNAMIC ORIENTATION)
         function exportToPDF() {
             const htmlContent = sanitizeDocumentHTML(document.getElementById('editorContent').innerHTML);
             if (!htmlContent.trim()) return showToast('Editor masih kosong!', 'warning');
@@ -2421,42 +2444,44 @@ PETUNJUK FORMATTING WAJIB:
             const mapel = document.getElementById('input-mapel').value || 'Dokumen';
             const filename = `RekanAjar_${activeModule}_${mapel.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
 
+            const isLandscape = (activeModule === 'prota-prosem' || activeModule === 'tp-atp');
+            const targetWidth = isLandscape ? '267mm' : '180mm';
+
             if (typeof html2pdf !== 'undefined') {
                 showToast('Menyiapkan file PDF...', 'info');
                 const element = document.createElement('div');
                 element.innerHTML = htmlContent;
-                element.style.width = '170mm';
-                element.style.maxWidth = '170mm';
+                element.style.width = targetWidth;
+                element.style.maxWidth = targetWidth;
                 element.style.boxSizing = 'border-box';
                 element.style.background = '#ffffff';
                 element.style.padding = '0';
                 element.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
-                element.style.fontSize = '11pt';
-                element.style.lineHeight = '1.5';
-                element.style.color = '#1e293b';
+                element.style.fontSize = '10pt';
+                element.style.lineHeight = '1.4';
+                element.style.color = '#0f172a';
 
                 const exportHost = document.createElement('div');
                 exportHost.style.position = 'fixed';
                 exportHost.style.left = '-100000px';
                 exportHost.style.top = '0';
-                exportHost.style.width = '170mm';
-                exportHost.style.maxWidth = '170mm';
+                exportHost.style.width = targetWidth;
                 exportHost.style.background = '#ffffff';
                 exportHost.style.zIndex = '-1';
                 exportHost.appendChild(element);
                 document.body.appendChild(exportHost);
 
                 const opt = {
-                    margin: [15, 15, 15, 15],
+                    margin: [12, 12, 12, 12],
                     filename: filename,
                     image: { type: 'jpeg', quality: 0.98 },
                     html2canvas: { scale: 2, useCORS: true, logging: false },
-                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: isLandscape ? 'landscape' : 'portrait' },
                     pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
                 };
                 html2pdf().set(opt).from(element).save().then(() => {
                     exportHost.remove();
-                    showToast('PDF berhasil diunduh!', 'success');
+                    showToast('PDF Rapi berhasil diunduh!', 'success');
                 }).catch(err => {
                     exportHost.remove();
                     console.error('PDF export error:', err);
