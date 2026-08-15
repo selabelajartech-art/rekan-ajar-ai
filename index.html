@@ -25,8 +25,11 @@
         rel="stylesheet">
     <!-- Supabase JS Client CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- HTML2PDF.js Client CDN (Untuk Ekspor PDF Langsung) -->
+    <!-- HTML2PDF.js Client CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- HTML-DOCX & FileSaver CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/html-docx-js@0.3.1/dist/html-docx.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
     <script>
         tailwind.config = {
@@ -75,7 +78,7 @@
             outline: none;
         }
 
-        /* PERBAIKAN STYLING EDITOR & TABEL (PENCEGAH TEKS MENUMPUK VERTIKAL) */
+        /* STYLING EDITOR & TABEL HASIL GENERATE */
         #editorContent {
             width: 100% !important;
             max-width: 100% !important;
@@ -84,6 +87,7 @@
             overflow-wrap: break-word !important;
             box-sizing: border-box !important;
             line-height: 1.6;
+            color: #1e293b;
         }
 
         #editorContent table {
@@ -159,10 +163,9 @@
             height: auto;
         }
 
-        /* PERBAIKAN CSS PRINT */
+        /* MODE CETAK BROWSER */
         @media print {
-            html,
-            body {
+            html, body {
                 height: auto !important;
                 overflow: visible !important;
                 background: #ffffff !important;
@@ -172,16 +175,11 @@
                 visibility: hidden;
             }
 
-            #printableArea,
-            #printableArea * {
+            #printableArea, #printableArea * {
                 visibility: visible;
             }
 
-            #app-workspace,
-            main,
-            #view-generator,
-            #panel-generator-editor,
-            #printableArea {
+            #app-workspace, main, #view-generator, #panel-generator-editor, #printableArea {
                 display: block !important;
                 position: absolute !important;
                 left: 0 !important;
@@ -195,8 +193,7 @@
                 border: none !important;
             }
 
-            #editor-placeholder,
-            #editor-loading {
+            #editor-placeholder, #editor-loading {
                 display: none !important;
             }
 
@@ -215,8 +212,7 @@
                 page-break-after: auto;
             }
 
-            #editorContent h2,
-            #editorContent h3 {
+            #editorContent h2, #editorContent h3 {
                 page-break-after: avoid;
             }
         }
@@ -261,30 +257,16 @@
             box-sizing: border-box !important;
         }
 
-        #app-workspace,
-        #view-generator,
-        #view-workbook,
-        #view-pustaka,
-        #view-topup,
-        #view-generator > *,
-        #panel-generator-form,
-        #panel-generator-editor,
-        #printableArea {
+        #app-workspace, #view-generator, #view-workbook, #view-pustaka, #view-topup, #view-generator > *, #panel-generator-form, #panel-generator-editor, #printableArea {
             min-width: 0 !important;
         }
 
-        #app-workspace {
+        #app-workspace, #view-generator {
             width: 100% !important;
             max-width: none !important;
         }
 
-        #view-generator {
-            width: 100% !important;
-            max-width: none !important;
-        }
-
-        #panel-generator-form,
-        #panel-generator-editor {
+        #panel-generator-form, #panel-generator-editor {
             min-width: 0 !important;
             max-width: none !important;
         }
@@ -300,7 +282,7 @@
 
 <body class="bg-slate-50 text-slate-800 font-sans antialiased h-screen flex flex-col overflow-hidden">
 
-    <!-- TOAST NOTIFICATION CONTAINER (MODERN NOTIFICATION UI) -->
+    <!-- TOAST NOTIFICATION CONTAINER -->
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
     <!-- APP SHELL -->
@@ -310,14 +292,12 @@
     <header
         class="bg-tealbrand-900 text-white border-b border-tealbrand-800 px-4 md:px-6 py-2.5 md:py-3 flex items-center justify-between shadow-md z-30 flex-shrink-0">
         <div class="flex items-center space-x-2 md:space-x-3 cursor-pointer">
-            <!-- Mobile Menu Hamburger Button -->
             <button id="mobile-menu-btn" onclick="toggleMobileSidebar()"
                 class="lg:hidden p-2 text-tealbrand-200 hover:text-white hover:bg-tealbrand-800 rounded-lg transition"
                 title="Buka Sidebar Navigasi">
                 <i class="fa-solid fa-bars text-lg"></i>
             </button>
 
-            <!-- Brand Logo & Title -->
             <div class="flex items-center space-x-2" onclick="switchTab('landing')">
                 <div
                     class="p-1 rounded-xl font-bold flex items-center justify-center w-9 h-9 md:w-11 md:h-11 overflow-hidden">
@@ -336,7 +316,6 @@
             </div>
         </div>
 
-        <!-- Navigation Links & User Bar -->
         <div class="flex items-center space-x-2 md:space-x-4">
             <nav class="hidden md:flex items-center space-x-1 mr-2 text-xs font-semibold">
                 <button onclick="switchTab('landing')"
@@ -349,7 +328,6 @@
                     Guru</button>
             </nav>
 
-            <!-- Dynamic Header Elements: Saldo Token & Top-up -->
             <div id="header-token-container"
                 class="hidden bg-tealbrand-800 border border-tealbrand-700 rounded-xl px-2.5 md:px-3 py-1 md:py-1.5 items-center gap-1.5 md:gap-2">
                 <i class="fa-solid fa-coins text-amber-400 text-xs md:text-sm"></i>
@@ -378,9 +356,7 @@
     <!-- MAIN CONTAINER -->
     <div class="flex flex-1 overflow-hidden relative">
 
-        <!-- ================================================================= -->
-        <!-- VIEW 1: LANDING PAGE (MARKETING & CONVERSION)                     -->
-        <!-- ================================================================= -->
+        <!-- VIEW 1: LANDING PAGE -->
         <div id="view-landing" class="flex-1 overflow-y-auto custom-scrollbar bg-slate-50">
             <!-- HERO SECTION -->
             <section
@@ -415,7 +391,7 @@
                 </div>
             </section>
 
-            <!-- INTERACTIVE TIME SAVER CALCULATOR -->
+            <!-- KALKULATOR EFISIENSI -->
             <section class="py-10 md:py-14 px-4 md:px-6 max-w-4xl mx-auto -mt-6 md:-mt-8 relative z-20">
                 <div class="bg-white p-5 md:p-8 rounded-3xl border border-slate-200 shadow-xl">
                     <div class="text-center mb-6">
@@ -591,7 +567,7 @@
                 </div>
             </section>
 
-            <!-- CONTACT & SUPPORT SECTION (EMAIL & WHATSAPP DITAMPILKAN LENGKAP) -->
+            <!-- CONTACT & SUPPORT SECTION (WHATSAPP & EMAIL DITAMPILKAN LENGKAP) -->
             <section class="py-12 md:py-14 bg-white border-t border-slate-200 px-4 md:px-6">
                 <div class="max-w-5xl mx-auto">
                     <div class="text-center mb-10">
@@ -696,7 +672,7 @@
                                 <i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition-transform"></i>
                             </summary>
                             <p class="text-slate-600 mt-2.5 leading-relaxed text-xs">
-                                Cukup klik tombol **.DOCX** pada panel editor. Dokumen akan terunduh otomatis dalam format tabel Word yang rapi, utuh, dan siap diedit sesuai kebutuhan sekolah Anda.
+                                Cukup klik tombol **.DOCX** pada panel editor. Dokumen akan terunduh otomatis dalam format .DOCX modern yang rapi, utuh, dan siap diedit di Microsoft Word versi berapa pun.
                             </p>
                         </details>
 
@@ -726,9 +702,7 @@
             </section>
         </div>
 
-        <!-- ================================================================= -->
-        <!-- VIEW 2: APP WORKSPACE SHELL (RESPONSIVE SIDEBAR & MAIN CONTENT)    -->
-        <!-- ================================================================= -->
+        <!-- VIEW 2: APP WORKSPACE SHELL -->
         <div id="app-workspace" class="hidden flex-1 flex overflow-hidden w-full relative">
 
             <!-- GLOBAL SIDEBAR MODULE NAVIGATION -->
@@ -868,10 +842,11 @@
 
                         <form id="generator-form" onsubmit="handleGenerate(event)" class="space-y-3.5 text-xs relative">
 
+                            <!-- PERBAIKAN LOGIKA JENJANG DAN KELAS DINAMIS -->
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                 <div>
                                     <label class="block font-semibold text-slate-700 mb-1">Jenjang</label>
-                                    <select id="input-jenjang" onchange="updateFaseMapping()"
+                                    <select id="input-jenjang" onchange="updateJenjangAndKelas()"
                                         class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
                                         <option value="SD">SD / MI</option>
                                         <option value="SMP">SMP / MTs</option>
@@ -884,12 +859,7 @@
                                     <label class="block font-semibold text-slate-700 mb-1">Kelas</label>
                                     <select id="input-kelas" onchange="updateFaseMapping()"
                                         class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
-                                        <option value="1">Kelas 1</option>
-                                        <option value="2">Kelas 2</option>
-                                        <option value="3">Kelas 3</option>
-                                        <option value="4">Kelas 4</option>
-                                        <option value="5">Kelas 5</option>
-                                        <option value="6">Kelas 6</option>
+                                        <!-- OPSI DINAMIS AKAN DIPETAKAN OLEH JAVASCRIPT -->
                                     </select>
                                 </div>
                                 <div>
@@ -984,7 +954,6 @@
                                 </div>
                             </div>
 
-                            <!-- STICKY GENERATE BUTTON UNTUK MOBILE -->
                             <div
                                 class="sticky bottom-0 bg-white/95 backdrop-blur-sm pt-3 pb-2 border-t border-slate-200 lg:static lg:bg-transparent lg:border-0 lg:pt-2 lg:pb-0 z-20">
                                 <button type="submit" id="btn-generate"
@@ -1318,7 +1287,7 @@
     <script>
         // CONFIG SUPABASE CREDENTIALS
         const SUPABASE_URL = 'https://jxobndahksbowmthrflh.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4b2JuZGFoa3Nib3dtdGhyZmxoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxOTI5ODIsImV4cCI6MjEwMTc2ODk4Mn0.HqRw6I2NmZ3VoGUjPotVbuhUakIqqVknQQRofft_nIg';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4b2JuZGFoa3Nib3dtdGhyZmxoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxOTI5ODIsImV4cCI6MjE0MTc6ODk4Mn0.HqRw6I2NmZ3VoGUjPotVbuhUakIqqVknQQRofft_nIg';
 
         // Initialize Supabase Client
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1396,7 +1365,7 @@
 
         document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById('workbook-date').valueAsDate = new Date();
-            updateFaseMapping();
+            updateJenjangAndKelas();
             updateCalculator();
             renderClassSelect();
             renderStudentsTable();
@@ -1408,17 +1377,57 @@
 
         window.addEventListener('resize', lockAppShell);
 
+        // PERBAIKAN LOGIKA DINAMIS JENJANG VS KELAS
+        function updateJenjangAndKelas() {
+            const jenjang = document.getElementById('input-jenjang').value;
+            const kelasSelect = document.getElementById('input-kelas');
+            
+            let kelasOptions = [];
+            if (jenjang === 'SD') {
+                kelasOptions = [1, 2, 3, 4, 5, 6];
+            } else if (jenjang === 'SMP') {
+                kelasOptions = [7, 8, 9];
+            } else if (jenjang === 'SMA' || jenjang === 'SMK') {
+                kelasOptions = [10, 11, 12];
+            } else if (jenjang === 'PAUD') {
+                kelasOptions = ['PAUD / TK'];
+            }
+
+            kelasSelect.innerHTML = kelasOptions.map(k => `<option value="${k}">${typeof k === 'number' ? 'Kelas ' + k : k}</option>`).join('');
+            updateFaseMapping();
+        }
+
+        function updateFaseMapping() {
+            const jenjang = document.getElementById('input-jenjang').value;
+            const kelasVal = document.getElementById('input-kelas').value;
+            const kelas = parseInt(kelasVal);
+            const faseInput = document.getElementById('input-fase');
+
+            if (jenjang === 'PAUD') faseInput.value = 'Fase Pondasi';
+            else if (jenjang === 'SD') {
+                if (kelas <= 2) faseInput.value = 'Fase A';
+                else if (kelas <= 4) faseInput.value = 'Fase B';
+                else faseInput.value = 'Fase C';
+            } else if (jenjang === 'SMP') {
+                faseInput.value = 'Fase D';
+            } else if (jenjang === 'SMA' || jenjang === 'SMK') {
+                if (kelas === 10) faseInput.value = 'Fase E';
+                else faseInput.value = 'Fase F';
+            } else faseInput.value = 'Fase Khusus';
+        }
+
         // AUTO-FILL SAMPLE DATA
         function autoFillSampleData() {
-            document.getElementById('input-jenjang').value = 'SD';
-            document.getElementById('input-kelas').value = '5';
+            document.getElementById('input-jenjang').value = 'SMA';
+            updateJenjangAndKelas();
+            document.getElementById('input-kelas').value = '10';
             updateFaseMapping();
 
-            document.getElementById('input-mapel').value = 'IPAS (Ilmu Pengetahuan Alam & Sosial)';
-            document.getElementById('input-rombel').value = 'V-A / Semester 1';
-            document.getElementById('input-waktu').value = '2 JP (2 x 35 Menit)';
-            document.getElementById('input-materi').value = 'Sifat-Sifat Cahaya & Indera Penglihatan Manusia';
-            document.getElementById('input-cp-text').value = 'Peserta didik menganalisis hubungan antara sifat-sifat cahaya dengan sistem indera penglihatan manusia serta penerapannya dalam kehidupan sehari-hari.';
+            document.getElementById('input-mapel').value = 'Fisika';
+            document.getElementById('input-rombel').value = 'X-1 / Semester 1';
+            document.getElementById('input-waktu').value = '2 JP (2 x 45 Menit)';
+            document.getElementById('input-materi').value = 'Energi Terbarukan & Efisiensi Energi';
+            document.getElementById('input-cp-text').value = 'Peserta didik menganalisis konsep energi terbarukan, dampak penggunaan energi fosil, serta merancang solusi efisiensi energi berbasis potensi lokal.';
             document.getElementById('input-model').value = 'Problem-Based Learning (PBL)';
             document.getElementById('input-diferensiasi').value = 'Diferensiasi Proses & Hasil/Produk';
 
@@ -1427,19 +1436,13 @@
             });
 
             if (document.getElementById('opt-sarpras')) {
-                document.getElementById('opt-sarpras').value = 'LCD Proyektor, Cermin, Senter, Lensa, LKPD Cetak';
+                document.getElementById('opt-sarpras').value = 'LCD Proyektor, Laptop, Simulator PhET, LKPD Cetak';
             }
             if (document.getElementById('opt-target-siswa')) {
                 document.getElementById('opt-target-siswa').value = 'Peserta Didik Reguler / Tipikal';
             }
-            if (document.getElementById('opt-p5-tema')) {
-                document.getElementById('opt-p5-tema').value = 'Gaya Hidup Berkelanjutan';
-            }
-            if (document.getElementById('opt-p5-produk')) {
-                document.getElementById('opt-p5-produk').value = 'Alat Peraga Sederhana Daur Ulang Pemanfaatan Cahaya';
-            }
 
-            showToast('Contoh data sampel berhasil terisi!', 'success');
+            showToast('Contoh data sampel SMA berhasil terisi!', 'success');
         }
 
         // SHOW/HIDE PASSWORD TOGGLE
@@ -2314,129 +2317,108 @@ PETUNJUK FORMATTING WAJIB:
             }
         }
 
-        // UTILITIES
-        function updateFaseMapping() {
-            const jenjang = document.getElementById('input-jenjang').value;
-            const kelas = parseInt(document.getElementById('input-kelas').value);
-            const faseInput = document.getElementById('input-fase');
-
-            if (jenjang === 'PAUD') faseInput.value = 'Fase Pondasi';
-            else if (jenjang === 'SD') {
-                if (kelas <= 2) faseInput.value = 'Fase A';
-                else if (kelas <= 4) faseInput.value = 'Fase B';
-                else faseInput.value = 'Fase C';
-            } else if (jenjang === 'SMP') faseInput.value = 'Fase D';
-            else if (jenjang === 'SMA' || jenjang === 'SMK') {
-                if (kelas === 1) faseInput.value = 'Fase E';
-                else faseInput.value = 'Fase F';
-            } else faseInput.value = 'Fase Khusus';
-        }
-
         function formatText(cmd, value = null) { document.execCommand(cmd, false, value); }
 
-        // EKSPOR WORD (SMART LANDSCAPE DETECTION)
+        // EKSPOR WORD (.DOCX SEJATI MODERN)
         function exportToWord() {
-            const htmlContent = sanitizeDocumentHTML(document.getElementById('editorContent').innerHTML);
+            const editorEl = document.getElementById('editorContent');
+            const htmlContent = sanitizeDocumentHTML(editorEl.innerHTML);
             if (!htmlContent.trim()) return showToast('Editor masih kosong!', 'warning');
 
             const mapel = document.getElementById('input-mapel').value || 'Dokumen';
-            const filename = `RekanAjar_${activeModule}_${mapel.replace(/\s+/g, '_')}_${Date.now()}.doc`;
+            const filename = `RekanAjar_${activeModule}_${mapel.replace(/\s+/g, '_')}_${Date.now()}.docx`;
 
             const isLandscape = (activeModule === 'prota-prosem' || activeModule === 'tp-atp');
-            const pageSize = isLandscape ? '297mm 210mm' : '210mm 297mm';
-            const pageOrientation = isLandscape ? 'landscape' : 'portrait';
+            const orientation = isLandscape ? 'landscape' : 'portrait';
 
-            const wordHeader = `
-                <html xmlns:o='urn:schemas-microsoft-com:office:office' 
-                      xmlns:w='urn:schemas-microsoft-com:office:word' 
-                      xmlns='http://www.w3.org/TR/REC-html40'>
+            const fullHtml = `
+                <!DOCTYPE html>
+                <html>
                 <head>
-                    <meta charset='utf-8'>
-                    <title>Rekan Ajar AI Document</title>
-                    <!--[if gte mso 9]>
-                    <xml>
-                        <w:WordDocument>
-                            <w:View>Print</w:View>
-                            <w:Zoom>100</w:Zoom>
-                            <w:DoNotOptimizeForBrowser/>
-                        </w:WordDocument>
-                    </xml>
-                    <![endif]-->
+                    <meta charset="utf-8">
                     <style>
-                        @page Section1 {
-                            size: ${pageSize};
-                            margin: 15mm 15mm 15mm 15mm;
-                            mso-page-orientation: ${pageOrientation};
-                            mso-header-margin: 35.4pt;
-                            mso-footer-margin: 35.4pt;
+                        @page {
+                            size: A4 ${orientation};
+                            margin: 20mm;
                         }
-                        div.Section1 { page: Section1; }
                         body {
-                            font-family: 'Plus Jakarta Sans', Arial, sans-serif;
-                            font-size: 10.5pt;
+                            font-family: 'Calibri', 'Arial', sans-serif;
+                            font-size: 11pt;
                             line-height: 1.5;
-                            color: #0f172a;
+                            color: #1e293b;
                         }
                         table {
-                            width: 100% !important;
-                            border-collapse: collapse !important;
-                            margin-top: 10pt;
-                            margin-bottom: 10pt;
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin-top: 12pt;
+                            margin-bottom: 12pt;
                         }
                         th, td {
-                            border: 1px solid #64748b !important;
-                            padding: 6pt 8pt !important;
+                            border: 1px solid #475569;
+                            padding: 6pt 8pt;
                             text-align: left;
                             vertical-align: top;
-                            font-size: 9.5pt;
-                            word-wrap: break-word !important;
+                            font-size: 10pt;
                         }
                         th {
-                            background-color: #f0fdfa !important;
-                            color: #0f766e !important;
+                            background-color: #f0fdfa;
+                            color: #0f766e;
                             font-weight: bold;
                         }
                         h2 {
-                            font-size: 13pt;
+                            font-size: 14pt;
                             font-weight: bold;
                             color: #0f766e;
                             border-bottom: 2pt solid #99f6e4;
                             padding-bottom: 4pt;
-                            margin-top: 14pt;
-                            margin-bottom: 6pt;
+                            margin-top: 16pt;
+                            margin-bottom: 8pt;
                         }
                         h3 {
-                            font-size: 11pt;
+                            font-size: 12pt;
                             font-weight: bold;
                             color: #0f172a;
-                            margin-top: 10pt;
-                            margin-bottom: 4pt;
+                            margin-top: 12pt;
+                            margin-bottom: 6pt;
                         }
-                        ul, ol { margin-left: 18pt; margin-bottom: 6pt; }
-                        li { margin-bottom: 2pt; }
+                        ul, ol { margin-left: 18pt; margin-bottom: 8pt; }
+                        li { margin-bottom: 3pt; }
                     </style>
                 </head>
                 <body>
-                    <div class="Section1">
-                        ${htmlContent}
-                    </div>
+                    ${htmlContent}
                 </body>
                 </html>
             `;
 
-            const blob = new Blob(['\ufeff', wordHeader], { type: 'application/msword' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showToast(`Mengunduh Word (${isLandscape ? 'Landscape' : 'Portrait'})...`, 'info');
+            try {
+                if (typeof htmlDocx !== 'undefined') {
+                    showToast('Mengunduh dokumen Word (.DOCX sejati)...', 'info');
+                    const converted = htmlDocx.asBlob(fullHtml, { orientation: orientation, margins: { top: 720, right: 720, bottom: 720, left: 720 } });
+                    if (typeof saveAs !== 'undefined') {
+                        saveAs(converted, filename);
+                    } else {
+                        const a = document.createElement('a');
+                        a.href = URL.createObjectURL(converted);
+                        a.download = filename;
+                        a.click();
+                    }
+                    showToast('Dokumen .DOCX berhasil terunduh!', 'success');
+                } else {
+                    const blob = new Blob(['\ufeff', fullHtml], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = filename;
+                    a.click();
+                    showToast('Mengunduh dokumen Word...', 'info');
+                }
+            } catch (err) {
+                console.error('Word Export Error:', err);
+                showToast('Gagal mengekspor Word: ' + err.message, 'error');
+            }
         }
 
-        // EKSPOR PDF (DYNAMIC ORIENTATION)
+        // PERBAIKAN TOTAL EKSPOR PDF (PRESISI VEKTOR & GARIS TABEL UTUH)
         function exportToPDF() {
             const htmlContent = sanitizeDocumentHTML(document.getElementById('editorContent').innerHTML);
             if (!htmlContent.trim()) return showToast('Editor masih kosong!', 'warning');
@@ -2445,47 +2427,95 @@ PETUNJUK FORMATTING WAJIB:
             const filename = `RekanAjar_${activeModule}_${mapel.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
 
             const isLandscape = (activeModule === 'prota-prosem' || activeModule === 'tp-atp');
-            const targetWidth = isLandscape ? '267mm' : '180mm';
+            const targetWidthPx = isLandscape ? '1020px' : '750px';
 
             if (typeof html2pdf !== 'undefined') {
                 showToast('Menyiapkan file PDF...', 'info');
-                const element = document.createElement('div');
-                element.innerHTML = htmlContent;
-                element.style.width = targetWidth;
-                element.style.maxWidth = targetWidth;
-                element.style.boxSizing = 'border-box';
-                element.style.background = '#ffffff';
-                element.style.padding = '0';
-                element.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
-                element.style.fontSize = '10pt';
-                element.style.lineHeight = '1.4';
-                element.style.color = '#0f172a';
 
-                const exportHost = document.createElement('div');
-                exportHost.style.position = 'fixed';
-                exportHost.style.left = '-100000px';
-                exportHost.style.top = '0';
-                exportHost.style.width = targetWidth;
-                exportHost.style.background = '#ffffff';
-                exportHost.style.zIndex = '-1';
-                exportHost.appendChild(element);
-                document.body.appendChild(exportHost);
+                const printElement = document.createElement('div');
+                printElement.style.width = targetWidthPx;
+                printElement.style.padding = '15px';
+                printElement.style.background = '#ffffff';
+                printElement.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
+                printElement.style.color = '#0f172a';
+                printElement.style.fontSize = '12px';
+                printElement.style.lineHeight = '1.5';
+                printElement.style.boxSizing = 'border-box';
+                
+                printElement.innerHTML = `
+                    <style>
+                        .pdf-render table {
+                            width: 100% !important;
+                            border-collapse: collapse !important;
+                            margin: 12px 0 !important;
+                            table-layout: auto !important;
+                        }
+                        .pdf-render th, .pdf-render td {
+                            border: 1.5px solid #1e293b !important;
+                            padding: 8px 10px !important;
+                            text-align: left !important;
+                            vertical-align: top !important;
+                            font-size: 11px !important;
+                            word-break: normal !important;
+                            overflow-wrap: break-word !important;
+                        }
+                        .pdf-render th {
+                            background-color: #f0fdfa !important;
+                            color: #0f766e !important;
+                            font-weight: bold !important;
+                        }
+                        .pdf-render h2 {
+                            font-size: 16px !important;
+                            font-weight: bold !important;
+                            color: #0f766e !important;
+                            border-bottom: 2px solid #99f6e4 !important;
+                            padding-bottom: 4px !important;
+                            margin-top: 16px !important;
+                            margin-bottom: 8px !important;
+                            page-break-after: avoid !important;
+                        }
+                        .pdf-render h3 {
+                            font-size: 13px !important;
+                            font-weight: bold !important;
+                            color: #0f172a !important;
+                            margin-top: 12px !important;
+                            margin-bottom: 6px !important;
+                            page-break-after: avoid !important;
+                        }
+                        .pdf-render tr {
+                            page-break-inside: avoid !important;
+                        }
+                        .pdf-render ul, .pdf-render ol {
+                            padding-left: 20px !important;
+                            margin-bottom: 8px !important;
+                        }
+                        .pdf-render li {
+                            margin-bottom: 3px !important;
+                        }
+                    </style>
+                    <div class="pdf-render">${htmlContent}</div>
+                `;
 
                 const opt = {
-                    margin: [12, 12, 12, 12],
+                    margin: [10, 10, 10, 10],
                     filename: filename,
                     image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { scale: 2, useCORS: true, logging: false },
+                    html2canvas: { 
+                        scale: 2, 
+                        useCORS: true, 
+                        logging: false,
+                        letterRendering: true
+                    },
                     jsPDF: { unit: 'mm', format: 'a4', orientation: isLandscape ? 'landscape' : 'portrait' },
                     pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
                 };
-                html2pdf().set(opt).from(element).save().then(() => {
-                    exportHost.remove();
-                    showToast('PDF Rapi berhasil diunduh!', 'success');
+
+                html2pdf().set(opt).from(printElement).save().then(() => {
+                    showToast('PDF Vektor Rapi berhasil diunduh!', 'success');
                 }).catch(err => {
-                    exportHost.remove();
                     console.error('PDF export error:', err);
-                    showToast('Gagal membuat PDF: ' + (err.message || err), 'error');
+                    showToast('Gagal membuat PDF. Mengalihkan ke Cetak PDF Browser...', 'warning');
+                    window.print();
                 });
             } else {
                 window.print();
