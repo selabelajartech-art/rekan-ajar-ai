@@ -2508,15 +2508,10 @@ PETUNJUK FORMATTING WAJIB:
 
                 // PENANGANAN ERROR GURU-FRIENDLY
                 if (!response.ok || data.error) {
-                    if (response.status === 503 || (data.error && data.error.message === 'SERVER_BUSY')) {
-                        throw new Error(
-                            'Mohon maaf Bapak/Ibu Guru, lalu lintas server penyusunan saat ini sedang sangat padat. ' +
-                            'Sistem sedang menyegarkan antrean. Silakan klik tombol "Susun Perangkat Ajar Sekarang" sekali lagi dalam 10-20 detik.'
-                        );
-                    }
-                    throw new Error(typeof data.error === 'string' ? data.error : (data.error.message || 'Gagal memproses dokumen.'));
+                    // Tampilkan detail error asli dari Google / Vercel
+                    const detailError = data.error?.detail || data.error?.message || JSON.stringify(data);
+                    throw new Error('DETAIL ERROR ASLI: ' + detailError);
                 }
-
                 let resultHtml = data.candidates[0].content.parts[0].text;
                 resultHtml = sanitizeDocumentHTML(resultHtml);
                 if (!resultHtml.trim()) {
