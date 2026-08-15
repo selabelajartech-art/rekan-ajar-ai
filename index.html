@@ -282,8 +282,8 @@
 
 <body class="bg-slate-50 text-slate-800 font-sans antialiased h-screen flex flex-col overflow-hidden">
 
-    <!-- TOAST NOTIFICATION CONTAINER -->
-    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+    <!-- TOAST NOTIFICATION CONTAINER (Z-INDEX 100 AGAR SELALU DI DEPAN MODAL & BLUR) -->
+    <div id="toast-container" class="fixed top-5 right-5 z-[100] flex flex-col gap-2 pointer-events-none"></div>
 
     <!-- APP SHELL -->
     <div id="app-shell" aria-label="Rekan Ajar AI application shell">
@@ -567,7 +567,7 @@
                 </div>
             </section>
 
-            <!-- CONTACT & SUPPORT SECTION (WHATSAPP & EMAIL DITAMPILKAN LENGKAP) -->
+            <!-- CONTACT & SUPPORT SECTION -->
             <section class="py-12 md:py-14 bg-white border-t border-slate-200 px-4 md:px-6">
                 <div class="max-w-5xl mx-auto">
                     <div class="text-center mb-10">
@@ -636,7 +636,7 @@
                 </div>
             </section>
 
-            <!-- FAQ SECTION (PERTANYAAN UMUM GURU) -->
+            <!-- FAQ SECTION -->
             <section class="py-12 md:py-16 bg-slate-100/60 border-t border-slate-200 px-4 md:px-6">
                 <div class="max-w-4xl mx-auto">
                     <div class="text-center mb-10">
@@ -842,7 +842,6 @@
 
                         <form id="generator-form" onsubmit="handleGenerate(event)" class="space-y-3.5 text-xs relative">
 
-                            <!-- PERBAIKAN LOGIKA JENJANG DAN KELAS DINAMIS -->
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                 <div>
                                     <label class="block font-semibold text-slate-700 mb-1">Jenjang</label>
@@ -859,7 +858,6 @@
                                     <label class="block font-semibold text-slate-700 mb-1">Kelas</label>
                                     <select id="input-kelas" onchange="updateFaseMapping()"
                                         class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
-                                        <!-- OPSI DINAMIS AKAN DIPETAKAN OLEH JAVASCRIPT -->
                                     </select>
                                 </div>
                                 <div>
@@ -1236,7 +1234,7 @@
         </div>
     </div>
 
-    <!-- MODAL: LOGIN / REGISTER -->
+    <!-- MODAL: LOGIN / REGISTER / RESET PASSWORD -->
     <div id="auth-modal"
         class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl p-5 w-full max-w-sm shadow-xl border border-slate-200">
@@ -1257,8 +1255,11 @@
                     <input type="email" id="auth-email" required placeholder="guru@sekolah.sch.id"
                         class="w-full p-2 border border-slate-300 rounded-lg">
                 </div>
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Password</label>
+                <div id="field-password-container">
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="block font-semibold text-slate-700">Password</label>
+                        <button type="button" id="btn-forgot-password" onclick="setAuthMode('forgot')" class="text-[11px] text-tealbrand-700 font-semibold hover:underline">Lupa Password?</button>
+                    </div>
                     <div class="relative">
                         <input type="password" id="auth-password" required minlength="6"
                             placeholder="Minimal 6 karakter" class="w-full p-2 pr-9 border border-slate-300 rounded-lg">
@@ -1287,7 +1288,7 @@
     <script>
         // CONFIG SUPABASE CREDENTIALS
         const SUPABASE_URL = 'https://jxobndahksbowmthrflh.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4b2JuZGFoa3Nib3dtdGhyZmxoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxOTI5ODIsImV4cCI6MjE0MTc6ODk4Mn0.HqRw6I2NmZ3VoGUjPotVbuhUakIqqVknQQRofft_nIg';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4b2JuZGFoa3Nib3dtdGhyZmxoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxOTI5ODIsImV4cCI6MjEwMTc2ODk4Mn0.HqRw6I2NmZ3VoGUjPotVbuhUakIqqVknQQRofft_nIg';
 
         // Initialize Supabase Client
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1297,7 +1298,7 @@
         let activeModule = 'modul-ajar';
         let currentUser = null;
         let userProfile = null;
-        let isRegisterMode = false;
+        let authMode = 'login'; // 'login' | 'register' | 'forgot'
 
         // Dynamic Class & Workbook State
         let classList = ['VII-A', 'VII-B', 'VIII-A'];
@@ -1328,7 +1329,7 @@
             'p5': 'Generator Modul Projek P5'
         };
 
-        // TOAST NOTIFIKASI
+        // TOAST NOTIFIKASI (Z-INDEX BROWSER DIATAS SEMUA MODAL)
         function showToast(message, type = 'info') {
             const container = document.getElementById('toast-container');
             if (!container) return;
@@ -1348,7 +1349,7 @@
                 icon = '<i class="fa-solid fa-coins text-amber-300 mr-2"></i>';
             }
 
-            toast.className = `${bgBg} px-4 py-3 rounded-xl shadow-xl text-xs font-semibold flex items-center transition-all duration-300 transform translate-y-2 opacity-0 pointer-events-auto border border-white/10`;
+            toast.className = `${bgBg} px-4 py-3 rounded-xl shadow-2xl text-xs font-semibold flex items-center transition-all duration-300 transform translate-y-2 opacity-0 pointer-events-auto border border-white/10`;
             toast.innerHTML = `${icon}<span>${message}</span>`;
 
             container.appendChild(toast);
@@ -1360,7 +1361,7 @@
             setTimeout(() => {
                 toast.classList.add('opacity-0', 'translate-y-2');
                 setTimeout(() => toast.remove(), 300);
-            }, 4000);
+            }, 4500);
         }
 
         document.addEventListener("DOMContentLoaded", async () => {
@@ -1377,7 +1378,7 @@
 
         window.addEventListener('resize', lockAppShell);
 
-        // PERBAIKAN LOGIKA DINAMIS JENJANG VS KELAS
+        // LOGIKA JENJANG VS KELAS DINAMIS
         function updateJenjangAndKelas() {
             const jenjang = document.getElementById('input-jenjang').value;
             const kelasSelect = document.getElementById('input-kelas');
@@ -1490,7 +1491,7 @@
             }
         }
 
-        // AUTHENTICATION LOGIC
+        // AUTHENTICATION LOGIC & MODAL MODE MANAGEMENT
         async function checkUserSession() {
             const { data: { session } } = await _supabase.auth.getSession();
             if (session) {
@@ -1566,39 +1567,77 @@
         }
 
         function openAuthModal() {
-            const passInput = document.getElementById('auth-password');
-            const icon = document.getElementById('password-toggle-icon');
-            if (passInput) passInput.type = 'password';
-            if (icon) { icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
+            setAuthMode('login');
             document.getElementById('auth-modal').classList.remove('hidden');
         }
 
         function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
 
-        function toggleAuthMode() {
-            isRegisterMode = !isRegisterMode;
-            if (isRegisterMode) {
-                document.getElementById('auth-modal-title').innerText = 'Daftar Akun Baru (Gratis 15 Token)';
-                document.getElementById('field-name-container').classList.remove('hidden');
-                document.getElementById('btn-auth-submit').innerText = 'Daftar Sekarang';
-                document.getElementById('auth-switch-text').innerText = 'Sudah punya akun?';
-                document.getElementById('btn-auth-switch').innerText = 'Login';
-            } else {
-                document.getElementById('auth-modal-title').innerText = 'Login Akun Rekan Ajar AI';
-                document.getElementById('field-name-container').classList.add('hidden');
-                document.getElementById('btn-auth-submit').innerText = 'Masuk Akun';
-                document.getElementById('auth-switch-text').innerText = 'Belum punya akun?';
-                document.getElementById('btn-auth-switch').innerText = 'Daftar Sekarang';
+        function setAuthMode(mode) {
+            authMode = mode;
+            const passInput = document.getElementById('auth-password');
+            const passContainer = document.getElementById('field-password-container');
+            const nameContainer = document.getElementById('field-name-container');
+            const btnSubmit = document.getElementById('btn-auth-submit');
+            const title = document.getElementById('auth-modal-title');
+            const switchText = document.getElementById('auth-switch-text');
+            const btnSwitch = document.getElementById('btn-auth-switch');
+
+            if (mode === 'login') {
+                title.innerText = 'Login Akun Rekan Ajar AI';
+                nameContainer.classList.add('hidden');
+                passContainer.classList.remove('hidden');
+                if (passInput) passInput.required = true;
+                btnSubmit.innerText = 'Masuk Akun';
+                switchText.innerText = 'Belum punya akun?';
+                btnSwitch.innerText = 'Daftar Sekarang';
+                btnSwitch.onclick = () => setAuthMode('register');
+            } else if (mode === 'register') {
+                title.innerText = 'Daftar Akun Baru (Gratis 15 Token)';
+                nameContainer.classList.remove('hidden');
+                passContainer.classList.remove('hidden');
+                if (passInput) passInput.required = true;
+                btnSubmit.innerText = 'Daftar Sekarang';
+                switchText.innerText = 'Sudah punya akun?';
+                btnSwitch.innerText = 'Login';
+                btnSwitch.onclick = () => setAuthMode('login');
+            } else if (mode === 'forgot') {
+                title.innerText = 'Reset / Lupa Password';
+                nameContainer.classList.add('hidden');
+                passContainer.classList.add('hidden');
+                if (passInput) passInput.required = false;
+                btnSubmit.innerText = 'Kirim Tautan Reset Password';
+                switchText.innerText = 'Kembali ke halaman?';
+                btnSwitch.innerText = 'Login';
+                btnSwitch.onclick = () => setAuthMode('login');
             }
+        }
+
+        function toggleAuthMode() {
+            if (authMode === 'login') setAuthMode('register');
+            else setAuthMode('login');
         }
 
         async function handleAuthSubmit(e) {
             e.preventDefault();
-            const email = document.getElementById('auth-email').value;
+            const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value;
             const fullName = document.getElementById('auth-name').value;
 
-            if (isRegisterMode) {
+            if (authMode === 'forgot') {
+                const { error } = await _supabase.auth.resetPasswordForEmail(email, {
+                    redirectTo: window.location.origin
+                });
+                if (error) {
+                    return showToast('Gagal Reset Password: ' + error.message, 'error');
+                }
+                showToast('Tautan reset password telah dikirim ke email Anda! Periksa inbox/spam.', 'success');
+                setAuthMode('login');
+                closeAuthModal();
+                return;
+            }
+
+            if (authMode === 'register') {
                 const { data, error } = await _supabase.auth.signUp({
                     email, password,
                     options: { data: { full_name: fullName } }
