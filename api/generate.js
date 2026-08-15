@@ -23,7 +23,7 @@ export default async function handler(req, res) {
     }
 
     // Model resmi yang terbukti stabil & didukung Google REST API
-    const MODELS = ['gemini-1.5-flash', 'gemini-2.0-flash'];
+    const MODELS = ['gemini-1.5-flash'];
     let lastErrorMsg = 'Server sibuk';
 
     for (const apiKey of API_KEYS) {
