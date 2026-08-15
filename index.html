@@ -2496,7 +2496,6 @@ PETUNJUK FORMATTING WAJIB:
 4. DILARANG menghasilkan tag <html>, <head>, <body>, <style>, <script>, <link>, <meta>, <base>, <iframe>, <form>, <input>, atau <button>.
 5. DILARANG menggunakan atribut style, class, id, onclick, atau event handler HTML apa pun.
 6. Jangan membuat atau mengubah CSS aplikasi. Gunakan hanya struktur HTML semantik seperti h1-h6, p, ul, ol, li, table, thead, tbody, tr, th, td, strong, em, div, dan br.`;
-
             try {
                 const response = await fetch('/api/generate', {
                     method: 'POST',
@@ -2504,7 +2503,14 @@ PETUNJUK FORMATTING WAJIB:
                     body: JSON.stringify({ promptText: promptText })
                 });
 
-                const data = await response.json();
+                // BACA SEBAGAI TEKS TERLEBIH DAHULU UNTUK MENCEGAH JSON PARSE CRASH
+                const responseText = await response.text();
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                } catch (e) {
+                    throw new Error('Terjadi kendala koneksi pada Server Vercel. Silakan coba klik sekali lagi.');
+                }
 
                 // PENANGANAN ERROR GURU-FRIENDLY
                 if (!response.ok || data.error) {

@@ -5,51 +5,56 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { promptText } = req.body;
+  try {
+    const { promptText } = req.body || {};
+    if (!promptText) {
+      return res.status(400).json({ error: 'Prompt teks tidak boleh kosong' });
+    }
 
-  // 1. Ambil daftar API Key dari Vercel Environment Variables
-  const API_KEYS = [
-    process.env.GEMINI_API_KEY_1,
-    process.env.GEMINI_API_KEY_2,
-    process.env.GEMINI_API_KEY_3
-  ].filter(Boolean); // Hanya ambil yang terisi
+    // Ambil API Keys dari Environment Variables
+    const API_KEYS = [
+      process.env.GEMINI_API_KEY_1 || process.env.GEMINI_API_KEY,
+      process.env.GEMINI_API_KEY_2,
+      process.env.GEMINI_API_KEY_3
+    ].filter(Boolean);
 
-  // 2. Daftar model yang dicoba berurutan (utamakan flash yang stabil)
-  const MODELS = ['gemini-1.5-flash'];
-git
-  let lastErrorDetail = null;
+    if (API_KEYS.length === 0) {
+      return res.status(500).json({ error: 'API Key Gemini belum dipasang di Vercel Settings' });
+    }
 
-  // 3. Looping mencoba kombinasi API Key & Model secara otomatis
-  for (const apiKey of API_KEYS) {
-    for (const modelName of MODELS) {
-      try {
-        const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`,
-          {
+    // Model resmi yang terbukti stabil & didukung Google REST API
+    const MODELS = ['gemini-1.5-flash', 'gemini-2.0-flash'];
+    let lastErrorMsg = 'Server sibuk';
+
+    for (const apiKey of API_KEYS) {
+      for (const modelName of MODELS) {
+        try {
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+          const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               contents: [{ parts: [{ text: promptText }] }]
             })
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.candidates && data.candidates.length > 0) {
+            return res.status(200).json(data);
           }
-        );
 
-        const data = await response.json();
-
-        // Jika sukses mendapatkan jawaban dari Google
-        if (response.ok && data.candidates && data.candidates.length > 0) {
-          return res.status(200).json(data);
+          lastErrorMsg = data.error?.message || `Model ${modelName} gagal`;
+        } catch (err) {
+          lastErrorMsg = err.message;
         }
-
-        lastErrorDetail = data.error?.message || 'Server sibuk';
-      } catch (err) {
-        lastErrorDetail = err.message;
       }
     }
-  }
 
-  // 4. Jika semua Key & Model gagal/high demand, kirim status 503 dengan kode 'SERVER_BUSY'
-  return res.status(503).json({ 
-    error: { message: 'SERVER_BUSY', detail: lastErrorDetail } 
-  });
+    return res.status(503).json({ error: { message: 'SERVER_BUSY', detail: lastErrorMsg } });
+
+  } catch (serverErr) {
+    // Menangkap crash tak terduga agar server tetap mengembalikan format JSON
+    return res.status(500).json({ error: { message: 'SERVER_CRASH', detail: serverErr.message } });
+  }
 }
