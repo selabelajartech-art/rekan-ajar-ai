@@ -291,33 +291,33 @@
 
     <!-- HEADER / NAVIGATION TOP BAR -->
     <header
-        class="bg-tealbrand-900 text-white border-b border-tealbrand-800 px-4 md:px-6 py-2.5 md:py-3 flex items-center justify-between shadow-md z-30 flex-shrink-0">
-        <div class="flex items-center space-x-2 md:space-x-3 cursor-pointer">
+        class="bg-tealbrand-900 text-white border-b border-tealbrand-800 px-3 md:px-6 py-2.5 md:py-3 flex items-center justify-between shadow-md z-30 flex-shrink-0">
+        <div class="flex items-center space-x-1.5 sm:space-x-3 cursor-pointer min-w-0">
+            <!-- BURGER MENU BUTTON (HIDDEN DEFAULT PADA LANDING PAGE) -->
             <button id="mobile-menu-btn" onclick="toggleMobileSidebar()"
-                class="lg:hidden p-2 text-tealbrand-200 hover:text-white hover:bg-tealbrand-800 rounded-lg transition"
+                class="hidden lg:hidden p-1.5 sm:p-2 text-tealbrand-200 hover:text-white hover:bg-tealbrand-800 rounded-lg transition flex-shrink-0"
                 title="Buka Sidebar Navigasi">
-                <i class="fa-solid fa-bars text-lg"></i>
+                <i class="fa-solid fa-bars text-base sm:text-lg"></i>
             </button>
 
-            <div class="flex items-center space-x-2" onclick="switchTab('landing')">
+            <!-- LOGO & MEREK (DIATUR SUPAYA RAPI DI HAPE & TANPA TULISAN AI PRO DI HAPE) -->
+            <div class="flex items-center space-x-1.5 sm:space-x-2 min-w-0 flex-shrink-0" onclick="switchTab('landing')">
                 <div
-                    class="p-1 rounded-xl font-bold flex items-center justify-center w-9 h-9 md:w-11 md:h-11 overflow-hidden">
+                    class="p-0.5 sm:p-1 rounded-xl font-bold flex items-center justify-center w-8 h-8 md:w-11 md:h-11 overflow-hidden flex-shrink-0">
                     <img src="logo.png" alt="Rekan Ajar AI Logo"
                         class="w-full h-full object-contain brightness-0 invert">
                 </div>
-                <div>
-                    <h1 class="text-base md:text-xl font-extrabold tracking-tight flex items-center gap-1.5 md:gap-2">
-                        Rekan Ajar <span
-                            class="bg-tealbrand-500/20 text-tealbrand-200 text-[10px] md:text-xs px-2 py-0.5 rounded-full font-semibold border border-tealbrand-500/30">AI
-                            Pro</span>
+                <div class="whitespace-nowrap flex-shrink-0">
+                    <h1 class="text-sm sm:text-base md:text-xl font-extrabold tracking-tight flex items-center gap-1.5 md:gap-2 whitespace-nowrap">
+                        Rekan Ajar
+                        <span class="hidden sm:inline-block bg-tealbrand-500/20 text-tealbrand-200 text-[10px] md:text-xs px-2 py-0.5 rounded-full font-semibold border border-tealbrand-500/30 whitespace-nowrap">AI Pro</span>
                     </h1>
-                    <p class="hidden sm:block text-[11px] text-tealbrand-100/70">Asisten Administrasi & Workspace Guru
-                        Merdeka</p>
+                    <p class="hidden sm:block text-[11px] text-tealbrand-100/70">Asisten Administrasi & Workspace Guru Merdeka</p>
                 </div>
             </div>
         </div>
 
-        <div class="flex items-center space-x-2 md:space-x-4">
+        <div class="flex items-center space-x-1.5 md:space-x-4 flex-shrink-0">
             <nav class="hidden md:flex items-center space-x-1 mr-2 text-xs font-semibold">
                 <button onclick="switchTab('landing')"
                     class="px-3 py-1.5 rounded-lg hover:bg-tealbrand-800 text-tealbrand-100 transition">Beranda</button>
@@ -330,7 +330,7 @@
             </nav>
 
             <div id="header-token-container"
-                class="hidden bg-tealbrand-800 border border-tealbrand-700 rounded-xl px-2.5 md:px-3 py-1 md:py-1.5 items-center gap-1.5 md:gap-2">
+                class="hidden bg-tealbrand-800 border border-tealbrand-700 rounded-xl px-2 md:px-3 py-1 md:py-1.5 items-center gap-1 md:gap-2">
                 <i class="fa-solid fa-coins text-amber-400 text-xs md:text-sm"></i>
                 <div class="text-xs">
                     <span class="text-tealbrand-200 hidden md:block text-[10px]">Saldo Token</span>
@@ -339,14 +339,14 @@
             </div>
 
             <button id="header-topup-btn" onclick="switchTab('topup')"
-                class="hidden bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-bold text-xs px-2.5 md:px-3.5 py-1.5 md:py-2 rounded-xl shadow-sm transition items-center gap-1 md:gap-1.5">
+                class="hidden bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-bold text-xs px-2 md:px-3.5 py-1.5 md:py-2 rounded-xl shadow-sm transition items-center gap-1 md:gap-1.5">
                 <i class="fa-solid fa-plus-circle"></i>
                 <span class="hidden sm:inline">Isi Token</span>
             </button>
 
             <div id="auth-btn-container">
                 <button onclick="openAuthModal()"
-                    class="bg-tealbrand-600 hover:bg-tealbrand-500 text-white font-bold text-xs px-3 md:px-3.5 py-1.5 md:py-2 rounded-xl transition shadow flex items-center gap-1.5">
+                    class="bg-tealbrand-600 hover:bg-tealbrand-500 text-white font-bold text-xs px-2.5 md:px-3.5 py-1.5 md:py-2 rounded-xl transition shadow flex items-center gap-1.5">
                     <i class="fa-solid fa-user-plus"></i>
                     <span class="hidden sm:inline">Login / Daftar</span>
                 </button>
@@ -1356,12 +1356,12 @@
         };
 
         const moduleTitles = {
-            'modul-ajar': 'Generator Modul Ajar / RPP Plus',
-            'tp-atp': 'Generator Tujuan & Alur Pembelajaran (TP/ATP)',
-            'prota-prosem': 'Generator Program Tahunan & Semester (Prota/Prosem)',
-            'lkpd': 'Generator Lembar Kerja Peserta Didik (LKPD)',
-            'asesmen': 'Generator Instrumen & Rubrik Asesmen',
-            'p5': 'Generator Modul Projek P5'
+            'modul-ajar': 'Asisten Modul Ajar / RPP Plus',
+            'tp-atp': 'Asisten Tujuan & Alur Pembelajaran (TP/ATP)',
+            'prota-prosem': 'Asisten Program Tahunan & Semester (Prota/Prosem)',
+            'lkpd': 'Asisten Lembar Kerja Peserta Didik (LKPD)',
+            'asesmen': 'Asisten Instrumen & Rubrik Asesmen',
+            'p5': 'Asisten Modul Projek P5'
         };
 
         // TOAST NOTIFIKASI (Z-INDEX BROWSER DIATAS SEMUA MODAL)
@@ -1779,6 +1779,7 @@
             shell.style.setProperty('zoom', '1', 'important');
         }
 
+        // CONTROL PENAMPILAN TAB DAN BURGER MENU PADA LANDING PAGE VS WORKSPACE
         function switchTab(tabName) {
             lockAppShell();
             activeTab = tabName;
@@ -1787,6 +1788,7 @@
             const appWorkspace = document.getElementById('app-workspace');
             const tokenContainer = document.getElementById('header-token-container');
             const topupBtn = document.getElementById('header-topup-btn');
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
 
             const sidebar = document.getElementById('global-sidebar');
             const overlay = document.getElementById('sidebar-overlay');
@@ -1807,6 +1809,9 @@
                 tokenContainer.classList.remove('flex');
                 topupBtn.classList.add('hidden');
                 topupBtn.classList.remove('flex');
+                
+                // HILANGKAN TOMBOL BURGER SAAT DI LANDING PAGE
+                if (mobileMenuBtn) mobileMenuBtn.classList.add('hidden');
             } else {
                 landingView.classList.add('hidden');
                 appWorkspace.classList.remove('hidden');
@@ -1816,6 +1821,9 @@
                 tokenContainer.classList.add('flex');
                 topupBtn.classList.remove('hidden');
                 topupBtn.classList.add('flex');
+                
+                // TAMPILKAN TOMBOL BURGER DI WORKSPACE UNTUK TAMPILAN MOBILE
+                if (mobileMenuBtn) mobileMenuBtn.classList.remove('hidden');
 
                 if (tabName === 'generator') document.getElementById('view-generator').classList.remove('hidden');
                 if (tabName === 'workbook') document.getElementById('view-workbook').classList.remove('hidden');
