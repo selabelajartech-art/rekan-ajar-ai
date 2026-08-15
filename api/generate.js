@@ -15,8 +15,8 @@ export default async function handler(req, res) {
   ].filter(Boolean); // Hanya ambil yang terisi
 
   // 2. Daftar model yang dicoba berurutan (utamakan flash yang stabil)
-  const MODELS = ['gemini-1.5-flash', 'gemini-1.5-flash-latest'];
-
+  const MODELS = ['gemini-1.5-flash', 'gemini-2.0-flash'];
+git
   let lastErrorDetail = null;
 
   // 3. Looping mencoba kombinasi API Key & Model secara otomatis
