@@ -6,14 +6,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rekan Ajar AI - Platform Administrasi Kurikulum Merdeka & Workspace Guru Pro</title>
-    
+
     <!-- Favicon / Ikon Tab Browser -->
     <link rel="icon" type="image/png" href="favicon-logo.png">
 
     <!-- OPEN GRAPH META TAGS (Preview Link WhatsApp, Facebook, Telegram) -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="Rekan Ajar AI Pro - Asisten Administrasi & Workspace Guru Merdeka">
-    <meta property="og:description" content="Bantu Bapak/Ibu Guru menyusun Modul Ajar, TP/ATP, Prota, Prosem, LKPD, hingga Asesmen sesuai standar BSKAP resmi secara instan. Dilengkapi Buku Kerja Digital Guru.">
+    <meta property="og:description"
+        content="Bantu Bapak/Ibu Guru menyusun Modul Ajar, TP/ATP, Prota, Prosem, LKPD, hingga Asesmen sesuai standar BSKAP resmi secara instan. Dilengkapi Buku Kerja Digital Guru.">
     <meta property="og:image" content="logo.png">
     <meta property="og:url" content="https://rekan-ajar-ai.vercel.app">
 
@@ -166,7 +167,9 @@
 
         /* MODE CETAK BROWSER */
         @media print {
-            html, body {
+
+            html,
+            body {
                 height: auto !important;
                 overflow: visible !important;
                 background: #ffffff !important;
@@ -176,11 +179,16 @@
                 visibility: hidden;
             }
 
-            #printableArea, #printableArea * {
+            #printableArea,
+            #printableArea * {
                 visibility: visible;
             }
 
-            #app-workspace, main, #view-generator, #panel-generator-editor, #printableArea {
+            #app-workspace,
+            main,
+            #view-generator,
+            #panel-generator-editor,
+            #printableArea {
                 display: block !important;
                 position: absolute !important;
                 left: 0 !important;
@@ -194,7 +202,8 @@
                 border: none !important;
             }
 
-            #editor-placeholder, #editor-loading {
+            #editor-placeholder,
+            #editor-loading {
                 display: none !important;
             }
 
@@ -213,13 +222,15 @@
                 page-break-after: auto;
             }
 
-            #editorContent h2, #editorContent h3 {
+            #editorContent h2,
+            #editorContent h3 {
                 page-break-after: avoid;
             }
         }
 
         /* APP SHELL ISOLATION */
-        html, body {
+        html,
+        body {
             width: 100%;
             min-width: 0;
             max-width: none !important;
@@ -242,7 +253,7 @@
             isolation: isolate;
         }
 
-        #app-shell > header {
+        #app-shell>header {
             width: 100vw !important;
             max-width: none !important;
             min-width: 0 !important;
@@ -250,7 +261,7 @@
             box-sizing: border-box !important;
         }
 
-        #app-shell > .flex.flex-1 {
+        #app-shell>.flex.flex-1 {
             width: 100% !important;
             max-width: none !important;
             min-width: 0 !important;
@@ -258,16 +269,26 @@
             box-sizing: border-box !important;
         }
 
-        #app-workspace, #view-generator, #view-workbook, #view-pustaka, #view-topup, #view-generator > *, #panel-generator-form, #panel-generator-editor, #printableArea {
+        #app-workspace,
+        #view-generator,
+        #view-workbook,
+        #view-pustaka,
+        #view-topup,
+        #view-generator>*,
+        #panel-generator-form,
+        #panel-generator-editor,
+        #printableArea {
             min-width: 0 !important;
         }
 
-        #app-workspace, #view-generator {
+        #app-workspace,
+        #view-generator {
             width: 100% !important;
             max-width: none !important;
         }
 
-        #panel-generator-form, #panel-generator-editor {
+        #panel-generator-form,
+        #panel-generator-editor {
             min-width: 0 !important;
             max-width: none !important;
         }
@@ -289,897 +310,994 @@
     <!-- APP SHELL -->
     <div id="app-shell" aria-label="Rekan Ajar AI application shell">
 
-    <!-- HEADER / NAVIGATION TOP BAR -->
-    <header
-        class="bg-tealbrand-900 text-white border-b border-tealbrand-800 px-3 md:px-6 py-2.5 md:py-3 flex items-center justify-between shadow-md z-30 flex-shrink-0">
-        <div class="flex items-center space-x-1.5 sm:space-x-3 cursor-pointer min-w-0">
-            <!-- BURGER MENU BUTTON (HIDDEN DEFAULT PADA LANDING PAGE) -->
-            <button id="mobile-menu-btn" onclick="toggleMobileSidebar()"
-                class="hidden lg:hidden p-1.5 sm:p-2 text-tealbrand-200 hover:text-white hover:bg-tealbrand-800 rounded-lg transition flex-shrink-0"
-                title="Buka Sidebar Navigasi">
-                <i class="fa-solid fa-bars text-base sm:text-lg"></i>
-            </button>
-
-            <!-- LOGO & MEREK (DIATUR SUPAYA RAPI DI HAPE & TANPA TULISAN AI PRO DI HAPE) -->
-            <div class="flex items-center space-x-1.5 sm:space-x-2 min-w-0 flex-shrink-0" onclick="switchTab('landing')">
-                <div
-                    class="p-0.5 sm:p-1 rounded-xl font-bold flex items-center justify-center w-8 h-8 md:w-11 md:h-11 overflow-hidden flex-shrink-0">
-                    <img src="logo.png" alt="Rekan Ajar AI Logo"
-                        class="w-full h-full object-contain brightness-0 invert">
-                </div>
-                <div class="whitespace-nowrap flex-shrink-0">
-                    <h1 class="text-sm sm:text-base md:text-xl font-extrabold tracking-tight flex items-center gap-1.5 md:gap-2 whitespace-nowrap">
-                        Rekan Ajar
-                        <span class="hidden sm:inline-block bg-tealbrand-500/20 text-tealbrand-200 text-[10px] md:text-xs px-2 py-0.5 rounded-full font-semibold border border-tealbrand-500/30 whitespace-nowrap">AI Pro</span>
-                    </h1>
-                    <p class="hidden sm:block text-[11px] text-tealbrand-100/70">Asisten Administrasi & Workspace Guru Merdeka</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="flex items-center space-x-1.5 md:space-x-4 flex-shrink-0">
-            <nav class="hidden md:flex items-center space-x-1 mr-2 text-xs font-semibold">
-                <button onclick="switchTab('landing')"
-                    class="px-3 py-1.5 rounded-lg hover:bg-tealbrand-800 text-tealbrand-100 transition">Beranda</button>
-                <button onclick="switchTab('generator')"
-                    class="px-3 py-1.5 rounded-lg hover:bg-tealbrand-800 text-tealbrand-100 transition">Workspace
-                    Generator</button>
-                <button onclick="switchTab('workbook')"
-                    class="px-3 py-1.5 rounded-lg hover:bg-tealbrand-800 text-tealbrand-100 transition">Workbook
-                    Guru</button>
-            </nav>
-
-            <div id="header-token-container"
-                class="hidden bg-tealbrand-800 border border-tealbrand-700 rounded-xl px-2 md:px-3 py-1 md:py-1.5 items-center gap-1 md:gap-2">
-                <i class="fa-solid fa-coins text-amber-400 text-xs md:text-sm"></i>
-                <div class="text-xs">
-                    <span class="text-tealbrand-200 hidden md:block text-[10px]">Saldo Token</span>
-                    <span id="tokenBalance" class="font-bold text-amber-300">0</span>
-                </div>
-            </div>
-
-            <button id="header-topup-btn" onclick="switchTab('topup')"
-                class="hidden bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-bold text-xs px-2 md:px-3.5 py-1.5 md:py-2 rounded-xl shadow-sm transition items-center gap-1 md:gap-1.5">
-                <i class="fa-solid fa-plus-circle"></i>
-                <span class="hidden sm:inline">Isi Token</span>
-            </button>
-
-            <div id="auth-btn-container">
-                <button onclick="openAuthModal()"
-                    class="bg-tealbrand-600 hover:bg-tealbrand-500 text-white font-bold text-xs px-2.5 md:px-3.5 py-1.5 md:py-2 rounded-xl transition shadow flex items-center gap-1.5">
-                    <i class="fa-solid fa-user-plus"></i>
-                    <span class="hidden sm:inline">Login / Daftar</span>
+        <!-- HEADER / NAVIGATION TOP BAR -->
+        <header
+            class="bg-tealbrand-900 text-white border-b border-tealbrand-800 px-3 md:px-6 py-2.5 md:py-3 flex items-center justify-between shadow-md z-30 flex-shrink-0">
+            <div class="flex items-center space-x-1.5 sm:space-x-3 cursor-pointer min-w-0">
+                <!-- BURGER MENU BUTTON (HIDDEN DEFAULT PADA LANDING PAGE) -->
+                <button id="mobile-menu-btn" onclick="toggleMobileSidebar()"
+                    class="hidden lg:hidden p-1.5 sm:p-2 text-tealbrand-200 hover:text-white hover:bg-tealbrand-800 rounded-lg transition flex-shrink-0"
+                    title="Buka Sidebar Navigasi">
+                    <i class="fa-solid fa-bars text-base sm:text-lg"></i>
                 </button>
-            </div>
-        </div>
-    </header>
 
-    <!-- MAIN CONTAINER -->
-    <div class="flex flex-1 overflow-hidden relative">
-
-        <!-- VIEW 1: LANDING PAGE -->
-        <div id="view-landing" class="flex-1 overflow-y-auto custom-scrollbar bg-slate-50">
-            <!-- HERO SECTION -->
-            <section
-                class="bg-gradient-to-b from-tealbrand-900 via-tealbrand-800 to-slate-900 text-white py-12 md:py-16 px-4 md:px-6 relative overflow-hidden">
-                <div class="max-w-5xl mx-auto text-center relative z-10">
-                    <span
-                        class="inline-flex items-center gap-2 bg-tealbrand-500/20 text-tealbrand-200 border border-tealbrand-500/30 px-3 py-1 rounded-full text-xs font-semibold mb-4 md:mb-6">
-                        <i class="fa-solid fa-sparkles text-amber-400"></i> Platform Administrasi Kurikulum Merdeka Pilihan Bapak & Ibu Guru
-                    </span>
-                    <h1 class="text-2xl md:text-5xl font-extrabold tracking-tight leading-tight mb-4 md:mb-6">
-                        Penyusunan Perangkat Ajar Mengajar, <br><span
-                            class="text-transparent bg-clip-text bg-gradient-to-r from-tealbrand-200 to-emerald-400">Lebih Ringan & Presisi</span>
-                    </h1>
-                    <p
-                        class="text-xs md:text-base text-tealbrand-100/80 max-w-2xl mx-auto mb-6 md:mb-8 leading-relaxed">
-                        Susun Modul Ajar, TP/ATP, Prota, Prosem, LKPD, hingga Asesmen sesuai standar BSKAP resmi dalam hitungan detik. Bebaskan waktu Bapak/Ibu Guru untuk hal yang lebih bermakna: mendampingi siswa.
-                    </p>
-                    <div class="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4">
-                        <button onclick="switchTab('generator')"
-                            class="w-full sm:w-auto bg-tealbrand-500 hover:bg-tealbrand-600 text-tealbrand-950 font-extrabold text-xs md:text-sm px-6 py-3.5 rounded-2xl shadow-lg transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-rocket"></i>
-                            <span>Coba Buat Perangkat Ajar (Gratis 15 Token)</span>
-                        </button>
-                        <button onclick="switchTab('workbook')"
-                            class="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold text-xs md:text-sm px-5 py-3.5 rounded-2xl transition">
-                            <i class="fa-solid fa-book-bookmark mr-2"></i> Buka Buku Kerja Guru
-                        </button>
+                <!-- LOGO & MEREK (DIATUR SUPAYA RAPI DI HAPE & TANPA TULISAN AI PRO DI HAPE) -->
+                <div class="flex items-center space-x-1.5 sm:space-x-2 min-w-0 flex-shrink-0"
+                    onclick="switchTab('landing')">
+                    <div
+                        class="p-0.5 sm:p-1 rounded-xl font-bold flex items-center justify-center w-8 h-8 md:w-11 md:h-11 overflow-hidden flex-shrink-0">
+                        <img src="logo.png" alt="Rekan Ajar AI Logo"
+                            class="w-full h-full object-contain brightness-0 invert">
+                    </div>
+                    <div class="whitespace-nowrap flex-shrink-0">
+                        <h1
+                            class="text-sm sm:text-base md:text-xl font-extrabold tracking-tight flex items-center gap-1.5 md:gap-2 whitespace-nowrap">
+                            Rekan Ajar
+                            <span
+                                class="hidden sm:inline-block bg-tealbrand-500/20 text-tealbrand-200 text-[10px] md:text-xs px-2 py-0.5 rounded-full font-semibold border border-tealbrand-500/30 whitespace-nowrap">AI
+                                Pro</span>
+                        </h1>
+                        <p class="hidden sm:block text-[11px] text-tealbrand-100/70">Asisten Administrasi & Workspace
+                            Guru Merdeka</p>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <!-- KALKULATOR EFISIENSI -->
-            <section class="py-10 md:py-14 px-4 md:px-6 max-w-4xl mx-auto -mt-6 md:-mt-8 relative z-20">
-                <div class="bg-white p-5 md:p-8 rounded-3xl border border-slate-200 shadow-xl">
-                    <div class="text-center mb-6">
-                        <span
-                            class="bg-tealbrand-50 text-tealbrand-700 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Kalkulator Efisiensi Guru</span>
-                        <h2 class="text-xl md:text-2xl font-extrabold text-slate-800 mt-2">Berapa Banyak Waktu yang Bisa Bapak/Ibu Hemat?</h2>
-                        <p class="text-xs text-slate-500 mt-1">Hitung estimasi waktu penyusunan administrasi manual vs menggunakan Rekan Ajar AI</p>
+            <div class="flex items-center space-x-1.5 md:space-x-4 flex-shrink-0">
+                <nav class="hidden md:flex items-center space-x-1 mr-2 text-xs font-semibold">
+                    <button onclick="switchTab('landing')"
+                        class="px-3 py-1.5 rounded-lg hover:bg-tealbrand-800 text-tealbrand-100 transition">Beranda</button>
+                    <button onclick="switchTab('generator')"
+                        class="px-3 py-1.5 rounded-lg hover:bg-tealbrand-800 text-tealbrand-100 transition">Workspace
+                        Generator</button>
+                    <button onclick="switchTab('workbook')"
+                        class="px-3 py-1.5 rounded-lg hover:bg-tealbrand-800 text-tealbrand-100 transition">Workbook
+                        Guru</button>
+                </nav>
+
+                <div id="header-token-container"
+                    class="hidden bg-tealbrand-800 border border-tealbrand-700 rounded-xl px-2 md:px-3 py-1 md:py-1.5 items-center gap-1 md:gap-2">
+                    <i class="fa-solid fa-coins text-amber-400 text-xs md:text-sm"></i>
+                    <div class="text-xs">
+                        <span class="text-tealbrand-200 hidden md:block text-[10px]">Saldo Token</span>
+                        <span id="tokenBalance" class="font-bold text-amber-300">0</span>
                     </div>
+                </div>
 
-                    <div
-                        class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center border-t border-slate-100 pt-6">
-                        <div class="space-y-5">
-                            <div>
-                                <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
-                                    <span>Jumlah Kelas / Rombel:</span>
-                                    <span id="calc-kelas-val" class="text-tealbrand-700">3 Kelas</span>
-                                </div>
-                                <input type="range" id="calc-kelas" min="1" max="10" value="3"
-                                    oninput="updateCalculator()"
-                                    class="w-full accent-tealbrand-600 h-2 bg-slate-200 rounded-lg cursor-pointer">
-                            </div>
+                <button id="header-topup-btn" onclick="switchTab('topup')"
+                    class="hidden bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-bold text-xs px-2 md:px-3.5 py-1.5 md:py-2 rounded-xl shadow-sm transition items-center gap-1 md:gap-1.5">
+                    <i class="fa-solid fa-plus-circle"></i>
+                    <span class="hidden sm:inline">Isi Token</span>
+                </button>
 
-                            <div>
-                                <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
-                                    <span>Dokumen per Semester:</span>
-                                    <span id="calc-docs-val" class="text-tealbrand-700">8 Dokumen</span>
-                                </div>
-                                <input type="range" id="calc-docs" min="2" max="20" value="8"
-                                    oninput="updateCalculator()"
-                                    class="w-full accent-tealbrand-600 h-2 bg-slate-200 rounded-lg cursor-pointer">
-                            </div>
+                <div id="auth-btn-container">
+                    <button onclick="openAuthModal()"
+                        class="bg-tealbrand-600 hover:bg-tealbrand-500 text-white font-bold text-xs px-2.5 md:px-3.5 py-1.5 md:py-2 rounded-xl transition shadow flex items-center gap-1.5">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span class="hidden sm:inline">Login / Daftar</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN CONTAINER -->
+        <div class="flex flex-1 overflow-hidden relative">
+
+            <!-- VIEW 1: LANDING PAGE -->
+            <div id="view-landing" class="flex-1 overflow-y-auto custom-scrollbar bg-slate-50">
+                <!-- HERO SECTION -->
+                <section
+                    class="bg-gradient-to-b from-tealbrand-900 via-tealbrand-800 to-slate-900 text-white py-12 md:py-16 px-4 md:px-6 relative overflow-hidden">
+                    <div class="max-w-5xl mx-auto text-center relative z-10">
+                        <span
+                            class="inline-flex items-center gap-2 bg-tealbrand-500/20 text-tealbrand-200 border border-tealbrand-500/30 px-3 py-1 rounded-full text-xs font-semibold mb-4 md:mb-6">
+                            <i class="fa-solid fa-sparkles text-amber-400"></i> Platform Administrasi Kurikulum Merdeka
+                            Pilihan Bapak & Ibu Guru
+                        </span>
+                        <h1 class="text-2xl md:text-5xl font-extrabold tracking-tight leading-tight mb-4 md:mb-6">
+                            Penyusunan Perangkat Ajar Mengajar, <br><span
+                                class="text-transparent bg-clip-text bg-gradient-to-r from-tealbrand-200 to-emerald-400">Lebih
+                                Ringan & Presisi</span>
+                        </h1>
+                        <p
+                            class="text-xs md:text-base text-tealbrand-100/80 max-w-2xl mx-auto mb-6 md:mb-8 leading-relaxed">
+                            Susun Modul Ajar, TP/ATP, Prota, Prosem, LKPD, hingga Asesmen sesuai standar BSKAP resmi
+                            dalam hitungan detik. Bebaskan waktu Bapak/Ibu Guru untuk hal yang lebih bermakna:
+                            mendampingi siswa.
+                        </p>
+                        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4">
+                            <button onclick="switchTab('generator')"
+                                class="w-full sm:w-auto bg-tealbrand-500 hover:bg-tealbrand-600 text-tealbrand-950 font-extrabold text-xs md:text-sm px-6 py-3.5 rounded-2xl shadow-lg transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-rocket"></i>
+                                <span>Coba Buat Perangkat Ajar (Gratis 15 Token)</span>
+                            </button>
+                            <button onclick="switchTab('workbook')"
+                                class="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold text-xs md:text-sm px-5 py-3.5 rounded-2xl transition">
+                                <i class="fa-solid fa-book-bookmark mr-2"></i> Buka Buku Kerja Guru
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- KALKULATOR EFISIENSI -->
+                <section class="py-10 md:py-14 px-4 md:px-6 max-w-4xl mx-auto -mt-6 md:-mt-8 relative z-20">
+                    <div class="bg-white p-5 md:p-8 rounded-3xl border border-slate-200 shadow-xl">
+                        <div class="text-center mb-6">
+                            <span
+                                class="bg-tealbrand-50 text-tealbrand-700 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Kalkulator
+                                Efisiensi Guru</span>
+                            <h2 class="text-xl md:text-2xl font-extrabold text-slate-800 mt-2">Berapa Banyak Waktu yang
+                                Bisa Bapak/Ibu Hemat?</h2>
+                            <p class="text-xs text-slate-500 mt-1">Hitung estimasi waktu penyusunan administrasi manual
+                                vs menggunakan Rekan Ajar AI</p>
                         </div>
 
                         <div
-                            class="bg-gradient-to-br from-tealbrand-50 to-emerald-50 p-5 md:p-6 rounded-2xl border border-tealbrand-100 text-center">
-                            <div class="text-xs text-slate-500 font-semibold">Estimasi Waktu Dihemat:</div>
-                            <div id="calc-hours-saved"
-                                class="text-2xl md:text-3xl font-extrabold text-tealbrand-800 my-1">91.2 Jam</div>
-                            <p id="calc-description" class="text-[11px] text-slate-600 leading-relaxed">
-                                Setara dengan hemat <strong class="text-tealbrand-700">11 hari kerja</strong>! Waktu istirahat dan akhir pekan Bapak/Ibu kini bisa dinikmati bersama keluarga.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
+                            class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center border-t border-slate-100 pt-6">
+                            <div class="space-y-5">
+                                <div>
+                                    <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                                        <span>Jumlah Kelas / Rombel:</span>
+                                        <span id="calc-kelas-val" class="text-tealbrand-700">3 Kelas</span>
+                                    </div>
+                                    <input type="range" id="calc-kelas" min="1" max="10" value="3"
+                                        oninput="updateCalculator()"
+                                        class="w-full accent-tealbrand-600 h-2 bg-slate-200 rounded-lg cursor-pointer">
+                                </div>
 
-            <!-- FEATURE HIGHLIGHTS -->
-            <section class="py-8 md:py-12 px-4 md:px-6 max-w-6xl mx-auto">
-                <div class="text-center mb-8 md:mb-12">
-                    <h2 class="text-2xl font-extrabold text-slate-800">Semua Kebutuhan Mengajar dalam Satu Tempat</h2>
-                    <p class="text-xs text-slate-500 mt-1">Dirancang khusus membantu komprehensivitas Kurikulum Merdeka</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div
-                        class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
-                        <div>
-                            <div
-                                class="w-12 h-12 bg-tealbrand-50 text-tealbrand-700 rounded-xl flex items-center justify-center text-xl font-bold mb-4">
-                                <i class="fa-solid fa-layer-group"></i>
+                                <div>
+                                    <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                                        <span>Dokumen per Semester:</span>
+                                        <span id="calc-docs-val" class="text-tealbrand-700">8 Dokumen</span>
+                                    </div>
+                                    <input type="range" id="calc-docs" min="2" max="20" value="8"
+                                        oninput="updateCalculator()"
+                                        class="w-full accent-tealbrand-600 h-2 bg-slate-200 rounded-lg cursor-pointer">
+                                </div>
                             </div>
-                            <h3 class="font-bold text-slate-800 text-base mb-2">Pemetaan & Perencanaan Ajar</h3>
-                            <p class="text-xs text-slate-600 leading-relaxed">Penyusunan TP, ATP, Program Tahunan (Prota), dan Program Semester (Prosem) terstruktur rapi dan terintegrasi.</p>
-                        </div>
-                        <ul class="text-xs text-slate-500 space-y-1.5 mt-4 pt-4 border-t border-slate-100">
-                            <li><i class="fa-solid fa-circle-check text-tealbrand-600 mr-1.5"></i> Pemetaan Fase Otomatis</li>
-                            <li><i class="fa-solid fa-circle-check text-tealbrand-600 mr-1.5"></i> Integrasi CP BSKAP Resmi</li>
-                        </ul>
-                    </div>
 
-                    <div
-                        class="bg-white p-6 rounded-2xl border border-tealbrand-500/30 ring-2 ring-tealbrand-500/10 shadow-md flex flex-col justify-between">
-                        <div>
                             <div
-                                class="w-12 h-12 bg-tealbrand-700 text-white rounded-xl flex items-center justify-center text-xl font-bold mb-4 shadow-sm">
-                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                class="bg-gradient-to-br from-tealbrand-50 to-emerald-50 p-5 md:p-6 rounded-2xl border border-tealbrand-100 text-center">
+                                <div class="text-xs text-slate-500 font-semibold">Estimasi Waktu Dihemat:</div>
+                                <div id="calc-hours-saved"
+                                    class="text-2xl md:text-3xl font-extrabold text-tealbrand-800 my-1">91.2 Jam</div>
+                                <p id="calc-description" class="text-[11px] text-slate-600 leading-relaxed">
+                                    Setara dengan hemat <strong class="text-tealbrand-700">11 hari kerja</strong>! Waktu
+                                    istirahat dan akhir pekan Bapak/Ibu kini bisa dinikmati bersama keluarga.
+                                </p>
                             </div>
-                            <h3 class="font-bold text-slate-800 text-base mb-2">Modul Ajar, LKPD & Asesmen</h3>
-                            <p class="text-xs text-slate-600 leading-relaxed">Susun Modul Ajar berdiferensiasi, Lembar Kerja Siswa (LKPD), Soal HOTS, Rubrik Asesmen & Projek P5.</p>
                         </div>
-                        <ul class="text-xs text-slate-500 space-y-1.5 mt-4 pt-4 border-t border-slate-100">
-                            <li><i class="fa-solid fa-circle-check text-tealbrand-600 mr-1.5"></i> Model PBL, PjBL, Discovery</li>
-                            <li><i class="fa-solid fa-circle-check text-tealbrand-600 mr-1.5"></i> Ekspor Docx & PDF Instan</li>
-                        </ul>
                     </div>
+                </section>
 
-                    <div
-                        class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
-                        <div>
-                            <div
-                                class="w-12 h-12 bg-tealbrand-50 text-tealbrand-700 rounded-xl flex items-center justify-center text-xl font-bold mb-4">
-                                <i class="fa-solid fa-clipboard-user"></i>
-                            </div>
-                            <h3 class="font-bold text-slate-800 text-base mb-2">Buku Kerja & Presensi Digital</h3>
-                            <p class="text-xs text-slate-600 leading-relaxed">Kelola absensi harian, jurnal kegiatan mengajar, serta rekap penilaian siswa secara langsung dari HP atau Laptop.</p>
-                        </div>
-                        <ul class="text-xs text-slate-500 space-y-1.5 mt-4 pt-4 border-t border-slate-100">
-                            <li><i class="fa-solid fa-circle-check text-tealbrand-600 mr-1.5"></i> Tersimpan di Cloud Supabase</li>
-                            <li><i class="fa-solid fa-circle-check text-tealbrand-600 mr-1.5"></i> Akses Kapan Saja</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-
-            <!-- WHY CHOOSE US -->
-            <section class="py-12 md:py-14 bg-slate-100/80 border-y border-slate-200 px-4 md:px-6">
-                <div class="max-w-6xl mx-auto">
+                <!-- FEATURE HIGHLIGHTS -->
+                <section class="py-8 md:py-12 px-4 md:px-6 max-w-6xl mx-auto">
                     <div class="text-center mb-8 md:mb-12">
-                        <span
-                            class="bg-tealbrand-100 text-tealbrand-800 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Keunggulan Utama</span>
-                        <h2 class="text-2xl font-extrabold text-slate-800 mt-2">Mengapa Ribuan Guru Memilih Rekan Ajar AI?</h2>
-                        <p class="text-xs text-slate-500 mt-1">Dibuat khusus menyesuaikan standar administrasi sekolah di Indonesia</p>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                            <div
-                                class="w-10 h-10 bg-tealbrand-100 text-tealbrand-700 rounded-xl flex items-center justify-center font-bold text-lg mb-3">
-                                <i class="fa-solid fa-certificate"></i>
-                            </div>
-                            <h4 class="font-bold text-slate-800 text-sm mb-1">Standar BSKAP Resmi</h4>
-                            <p class="text-xs text-slate-500 leading-relaxed">Penyusunan indikator, CP, TP, dan kriteria ketercapaian sesuai aturan Kurikulum Merdeka terkini.</p>
-                        </div>
-
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                            <div
-                                class="w-10 h-10 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center font-bold text-lg mb-3">
-                                <i class="fa-solid fa-infinity"></i>
-                            </div>
-                            <h4 class="font-bold text-slate-800 text-sm mb-1">Masa Aktif Tanpa Batas</h4>
-                            <p class="text-xs text-slate-500 leading-relaxed">Token yang Bapak/Ibu miliki tidak akan hangus tiap bulan. Gunakan kapan saja saat dibutuhkan.</p>
-                        </div>
-
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                            <div
-                                class="w-10 h-10 bg-blue-100 text-blue-700 rounded-xl flex items-center justify-center font-bold text-lg mb-3">
-                                <i class="fa-solid fa-file-word"></i>
-                            </div>
-                            <h4 class="font-bold text-slate-800 text-sm mb-1">Unduh Word & PDF Rapi</h4>
-                            <p class="text-xs text-slate-500 leading-relaxed">Hasil penyusunan tersusun dalam tabel rapi yang siap diunduh ke format .DOCX tanpa rusak.</p>
-                        </div>
-
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                            <div
-                                class="w-10 h-10 bg-purple-100 text-purple-700 rounded-xl flex items-center justify-center font-bold text-lg mb-3">
-                                <i class="fa-solid fa-cloud-arrow-up"></i>
-                            </div>
-                            <h4 class="font-bold text-slate-800 text-sm mb-1">Tersimpan Aman di Cloud</h4>
-                            <p class="text-xs text-slate-500 leading-relaxed">Tidak takut file hilang. Semua dokumen & data tersimpan aman dan dapat dibuka kapan saja.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- CONTACT & SUPPORT SECTION -->
-            <section class="py-12 md:py-14 bg-white border-t border-slate-200 px-4 md:px-6">
-                <div class="max-w-5xl mx-auto">
-                    <div class="text-center mb-10">
-                        <span
-                            class="bg-tealbrand-50 text-tealbrand-700 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Layanan Bantuan</span>
-                        <h2 class="text-2xl font-extrabold text-slate-800 mt-2">Punya Pertanyaan atau Perlu Bantuan?</h2>
-                        <p class="text-xs text-slate-500 mt-1">Tim Rekan Ajar AI siap mendampingi Bapak/Ibu Guru 24/7</p>
+                        <h2 class="text-2xl font-extrabold text-slate-800">Semua Kebutuhan Mengajar dalam Satu Tempat
+                        </h2>
+                        <p class="text-xs text-slate-500 mt-1">Dirancang khusus membantu komprehensivitas Kurikulum
+                            Merdeka</p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div
-                            class="bg-slate-50 p-6 rounded-2xl border border-slate-200 text-center flex flex-col justify-between">
+                            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
                             <div>
                                 <div
-                                    class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-lg mb-3">
-                                    <i class="fa-brands fa-whatsapp"></i>
+                                    class="w-12 h-12 bg-tealbrand-50 text-tealbrand-700 rounded-xl flex items-center justify-center text-xl font-bold mb-4">
+                                    <i class="fa-solid fa-layer-group"></i>
                                 </div>
-                                <h4 class="font-bold text-slate-800 text-sm mb-1">Chat Admin WhatsApp</h4>
-                                <p class="text-xs text-slate-500 mb-4">Konsultasi cepat, kendala teknis, atau bantuan top-up manual.</p>
+                                <h3 class="font-bold text-slate-800 text-base mb-2">Pemetaan & Perencanaan Ajar</h3>
+                                <p class="text-xs text-slate-600 leading-relaxed">Penyusunan TP, ATP, Program Tahunan
+                                    (Prota), dan Program Semester (Prosem) terstruktur rapi dan terintegrasi.</p>
                             </div>
-                            <a href="https://wa.me/6285121178423?text=Halo%20Admin%20Rekan%20Ajar%20AI,%20saya%20butuh%20bantuan"
-                                target="_blank"
-                                class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition inline-block">
-                                Chat via WhatsApp
-                            </a>
+                            <ul class="text-xs text-slate-500 space-y-1.5 mt-4 pt-4 border-t border-slate-100">
+                                <li><i class="fa-solid fa-circle-check text-tealbrand-600 mr-1.5"></i> Pemetaan Fase
+                                    Otomatis</li>
+                                <li><i class="fa-solid fa-circle-check text-tealbrand-600 mr-1.5"></i> Integrasi CP
+                                    BSKAP Resmi</li>
+                            </ul>
                         </div>
 
                         <div
-                            class="bg-slate-50 p-6 rounded-2xl border border-slate-200 text-center flex flex-col justify-between">
+                            class="bg-white p-6 rounded-2xl border border-tealbrand-500/30 ring-2 ring-tealbrand-500/10 shadow-md flex flex-col justify-between">
                             <div>
                                 <div
-                                    class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto text-lg mb-3">
-                                    <i class="fa-solid fa-envelope"></i>
-                                </div>
-                                <h4 class="font-bold text-slate-800 text-sm mb-1">Email Layanan Resmi</h4>
-                                <p class="text-xs text-slate-500 mb-4">Kirimkan pertanyaan atau surat resmi kerjasama ke tim kami.</p>
-                            </div>
-                            <a href="mailto:selabelajar.tech@gmail.com"
-                                class="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs transition inline-block">
-                                Kirim Email
-                            </a>
-                        </div>
-
-                        <div
-                            class="bg-slate-50 p-6 rounded-2xl border border-slate-200 text-center flex flex-col justify-between">
-                            <div>
-                                <div
-                                    class="w-10 h-10 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto text-lg mb-3">
-                                    <i class="fa-solid fa-school"></i>
-                                </div>
-                                <h4 class="font-bold text-slate-800 text-sm mb-1">Lisensi Kolektif Sekolah</h4>
-                                <p class="text-xs text-slate-500 mb-4">Penawaran khusus akun Rekan Ajar AI untuk seluruh guru di sekolah Anda.</p>
-                            </div>
-                            <a href="https://wa.me/6285121178423?text=Halo%20Admin,%20saya%20tertarik%20penawaran%20Lisensi%20Sekolah"
-                                target="_blank"
-                                class="w-full py-2 bg-purple-700 hover:bg-purple-800 text-white font-bold rounded-xl text-xs transition inline-block">
-                                Minta Penawaran
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- FAQ SECTION -->
-            <section class="py-12 md:py-16 bg-slate-100/60 border-t border-slate-200 px-4 md:px-6">
-                <div class="max-w-4xl mx-auto">
-                    <div class="text-center mb-10">
-                        <span class="bg-tealbrand-100 text-tealbrand-800 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Tanya Jawab</span>
-                        <h2 class="text-2xl font-extrabold text-slate-800 mt-2">Pertanyaan Sering Diajukan (FAQ)</h2>
-                        <p class="text-xs text-slate-500 mt-1">Informasi penting seputar penggunaan platform Rekan Ajar AI</p>
-                    </div>
-
-                    <div class="space-y-3 text-xs md:text-sm">
-                        <details class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm group cursor-pointer">
-                            <summary class="font-bold text-slate-800 flex justify-between items-center list-none">
-                                <span>Apakah dokumen hasil penyusunan sesuai standar BSKAP resmi?</span>
-                                <i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition-transform"></i>
-                            </summary>
-                            <p class="text-slate-600 mt-2.5 leading-relaxed text-xs">
-                                Ya, 100% sesuai. Seluruh alur sistem dirancang khusus mematuhi struktur BSKAP Kemendikbudristek Kurikulum Merdeka terkini, mencakup pemetaan CP, TP/ATP, Capaian Dimensi Profil Pelajar Pancasila (P3), hingga Rubrik Asesmen Analitik.
-                            </p>
-                        </details>
-
-                        <details class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm group cursor-pointer">
-                            <summary class="font-bold text-slate-800 flex justify-between items-center list-none">
-                                <span>Apakah Saldo Token memiliki masa kedaluwarsa?</span>
-                                <i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition-transform"></i>
-                            </summary>
-                            <p class="text-slate-600 mt-2.5 leading-relaxed text-xs">
-                                Tidak ada. Token yang Bapak/Ibu miliki atau beli bersifat <strong class="font-bold text-slate-800">permanen</strong> dan tanpa tanggal kedaluwarsa. Bapak/Ibu dapat menggunakannya kapan saja sesuai kebutuhan penyusunan administrasi sekolah.
-                            </p>
-                        </details>
-
-                        <details class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm group cursor-pointer">
-                            <summary class="font-bold text-slate-800 flex justify-between items-center list-none">
-                                <span>Bagaimana cara mengedit hasil dokumen di Microsoft Word?</span>
-                                <i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition-transform"></i>
-                            </summary>
-                            <p class="text-slate-600 mt-2.5 leading-relaxed text-xs">
-                                Cukup klik tombol <strong class="font-bold text-slate-800">.DOCX</strong> pada panel editor. Dokumen akan terunduh otomatis dalam format .DOCX modern yang rapi, utuh, dan siap diedit di Microsoft Word versi berapa pun.
-                            </p>
-                        </details>
-
-                        <details class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm group cursor-pointer">
-                            <summary class="font-bold text-slate-800 flex justify-between items-center list-none">
-                                <span>Apakah data siswa dan dokumen saya aman tersimpan?</span>
-                                <i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition-transform"></i>
-                            </summary>
-                            <p class="text-slate-600 mt-2.5 leading-relaxed text-xs">
-                                Sangat aman. Seluruh data tersimpan di server Cloud Supabase terenkripsi dengan perlindungan <i>Row Level Security</i> (RLS). Hanya akun Bapak/Ibu yang memiliki hak akses untuk membaca dan mengelola dokumen tersebut.
-                            </p>
-                        </details>
-                    </div>
-                </div>
-            </section>
-
-            <!-- CTA SECTION -->
-            <section class="py-12 md:py-16 px-4 md:px-6 text-center max-w-3xl mx-auto">
-                <h2 class="text-xl md:text-2xl font-extrabold text-slate-800 mb-3">Siap Menyusun Perangkat Ajar Lebih Praktis?</h2>
-                <p class="text-xs text-slate-500 mb-6">Dapatkan 15 Token Gratis saat pertama kali mendaftar akun Rekan Ajar AI.</p>
-                <button onclick="openAuthModal()"
-                    class="bg-tealbrand-700 hover:bg-tealbrand-800 text-white font-bold text-xs md:text-sm px-6 py-3 rounded-xl shadow-md transition">
-                    Daftar Sekarang & Klaim Token Gratis
-                </button>
-            </section>
-        </div>
-
-        <!-- VIEW 2: APP WORKSPACE SHELL -->
-        <div id="app-workspace" class="hidden flex-1 flex overflow-hidden w-full relative">
-
-            <!-- GLOBAL SIDEBAR MODULE NAVIGATION -->
-            <aside id="global-sidebar"
-                class="fixed lg:static inset-y-0 left-0 w-64 bg-white border-r border-slate-200 flex flex-col justify-between z-40 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out flex-shrink-0 shadow-lg lg:shadow-none">
-                <div class="p-4 space-y-5 overflow-y-auto custom-scrollbar">
-
-                    <div class="flex items-center justify-between lg:hidden border-b pb-3 border-slate-100">
-                        <span class="font-bold text-xs text-slate-700">Menu Navigasi</span>
-                        <button onclick="toggleMobileSidebar()"
-                            class="p-1 text-slate-400 hover:text-slate-600 text-xs"><i
-                                class="fa-solid fa-xmark text-base"></i></button>
-                    </div>
-
-                    <div>
-                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-3">Perencanaan (Planning)</div>
-                        <nav class="space-y-1">
-                            <button onclick="switchModule('modul-ajar')" id="btn-modul-ajar"
-                                class="nav-btn active w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-tealbrand-700 bg-tealbrand-50">
-                                <i class="fa-solid fa-book-open w-4 text-center text-tealbrand-600"></i>
-                                <span>Modul Ajar / RPP Plus</span>
-                            </button>
-                            <button onclick="switchModule('tp-atp')" id="btn-tp-atp"
-                                class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-slate-600 hover:bg-slate-100">
-                                <i class="fa-solid fa-route w-4 text-center text-teal-600"></i>
-                                <span>Generator TP & ATP</span>
-                            </button>
-                            <button onclick="switchModule('prota-prosem')" id="btn-prota-prosem"
-                                class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-slate-600 hover:bg-slate-100">
-                                <i class="fa-solid fa-calendar-days w-4 text-center text-cyan-600"></i>
-                                <span>Prota & Prosem</span>
-                            </button>
-                        </nav>
-                    </div>
-
-                    <div>
-                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-3">
-                            Pembelajaran & Evaluasi</div>
-                        <nav class="space-y-1">
-                            <button onclick="switchModule('lkpd')" id="btn-lkpd"
-                                class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-slate-600 hover:bg-slate-100">
-                                <i class="fa-solid fa-file-pen w-4 text-center text-emerald-600"></i>
-                                <span>LKPD (Lembar Kerja)</span>
-                            </button>
-                            <button onclick="switchModule('asesmen')" id="btn-asesmen"
-                                class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-slate-600 hover:bg-slate-100">
-                                <i class="fa-solid fa-list-check w-4 text-center text-blue-600"></i>
-                                <span>Soal & Rubrik Asesmen</span>
-                            </button>
-                            <button onclick="switchModule('p5')" id="btn-p5"
-                                class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-slate-600 hover:bg-slate-100">
-                                <i class="fa-solid fa-hands-holding-child w-4 text-center text-purple-600"></i>
-                                <span>Modul Projek P5</span>
-                            </button>
-                        </nav>
-                    </div>
-
-                    <div>
-                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-3">Manajemen & Cloud</div>
-                        <nav class="space-y-1">
-                            <button onclick="switchTab('workbook')" id="btn-nav-workbook"
-                                class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-slate-600 hover:bg-slate-100">
-                                <i class="fa-solid fa-clipboard-user w-4 text-center text-indigo-600"></i>
-                                <span>Workbook Guru Pro</span>
-                            </button>
-                            <button onclick="switchTab('pustaka')" id="btn-nav-pustaka"
-                                class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-slate-600 hover:bg-slate-100">
-                                <i class="fa-solid fa-folder-open w-4 text-center text-amber-600"></i>
-                                <span>Pustaka Dokumen</span>
-                            </button>
-                            <button onclick="switchTab('topup')" id="btn-nav-topup"
-                                class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-slate-600 hover:bg-slate-100">
-                                <i class="fa-solid fa-wallet w-4 text-center text-tealbrand-600"></i>
-                                <span>Beli Token & Tarif</span>
-                            </button>
-                        </nav>
-                    </div>
-                </div>
-
-                <div class="p-3.5 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
-                    <div class="flex items-center gap-2.5">
-                        <div id="user-avatar"
-                            class="w-8 h-8 rounded-full bg-tealbrand-700 text-white flex items-center justify-center font-bold text-xs">
-                            ?
-                        </div>
-                        <div class="overflow-hidden">
-                            <div id="user-name-display" class="text-xs font-bold text-slate-700 truncate">Tamu</div>
-                            <div id="user-status-display" class="text-[10px] text-slate-400">Belum Login</div>
-                        </div>
-                    </div>
-                </div>
-            </aside>
-
-            <!-- SIDEBAR OVERLAY FOR MOBILE -->
-            <div id="sidebar-overlay" onclick="toggleMobileSidebar()"
-                class="hidden fixed inset-0 bg-slate-900/40 z-30 lg:hidden backdrop-blur-xs"></div>
-
-            <!-- WORKSPACE MAIN CONTENT AREA -->
-            <main class="flex-1 bg-slate-100 overflow-hidden flex flex-col relative w-full">
-
-                <!-- SUB-VIEW A: GENERATOR FORM & EDITOR -->
-                <div id="view-generator" class="flex-1 flex flex-col lg:flex-row overflow-hidden">
-
-                    <div class="lg:hidden bg-white border-b border-slate-200 p-2 flex text-xs font-bold">
-                        <button onclick="switchMobileWorkspaceTab('form')" id="btn-tab-mobile-form"
-                            class="flex-1 py-2 text-center rounded-lg bg-tealbrand-50 text-tealbrand-700">
-                            <i class="fa-solid fa-pen-to-square mr-1"></i> Form Input
-                        </button>
-                        <button onclick="switchMobileWorkspaceTab('editor')" id="btn-tab-mobile-editor"
-                            class="flex-1 py-2 text-center rounded-lg text-slate-500 hover:bg-slate-50">
-                            <i class="fa-solid fa-file-lines mr-1"></i> Hasil Dokumen
-                        </button>
-                    </div>
-
-                    <!-- LEFT FORM PANEL -->
-                    <section id="panel-generator-form"
-                        class="w-full lg:w-1/2 p-4 md:p-5 overflow-y-auto custom-scrollbar border-r border-slate-200 bg-white flex-1 pb-24 lg:pb-5">
-                        <div class="mb-4 md:mb-5 flex flex-wrap items-center justify-between border-b pb-3 border-slate-100 gap-2">
-                            <div>
-                                <h2 id="generator-title" class="text-sm md:text-base font-bold text-slate-800">Asisten Modul Ajar / RPP Plus</h2>
-                                <p class="text-[11px] text-slate-500">Isi parameter di bawah untuk menyusun dokumen presisi.</p>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <button type="button" onclick="autoFillSampleData()" class="bg-tealbrand-50 hover:bg-tealbrand-100 text-tealbrand-700 border border-tealbrand-200 text-[11px] px-2.5 py-1 rounded-full font-bold transition flex items-center gap-1">
-                                    <i class="fa-solid fa-wand-magic-sparkles"></i> Contoh Data
-                                </button>
-                                <span id="token-cost-badge"
-                                    class="bg-amber-100 text-amber-800 border border-amber-200 text-[11px] px-2.5 py-1 rounded-full font-bold whitespace-nowrap">
-                                    <i class="fa-solid fa-coins mr-1"></i> 5 Token
-                                </span>
-                            </div>
-                        </div>
-
-                        <form id="generator-form" onsubmit="handleGenerate(event)" class="space-y-3.5 text-xs relative">
-
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                <div>
-                                    <label class="block font-semibold text-slate-700 mb-1">Jenjang</label>
-                                    <select id="input-jenjang" onchange="updateJenjangAndKelas()"
-                                        class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
-                                        <option value="SD">SD / MI</option>
-                                        <option value="SMP">SMP / MTs</option>
-                                        <option value="SMA">SMA / MA</option>
-                                        <option value="SMK">SMK</option>
-                                        <option value="PAUD">PAUD / TK</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block font-semibold text-slate-700 mb-1">Kelas</label>
-                                    <select id="input-kelas" onchange="updateFaseMapping()"
-                                        class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block font-semibold text-slate-700 mb-1">Fase (Otomat)</label>
-                                    <input type="text" id="input-fase" readonly value="Fase A"
-                                        class="w-full p-2 bg-slate-100 border border-slate-300 rounded-lg text-tealbrand-700 font-bold text-center">
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                <div>
-                                    <label class="block font-semibold text-slate-700 mb-1">Mata Pelajaran</label>
-                                    <input type="text" id="input-mapel" required placeholder="Misal: IPAS / Matematika"
-                                        class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
-                                </div>
-                                <div>
-                                    <label class="block font-semibold text-slate-700 mb-1">Rombel / Semester</label>
-                                    <input type="text" id="input-rombel" placeholder="Misal: VII-B / Ganjil"
-                                        class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
-                                </div>
-                                <div>
-                                    <label class="block font-semibold text-slate-700 mb-1">Alokasi Waktu</label>
-                                    <input type="text" id="input-waktu" value="2 JP (2 x 45 Menit)"
-                                        class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="block font-semibold text-slate-700 mb-1">Topik / Judul Materi Utama</label>
-                                <input type="text" id="input-materi" required
-                                    placeholder="Misal: Sifat-sifat Cahaya & Indera Penglihatan"
-                                    class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
-                            </div>
-
-                            <div>
-                                <label class="block font-semibold text-slate-700 mb-1">Teks CP Resmi (Opsional)</label>
-                                <textarea id="input-cp-text" rows="2"
-                                    placeholder="Tempelkan paragraf CP resmi di sini..."
-                                    class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500"></textarea>
-                            </div>
-
-                            <div id="dynamic-module-options"
-                                class="p-3 bg-tealbrand-50/50 border border-tealbrand-100 rounded-xl space-y-3">
-                            </div>
-
-                            <div>
-                                <label class="block font-semibold text-slate-700 mb-1.5">Dimensi Profil Pelajar Pancasila (P3)</label>
-                                <div
-                                    class="grid grid-cols-2 gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                                    <label class="flex items-center gap-1.5"><input type="checkbox"
-                                            value="Beriman, Bertaqwa & Berakhlak Mulia"
-                                            class="ppp-check text-tealbrand-600 rounded"> Beriman & Bertaqwa</label>
-                                    <label class="flex items-center gap-1.5"><input type="checkbox"
-                                            value="Berkebinekaan Global" class="ppp-check text-tealbrand-600 rounded">
-                                        Berkebinekaan Global</label>
-                                    <label class="flex items-center gap-1.5"><input type="checkbox"
-                                            value="Gotong Royong" class="ppp-check text-tealbrand-600 rounded"> Gotong
-                                        Royong</label>
-                                    <label class="flex items-center gap-1.5"><input type="checkbox" value="Mandiri"
-                                            class="ppp-check text-tealbrand-600 rounded" checked> Mandiri</label>
-                                    <label class="flex items-center gap-1.5"><input type="checkbox"
-                                            value="Bernalar Kritis" class="ppp-check text-tealbrand-600 rounded"
-                                            checked> Bernalar Kritis</label>
-                                    <label class="flex items-center gap-1.5"><input type="checkbox" value="Kreatif"
-                                            class="ppp-check text-tealbrand-600 rounded" checked> Kreatif</label>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block font-semibold text-slate-700 mb-1">Model Pembelajaran</label>
-                                    <select id="input-model"
-                                        class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
-                                        <option value="Problem-Based Learning (PBL)">Problem-Based Learning (PBL)
-                                        </option>
-                                        <option value="Project-Based Learning (PjBL)">Project-Based Learning (PjBL)
-                                        </option>
-                                        <option value="Discovery Learning">Discovery Learning</option>
-                                        <option value="Inquiry Learning">Inquiry Learning</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block font-semibold text-slate-700 mb-1">Fokus Diferensiasi</label>
-                                    <select id="input-diferensiasi"
-                                        class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
-                                        <option value="Diferensiasi Proses & Hasil/Produk">Proses & Produk</option>
-                                        <option value="Diferensiasi Konten (Materi)">Konten (Materi)</option>
-                                        <option value="Integrasi Keseluruhan (Konten, Proses, Produk)">Lengkap</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div
-                                class="sticky bottom-0 bg-white/95 backdrop-blur-sm pt-3 pb-2 border-t border-slate-200 lg:static lg:bg-transparent lg:border-0 lg:pt-2 lg:pb-0 z-20">
-                                <button type="submit" id="btn-generate"
-                                    class="w-full bg-tealbrand-700 hover:bg-tealbrand-800 text-white font-bold py-3 md:py-2.5 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-2 text-xs md:text-sm">
+                                    class="w-12 h-12 bg-tealbrand-700 text-white rounded-xl flex items-center justify-center text-xl font-bold mb-4 shadow-sm">
                                     <i class="fa-solid fa-wand-magic-sparkles"></i>
-                                    <span>Susun Perangkat Ajar Sekarang</span>
-                                </button>
-                            </div>
-                        </form>
-                    </section>
-
-                    <!-- RIGHT EDITOR PANEL -->
-                    <section id="panel-generator-editor"
-                        class="hidden lg:flex w-full lg:w-1/2 p-4 md:p-5 flex-col h-full bg-slate-100 flex-1">
-                        <div
-                            class="bg-white p-3 rounded-t-2xl border border-slate-200 flex flex-wrap items-center justify-between gap-2 shadow-sm">
-                            <div class="flex items-center space-x-1 border-r border-slate-200 pr-2">
-                                <button onclick="formatText('bold')"
-                                    class="p-1.5 hover:bg-slate-100 rounded text-slate-700 font-bold"><i
-                                        class="fa-solid fa-bold"></i></button>
-                                <button onclick="formatText('italic')"
-                                    class="p-1.5 hover:bg-slate-100 rounded text-slate-700 italic"><i
-                                        class="fa-solid fa-italic"></i></button>
-                                <button onclick="formatText('insertUnorderedList')"
-                                    class="p-1.5 hover:bg-slate-100 rounded text-slate-700"><i
-                                        class="fa-solid fa-list-ul"></i></button>
-                            </div>
-
-                            <div class="flex items-center space-x-1.5">
-                                <button onclick="saveToPustaka()"
-                                    class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-300 transition flex items-center gap-1">
-                                    <i class="fa-solid fa-bookmark text-amber-600"></i> Simpan
-                                </button>
-                                <button onclick="exportToWord()"
-                                    class="bg-tealbrand-700 hover:bg-tealbrand-800 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
-                                    <i class="fa-solid fa-file-word"></i> .DOCX
-                                </button>
-                                <button onclick="exportToPDF()"
-                                    class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
-                                    <i class="fa-solid fa-file-pdf"></i> PDF
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="flex-1 bg-white border-x border-b border-slate-200 rounded-b-2xl p-4 md:p-6 overflow-y-auto custom-scrollbar shadow-inner relative"
-                            id="printableArea">
-                            <div id="editor-placeholder"
-                                class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-slate-400">
-                                <img src="logo.png" alt="Rekan Ajar AI Logo"
-                                    class="w-14 h-16 mb-3 opacity-25 object-contain select-none pointer-events-none">
-                                <h3 class="font-bold text-slate-600 text-sm">Dokumen Belum Diisi</h3>
-                                <p class="text-[11px] max-w-xs mt-1">Isi parameter lalu klik "Susun Perangkat Ajar Sekarang".</p>
-                            </div>
-
-                            <div id="editor-loading"
-                                class="hidden absolute inset-0 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center z-10">
-                                <div
-                                    class="w-10 h-10 border-4 border-tealbrand-200 border-t-tealbrand-700 rounded-full animate-spin mb-3">
                                 </div>
-                                <p class="font-bold text-slate-700 text-xs">Menyusun Dokumen Rekan Ajar AI...</p>
+                                <h3 class="font-bold text-slate-800 text-base mb-2">Modul Ajar, LKPD & Asesmen</h3>
+                                <p class="text-xs text-slate-600 leading-relaxed">Susun Modul Ajar berdiferensiasi,
+                                    Lembar Kerja Siswa (LKPD), Soal HOTS, Rubrik Asesmen & Projek P5.</p>
                             </div>
-
-                            <div id="editorContent" contenteditable="true"
-                                class="prose prose-slate max-w-none text-xs leading-relaxed outline-none min-h-full">
-                            </div>
+                            <ul class="text-xs text-slate-500 space-y-1.5 mt-4 pt-4 border-t border-slate-100">
+                                <li><i class="fa-solid fa-circle-check text-tealbrand-600 mr-1.5"></i> Model PBL, PjBL,
+                                    Discovery</li>
+                                <li><i class="fa-solid fa-circle-check text-tealbrand-600 mr-1.5"></i> Ekspor Docx & PDF
+                                    Instan</li>
+                            </ul>
                         </div>
-                    </section>
-                </div>
-
-                <!-- SUB-VIEW B: WORKBOOK GURU PRO -->
-                <div id="view-workbook" class="hidden flex-1 p-4 md:p-6 overflow-y-auto custom-scrollbar bg-slate-100">
-                    <div class="max-w-6xl mx-auto space-y-4 md:space-y-6">
 
                         <div
-                            class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 md:p-5 rounded-2xl border border-slate-200 shadow-sm gap-3">
+                            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
                             <div>
-                                <h2 class="text-base md:text-xl font-bold text-slate-800">Workbook Guru Digital Pro</h2>
-                                <p class="text-[11px] text-slate-500">Kelola Absensi Harian, Jurnal Mengajar, & Daftar Siswa Per Kelas.</p>
-                            </div>
-
-                            <div class="flex flex-wrap items-center gap-2 text-xs w-full sm:w-auto">
                                 <div
-                                    class="flex items-center gap-1.5 bg-slate-50 p-1.5 rounded-xl border border-slate-200 flex-1 sm:flex-none">
-                                    <span class="font-semibold text-slate-600 pl-1">Kelas:</span>
-                                    <select id="workbook-class-select" onchange="changeWorkbookClass()"
-                                        class="bg-white border border-slate-300 rounded-lg p-1 font-bold text-tealbrand-800 focus:ring-2 focus:ring-tealbrand-500">
-                                    </select>
+                                    class="w-12 h-12 bg-tealbrand-50 text-tealbrand-700 rounded-xl flex items-center justify-center text-xl font-bold mb-4">
+                                    <i class="fa-solid fa-clipboard-user"></i>
                                 </div>
-
-                                <div
-                                    class="flex items-center gap-1.5 bg-slate-50 p-1.5 rounded-xl border border-slate-200 flex-1 sm:flex-none">
-                                    <span class="font-semibold text-slate-600 pl-1">Tgl:</span>
-                                    <input type="date" id="workbook-date"
-                                        class="bg-white border border-slate-300 rounded-lg p-1 font-bold text-slate-700 text-xs">
-                                </div>
-
-                                <button onclick="saveWorkbookData()"
-                                    class="bg-tealbrand-700 hover:bg-tealbrand-800 text-white font-bold px-3 py-2 rounded-xl shadow transition flex items-center gap-1 text-xs">
-                                    <i class="fa-solid fa-floppy-disk"></i> Simpan
-                                </button>
+                                <h3 class="font-bold text-slate-800 text-base mb-2">Buku Kerja & Presensi Digital</h3>
+                                <p class="text-xs text-slate-600 leading-relaxed">Kelola absensi harian, jurnal kegiatan
+                                    mengajar, serta rekap penilaian siswa secara langsung dari HP atau Laptop.</p>
                             </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
-
-                            <div
-                                class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200 shadow-sm lg:col-span-2 flex flex-col justify-between">
-                                <div>
-                                    <div class="flex flex-wrap justify-between items-center mb-4 gap-2">
-                                        <h3 class="font-bold text-xs md:text-sm text-slate-800 flex items-center">
-                                            <i class="fa-solid fa-user-check text-tealbrand-600 mr-2"></i> Presensi Siswa Harian
-                                        </h3>
-
-                                        <div class="flex items-center gap-2">
-                                            <button onclick="markAllPresent()"
-                                                class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-[10px] font-bold px-2 py-1 rounded-lg transition">
-                                                <i class="fa-solid fa-check-double mr-1"></i> Hadir Semua
-                                            </button>
-                                            <button onclick="openAddStudentModal()"
-                                                class="bg-tealbrand-700 hover:bg-tealbrand-800 text-white text-[10px] font-bold px-2 py-1 rounded-lg transition">
-                                                <i class="fa-solid fa-user-plus mr-1"></i> Tambah Siswa
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div class="overflow-x-auto">
-                                        <table class="w-full text-xs text-left border-collapse min-w-[320px]">
-                                            <thead>
-                                                <tr class="bg-slate-50 border-b text-slate-600">
-                                                    <th class="p-2 border border-slate-200 w-8 text-center">No</th>
-                                                    <th class="p-2 border border-slate-200">Nama Siswa</th>
-                                                    <th class="p-2 border border-slate-200 text-center w-12">H</th>
-                                                    <th class="p-2 border border-slate-200 text-center w-12">I</th>
-                                                    <th class="p-2 border border-slate-200 text-center w-12">S</th>
-                                                    <th class="p-2 border border-slate-200 text-center w-12">A</th>
-                                                    <th class="p-2 border border-slate-200 text-center w-10">Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="student-attendance-tbody">
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                                <div
-                                    class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-[11px] text-slate-400">
-                                    <span>Total Siswa: <strong id="total-students-count"
-                                            class="text-slate-700">0</strong></span>
-                                    <span>Status: Auto-saved</span>
-                                </div>
-                            </div>
-
-                            <div class="space-y-4 md:space-y-6">
-                                <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200 shadow-sm">
-                                    <h3 class="font-bold text-xs md:text-sm text-slate-800 mb-3 flex items-center">
-                                        <i class="fa-solid fa-book-journal-whills text-indigo-600 mr-2"></i> Jurnal Mengajar
-                                    </h3>
-                                    <form class="space-y-3 text-xs">
-                                        <div>
-                                            <label class="block font-semibold mb-1 text-slate-700">Materi / Sub-Bab</label>
-                                            <input type="text" id="jurnal-materi" placeholder="Misal: Bab 2 Ekosistem"
-                                                class="w-full p-2 border border-slate-300 rounded-lg">
-                                        </div>
-                                        <div>
-                                            <label class="block font-semibold mb-1 text-slate-700">Hambatan Kelas</label>
-                                            <textarea id="jurnal-hambatan" rows="2" placeholder="Catatan kelompok..."
-                                                class="w-full p-2 border border-slate-300 rounded-lg"></textarea>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-
+                            <ul class="text-xs text-slate-500 space-y-1.5 mt-4 pt-4 border-t border-slate-100">
+                                <li><i class="fa-solid fa-circle-check text-tealbrand-600 mr-1.5"></i> Tersimpan di
+                                    Cloud Supabase</li>
+                                <li><i class="fa-solid fa-circle-check text-tealbrand-600 mr-1.5"></i> Akses Kapan Saja
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <!-- SUB-VIEW C: PUSTAKA DOKUMEN -->
-                <div id="view-pustaka" class="hidden flex-1 p-4 md:p-6 overflow-y-auto custom-scrollbar">
+                <!-- WHY CHOOSE US -->
+                <section class="py-12 md:py-14 bg-slate-100/80 border-y border-slate-200 px-4 md:px-6">
+                    <div class="max-w-6xl mx-auto">
+                        <div class="text-center mb-8 md:mb-12">
+                            <span
+                                class="bg-tealbrand-100 text-tealbrand-800 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Keunggulan
+                                Utama</span>
+                            <h2 class="text-2xl font-extrabold text-slate-800 mt-2">Mengapa Ribuan Guru Memilih Rekan
+                                Ajar AI?</h2>
+                            <p class="text-xs text-slate-500 mt-1">Dibuat khusus menyesuaikan standar administrasi
+                                sekolah di Indonesia</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                                <div
+                                    class="w-10 h-10 bg-tealbrand-100 text-tealbrand-700 rounded-xl flex items-center justify-center font-bold text-lg mb-3">
+                                    <i class="fa-solid fa-certificate"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-800 text-sm mb-1">Standar BSKAP Resmi</h4>
+                                <p class="text-xs text-slate-500 leading-relaxed">Penyusunan indikator, CP, TP, dan
+                                    kriteria ketercapaian sesuai aturan Kurikulum Merdeka terkini.</p>
+                            </div>
+
+                            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                                <div
+                                    class="w-10 h-10 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center font-bold text-lg mb-3">
+                                    <i class="fa-solid fa-infinity"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-800 text-sm mb-1">Masa Aktif Tanpa Batas</h4>
+                                <p class="text-xs text-slate-500 leading-relaxed">Token yang Bapak/Ibu miliki tidak akan
+                                    hangus tiap bulan. Gunakan kapan saja saat dibutuhkan.</p>
+                            </div>
+
+                            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                                <div
+                                    class="w-10 h-10 bg-blue-100 text-blue-700 rounded-xl flex items-center justify-center font-bold text-lg mb-3">
+                                    <i class="fa-solid fa-file-word"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-800 text-sm mb-1">Unduh Word & PDF Rapi</h4>
+                                <p class="text-xs text-slate-500 leading-relaxed">Hasil penyusunan tersusun dalam tabel
+                                    rapi yang siap diunduh ke format .DOCX tanpa rusak.</p>
+                            </div>
+
+                            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                                <div
+                                    class="w-10 h-10 bg-purple-100 text-purple-700 rounded-xl flex items-center justify-center font-bold text-lg mb-3">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-800 text-sm mb-1">Tersimpan Aman di Cloud</h4>
+                                <p class="text-xs text-slate-500 leading-relaxed">Tidak takut file hilang. Semua dokumen
+                                    & data tersimpan aman dan dapat dibuka kapan saja.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CONTACT & SUPPORT SECTION -->
+                <section class="py-12 md:py-14 bg-white border-t border-slate-200 px-4 md:px-6">
                     <div class="max-w-5xl mx-auto">
-                        <div class="flex justify-between items-center mb-6">
-                            <div>
-                                <h2 class="text-lg md:text-xl font-bold text-slate-800">Pustaka Dokumen Cloud</h2>
-                                <p class="text-xs text-slate-500">Semua dokumen tersimpan di server Rekan Ajar AI Supabase Anda.</p>
+                        <div class="text-center mb-10">
+                            <span
+                                class="bg-tealbrand-50 text-tealbrand-700 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Layanan
+                                Bantuan</span>
+                            <h2 class="text-2xl font-extrabold text-slate-800 mt-2">Punya Pertanyaan atau Perlu Bantuan?
+                            </h2>
+                            <p class="text-xs text-slate-500 mt-1">Tim Rekan Ajar AI siap mendampingi Bapak/Ibu Guru
+                                24/7</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div
+                                class="bg-slate-50 p-6 rounded-2xl border border-slate-200 text-center flex flex-col justify-between">
+                                <div>
+                                    <div
+                                        class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-lg mb-3">
+                                        <i class="fa-brands fa-whatsapp"></i>
+                                    </div>
+                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Chat Admin WhatsApp</h4>
+                                    <p class="text-xs text-slate-500 mb-4">Konsultasi cepat, kendala teknis, atau
+                                        bantuan top-up manual.</p>
+                                </div>
+                                <a href="https://wa.me/6285121178423?text=Halo%20Admin%20Rekan%20Ajar%20AI,%20saya%20butuh%20bantuan"
+                                    target="_blank"
+                                    class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition inline-block">
+                                    Chat via WhatsApp
+                                </a>
+                            </div>
+
+                            <div
+                                class="bg-slate-50 p-6 rounded-2xl border border-slate-200 text-center flex flex-col justify-between">
+                                <div>
+                                    <div
+                                        class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto text-lg mb-3">
+                                        <i class="fa-solid fa-envelope"></i>
+                                    </div>
+                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Email Layanan Resmi</h4>
+                                    <p class="text-xs text-slate-500 mb-4">Kirimkan pertanyaan atau surat resmi
+                                        kerjasama ke tim kami.</p>
+                                </div>
+                                <a href="mailto:selabelajar.tech@gmail.com"
+                                    class="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs transition inline-block">
+                                    Kirim Email
+                                </a>
+                            </div>
+
+                            <div
+                                class="bg-slate-50 p-6 rounded-2xl border border-slate-200 text-center flex flex-col justify-between">
+                                <div>
+                                    <div
+                                        class="w-10 h-10 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto text-lg mb-3">
+                                        <i class="fa-solid fa-school"></i>
+                                    </div>
+                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Lisensi Kolektif Sekolah</h4>
+                                    <p class="text-xs text-slate-500 mb-4">Penawaran khusus akun Rekan Ajar AI untuk
+                                        seluruh guru di sekolah Anda.</p>
+                                </div>
+                                <a href="https://wa.me/6285121178423?text=Halo%20Admin,%20saya%20tertarik%20penawaran%20Lisensi%20Sekolah"
+                                    target="_blank"
+                                    class="w-full py-2 bg-purple-700 hover:bg-purple-800 text-white font-bold rounded-xl text-xs transition inline-block">
+                                    Minta Penawaran
+                                </a>
                             </div>
                         </div>
-                        <div id="pustaka-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
                     </div>
-                </div>
+                </section>
 
-                <!-- SUB-VIEW D: BELI TOKEN / TOP UP (HARGA & PAKET SKEMA BARU) -->
-                <div id="view-topup" class="hidden flex-1 p-4 md:p-6 overflow-y-auto custom-scrollbar">
+                <!-- FAQ SECTION -->
+                <section class="py-12 md:py-16 bg-slate-100/60 border-t border-slate-200 px-4 md:px-6">
                     <div class="max-w-4xl mx-auto">
-                        <div class="text-center mb-6 md:mb-8">
-                            <span class="bg-tealbrand-50 text-tealbrand-700 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Investasi Hemat Mengajar</span>
-                            <h2 class="text-xl md:text-2xl font-extrabold text-slate-800 mt-2">Pilih Paket Token Rekan Ajar AI Pro</h2>
-                            <p class="text-xs text-slate-500 mt-1">Solusi instan selesaikan administrasi sekolah tanpa ribet berlangganan mahal.</p>
+                        <div class="text-center mb-10">
+                            <span
+                                class="bg-tealbrand-100 text-tealbrand-800 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Tanya
+                                Jawab</span>
+                            <h2 class="text-2xl font-extrabold text-slate-800 mt-2">Pertanyaan Sering Diajukan (FAQ)
+                            </h2>
+                            <p class="text-xs text-slate-500 mt-1">Informasi penting seputar penggunaan platform Rekan
+                                Ajar AI</p>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8">
-                            <!-- PAKET 1: PEMULA -->
-                            <div
-                                class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between hover:border-slate-300 transition">
-                                <div>
-                                    <span
-                                        class="bg-slate-100 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Pencoba</span>
-                                    <h3 class="text-lg font-extrabold text-slate-800 mt-2">20 Token</h3>
-                                    <p class="text-[11px] text-slate-400 mb-2">Cukup untuk ~4-6 Dokumen AI</p>
-                                    <div class="flex items-baseline gap-1.5 mt-1">
-                                        <span class="text-xs text-slate-400 line-through">Rp 20.000</span>
-                                        <span class="text-xl font-extrabold text-tealbrand-700">Rp 9.900</span>
-                                    </div>
-                                </div>
-                                <button onclick="openPaymentCheckout('pemula')"
-                                    class="w-full mt-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5">
-                                    <i class="fa-solid fa-qrcode"></i> Beli via QRIS Instan
-                                </button>
-                            </div>
+                        <div class="space-y-3 text-xs md:text-sm">
+                            <details
+                                class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm group cursor-pointer">
+                                <summary class="font-bold text-slate-800 flex justify-between items-center list-none">
+                                    <span>Apakah dokumen hasil penyusunan sesuai standar BSKAP resmi?</span>
+                                    <i
+                                        class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition-transform"></i>
+                                </summary>
+                                <p class="text-slate-600 mt-2.5 leading-relaxed text-xs">
+                                    Ya, 100% sesuai. Seluruh alur sistem dirancang khusus mematuhi struktur BSKAP
+                                    Kemendikbudristek Kurikulum Merdeka terkini, mencakup pemetaan CP, TP/ATP, Capaian
+                                    Dimensi Profil Pelajar Pancasila (P3), hingga Rubrik Asesmen Analitik.
+                                </p>
+                            </details>
 
-                            <!-- PAKET 2: HEMAT (BEST SELLER) -->
-                            <div
-                                class="bg-white rounded-2xl p-5 border-2 border-tealbrand-500 shadow-md relative flex flex-col justify-between transform hover:-translate-y-1 transition">
-                                <span class="absolute -top-3 right-4 bg-tealbrand-600 text-white text-[9px] font-extrabold uppercase px-2.5 py-0.5 rounded-full shadow">Paling Laris 🔥</span>
-                                <div>
-                                    <span
-                                        class="bg-tealbrand-50 text-tealbrand-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Hemat Semester</span>
-                                    <h3 class="text-lg font-extrabold text-slate-800 mt-2">75 Token</h3>
-                                    <p class="text-[11px] text-slate-400 mb-2">Cukup untuk ~15-25 Dokumen AI</p>
-                                    <div class="flex items-baseline gap-1.5 mt-1">
-                                        <span class="text-xs text-slate-400 line-through">Rp 60.000</span>
-                                        <span class="text-xl font-extrabold text-tealbrand-700">Rp 29.000</span>
-                                    </div>
-                                </div>
-                                <button onclick="openPaymentCheckout('hemat')"
-                                    class="w-full mt-5 py-2.5 bg-tealbrand-700 hover:bg-tealbrand-800 text-white font-bold rounded-xl text-xs transition shadow flex items-center justify-center gap-1.5">
-                                    <i class="fa-solid fa-qrcode"></i> Beli via QRIS Instan
-                                </button>
-                            </div>
+                            <details
+                                class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm group cursor-pointer">
+                                <summary class="font-bold text-slate-800 flex justify-between items-center list-none">
+                                    <span>Apakah Saldo Token memiliki masa kedaluwarsa?</span>
+                                    <i
+                                        class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition-transform"></i>
+                                </summary>
+                                <p class="text-slate-600 mt-2.5 leading-relaxed text-xs">
+                                    Tidak ada. Token yang Bapak/Ibu miliki atau beli bersifat <strong
+                                        class="font-bold text-slate-800">permanen</strong> dan tanpa tanggal
+                                    kedaluwarsa. Bapak/Ibu dapat menggunakannya kapan saja sesuai kebutuhan penyusunan
+                                    administrasi sekolah.
+                                </p>
+                            </details>
 
-                            <!-- PAKET 3: LIFETIME PRO (UNLIMITED) -->
-                            <div
-                                class="bg-gradient-to-b from-amber-500/10 via-white to-white rounded-2xl p-5 border-2 border-amber-400/80 shadow-sm flex flex-col justify-between hover:shadow-md transition">
-                                <div>
-                                    <span
-                                        class="bg-amber-100 text-amber-800 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">Akses Seumur Hidup 👑</span>
-                                    <h3 class="text-lg font-extrabold text-slate-800 mt-2">LIFETIME PRO</h3>
-                                    <p class="text-[11px] text-slate-500 mb-2">Reset 150 Token Setiap Bulan Selamanya!</p>
-                                    <div class="flex items-baseline gap-1.5 mt-1">
-                                        <span class="text-xs text-slate-400 line-through">Rp 350.000</span>
-                                        <span class="text-xl font-extrabold text-amber-600">Rp 99.000</span>
-                                    </div>
-                                </div>
-                                <button onclick="openPaymentCheckout('lifetime')"
-                                    class="w-full mt-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-900 font-extrabold rounded-xl text-xs transition shadow flex items-center justify-center gap-1.5">
-                                    <i class="fa-solid fa-crown"></i> Ambil Akses Lifetime
+                            <details
+                                class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm group cursor-pointer">
+                                <summary class="font-bold text-slate-800 flex justify-between items-center list-none">
+                                    <span>Bagaimana cara mengedit hasil dokumen di Microsoft Word?</span>
+                                    <i
+                                        class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition-transform"></i>
+                                </summary>
+                                <p class="text-slate-600 mt-2.5 leading-relaxed text-xs">
+                                    Cukup klik tombol <strong class="font-bold text-slate-800">.DOCX</strong> pada panel
+                                    editor. Dokumen akan terunduh otomatis dalam format .DOCX modern yang rapi, utuh,
+                                    dan siap diedit di Microsoft Word versi berapa pun.
+                                </p>
+                            </details>
+
+                            <details
+                                class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm group cursor-pointer">
+                                <summary class="font-bold text-slate-800 flex justify-between items-center list-none">
+                                    <span>Apakah data siswa dan dokumen saya aman tersimpan?</span>
+                                    <i
+                                        class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition-transform"></i>
+                                </summary>
+                                <p class="text-slate-600 mt-2.5 leading-relaxed text-xs">
+                                    Sangat aman. Seluruh data tersimpan di server Cloud Supabase terenkripsi dengan
+                                    perlindungan <i>Row Level Security</i> (RLS). Hanya akun Bapak/Ibu yang memiliki hak
+                                    akses untuk membaca dan mengelola dokumen tersebut.
+                                </p>
+                            </details>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CTA SECTION -->
+                <section class="py-12 md:py-16 px-4 md:px-6 text-center max-w-3xl mx-auto">
+                    <h2 class="text-xl md:text-2xl font-extrabold text-slate-800 mb-3">Siap Menyusun Perangkat Ajar
+                        Lebih Praktis?</h2>
+                    <p class="text-xs text-slate-500 mb-6">Dapatkan 15 Token Gratis saat pertama kali mendaftar akun
+                        Rekan Ajar AI.</p>
+                    <button onclick="openAuthModal()"
+                        class="bg-tealbrand-700 hover:bg-tealbrand-800 text-white font-bold text-xs md:text-sm px-6 py-3 rounded-xl shadow-md transition">
+                        Daftar Sekarang & Klaim Token Gratis
+                    </button>
+                </section>
+            </div>
+
+            <!-- VIEW 2: APP WORKSPACE SHELL -->
+            <div id="app-workspace" class="hidden flex-1 flex overflow-hidden w-full relative">
+
+                <!-- GLOBAL SIDEBAR MODULE NAVIGATION -->
+                <aside id="global-sidebar"
+                    class="fixed lg:static inset-y-0 left-0 w-64 bg-white border-r border-slate-200 flex flex-col justify-between z-40 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out flex-shrink-0 shadow-lg lg:shadow-none">
+                    <div class="p-4 space-y-5 overflow-y-auto custom-scrollbar">
+
+                        <div class="flex items-center justify-between lg:hidden border-b pb-3 border-slate-100">
+                            <span class="font-bold text-xs text-slate-700">Menu Navigasi</span>
+                            <button onclick="toggleMobileSidebar()"
+                                class="p-1 text-slate-400 hover:text-slate-600 text-xs"><i
+                                    class="fa-solid fa-xmark text-base"></i></button>
+                        </div>
+
+                        <div>
+                            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-3">
+                                Perencanaan (Planning)</div>
+                            <nav class="space-y-1">
+                                <button onclick="switchModule('modul-ajar')" id="btn-modul-ajar"
+                                    class="nav-btn active w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-tealbrand-700 bg-tealbrand-50">
+                                    <i class="fa-solid fa-book-open w-4 text-center text-tealbrand-600"></i>
+                                    <span>Modul Ajar / RPP Plus</span>
                                 </button>
+                                <button onclick="switchModule('tp-atp')" id="btn-tp-atp"
+                                    class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-slate-600 hover:bg-slate-100">
+                                    <i class="fa-solid fa-route w-4 text-center text-teal-600"></i>
+                                    <span>Generator TP & ATP</span>
+                                </button>
+                                <button onclick="switchModule('prota-prosem')" id="btn-prota-prosem"
+                                    class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-slate-600 hover:bg-slate-100">
+                                    <i class="fa-solid fa-calendar-days w-4 text-center text-cyan-600"></i>
+                                    <span>Prota & Prosem</span>
+                                </button>
+                            </nav>
+                        </div>
+
+                        <div>
+                            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-3">
+                                Pembelajaran & Evaluasi</div>
+                            <nav class="space-y-1">
+                                <button onclick="switchModule('lkpd')" id="btn-lkpd"
+                                    class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-slate-600 hover:bg-slate-100">
+                                    <i class="fa-solid fa-file-pen w-4 text-center text-emerald-600"></i>
+                                    <span>LKPD (Lembar Kerja)</span>
+                                </button>
+                                <button onclick="switchModule('asesmen')" id="btn-asesmen"
+                                    class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-slate-600 hover:bg-slate-100">
+                                    <i class="fa-solid fa-list-check w-4 text-center text-blue-600"></i>
+                                    <span>Soal & Rubrik Asesmen</span>
+                                </button>
+                                <button onclick="switchModule('p5')" id="btn-p5"
+                                    class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-slate-600 hover:bg-slate-100">
+                                    <i class="fa-solid fa-hands-holding-child w-4 text-center text-purple-600"></i>
+                                    <span>Modul Projek P5</span>
+                                </button>
+                            </nav>
+                        </div>
+
+                        <div>
+                            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-3">
+                                Manajemen & Cloud</div>
+                            <nav class="space-y-1">
+                                <button onclick="switchTab('workbook')" id="btn-nav-workbook"
+                                    class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-slate-600 hover:bg-slate-100">
+                                    <i class="fa-solid fa-clipboard-user w-4 text-center text-indigo-600"></i>
+                                    <span>Workbook Guru Pro</span>
+                                </button>
+                                <button onclick="switchTab('pustaka')" id="btn-nav-pustaka"
+                                    class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-slate-600 hover:bg-slate-100">
+                                    <i class="fa-solid fa-folder-open w-4 text-center text-amber-600"></i>
+                                    <span>Pustaka Dokumen</span>
+                                </button>
+                                <button onclick="switchTab('topup')" id="btn-nav-topup"
+                                    class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition text-slate-600 hover:bg-slate-100">
+                                    <i class="fa-solid fa-wallet w-4 text-center text-tealbrand-600"></i>
+                                    <span>Beli Token & Tarif</span>
+                                </button>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <div class="p-3.5 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
+                        <div class="flex items-center gap-2.5">
+                            <div id="user-avatar"
+                                class="w-8 h-8 rounded-full bg-tealbrand-700 text-white flex items-center justify-center font-bold text-xs">
+                                ?
+                            </div>
+                            <div class="overflow-hidden">
+                                <div id="user-name-display" class="text-xs font-bold text-slate-700 truncate">Tamu</div>
+                                <div id="user-status-display" class="text-[10px] text-slate-400">Belum Login</div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </aside>
 
-            </main>
+                <!-- SIDEBAR OVERLAY FOR MOBILE -->
+                <div id="sidebar-overlay" onclick="toggleMobileSidebar()"
+                    class="hidden fixed inset-0 bg-slate-900/40 z-30 lg:hidden backdrop-blur-xs"></div>
+
+                <!-- WORKSPACE MAIN CONTENT AREA -->
+                <main class="flex-1 bg-slate-100 overflow-hidden flex flex-col relative w-full">
+
+                    <!-- SUB-VIEW A: GENERATOR FORM & EDITOR -->
+                    <div id="view-generator" class="flex-1 flex flex-col lg:flex-row overflow-hidden">
+
+                        <div class="lg:hidden bg-white border-b border-slate-200 p-2 flex text-xs font-bold">
+                            <button onclick="switchMobileWorkspaceTab('form')" id="btn-tab-mobile-form"
+                                class="flex-1 py-2 text-center rounded-lg bg-tealbrand-50 text-tealbrand-700">
+                                <i class="fa-solid fa-pen-to-square mr-1"></i> Form Input
+                            </button>
+                            <button onclick="switchMobileWorkspaceTab('editor')" id="btn-tab-mobile-editor"
+                                class="flex-1 py-2 text-center rounded-lg text-slate-500 hover:bg-slate-50">
+                                <i class="fa-solid fa-file-lines mr-1"></i> Hasil Dokumen
+                            </button>
+                        </div>
+
+                        <!-- LEFT FORM PANEL -->
+                        <section id="panel-generator-form"
+                            class="w-full lg:w-1/2 p-4 md:p-5 overflow-y-auto custom-scrollbar border-r border-slate-200 bg-white flex-1 pb-24 lg:pb-5">
+                            <div
+                                class="mb-4 md:mb-5 flex flex-wrap items-center justify-between border-b pb-3 border-slate-100 gap-2">
+                                <div>
+                                    <h2 id="generator-title" class="text-sm md:text-base font-bold text-slate-800">
+                                        Asisten Modul Ajar / RPP Plus</h2>
+                                    <p class="text-[11px] text-slate-500">Isi parameter di bawah untuk menyusun dokumen
+                                        presisi.</p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button type="button" onclick="autoFillSampleData()"
+                                        class="bg-tealbrand-50 hover:bg-tealbrand-100 text-tealbrand-700 border border-tealbrand-200 text-[11px] px-2.5 py-1 rounded-full font-bold transition flex items-center gap-1">
+                                        <i class="fa-solid fa-wand-magic-sparkles"></i> Contoh Data
+                                    </button>
+                                    <span id="token-cost-badge"
+                                        class="bg-amber-100 text-amber-800 border border-amber-200 text-[11px] px-2.5 py-1 rounded-full font-bold whitespace-nowrap">
+                                        <i class="fa-solid fa-coins mr-1"></i> 5 Token
+                                    </span>
+                                </div>
+                            </div>
+
+                            <form id="generator-form" onsubmit="handleGenerate(event)"
+                                class="space-y-3.5 text-xs relative">
+
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                    <div>
+                                        <label class="block font-semibold text-slate-700 mb-1">Jenjang</label>
+                                        <select id="input-jenjang" onchange="updateJenjangAndKelas()"
+                                            class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
+                                            <option value="SD">SD / MI</option>
+                                            <option value="SMP">SMP / MTs</option>
+                                            <option value="SMA">SMA / MA</option>
+                                            <option value="SMK">SMK</option>
+                                            <option value="PAUD">PAUD / TK</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block font-semibold text-slate-700 mb-1">Kelas</label>
+                                        <select id="input-kelas" onchange="updateFaseMapping()"
+                                            class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block font-semibold text-slate-700 mb-1">Fase (Otomat)</label>
+                                        <input type="text" id="input-fase" readonly value="Fase A"
+                                            class="w-full p-2 bg-slate-100 border border-slate-300 rounded-lg text-tealbrand-700 font-bold text-center">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                    <div>
+                                        <label class="block font-semibold text-slate-700 mb-1">Mata Pelajaran</label>
+                                        <input type="text" id="input-mapel" required
+                                            placeholder="Misal: IPAS / Matematika"
+                                            class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
+                                    </div>
+                                    <div>
+                                        <label class="block font-semibold text-slate-700 mb-1">Rombel / Semester</label>
+                                        <input type="text" id="input-rombel" placeholder="Misal: VII-B / Ganjil"
+                                            class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
+                                    </div>
+                                    <div>
+                                        <label class="block font-semibold text-slate-700 mb-1">Alokasi Waktu</label>
+                                        <input type="text" id="input-waktu" value="2 JP (2 x 45 Menit)"
+                                            class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Topik / Judul Materi
+                                        Utama</label>
+                                    <input type="text" id="input-materi" required
+                                        placeholder="Misal: Sifat-sifat Cahaya & Indera Penglihatan"
+                                        class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
+                                </div>
+
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Teks CP Resmi
+                                        (Opsional)</label>
+                                    <textarea id="input-cp-text" rows="2"
+                                        placeholder="Tempelkan paragraf CP resmi di sini..."
+                                        class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500"></textarea>
+                                </div>
+
+                                <div id="dynamic-module-options"
+                                    class="p-3 bg-tealbrand-50/50 border border-tealbrand-100 rounded-xl space-y-3">
+                                </div>
+
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1.5">Dimensi Profil Pelajar
+                                        Pancasila (P3)</label>
+                                    <div
+                                        class="grid grid-cols-2 gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                                        <label class="flex items-center gap-1.5"><input type="checkbox"
+                                                value="Beriman, Bertaqwa & Berakhlak Mulia"
+                                                class="ppp-check text-tealbrand-600 rounded"> Beriman & Bertaqwa</label>
+                                        <label class="flex items-center gap-1.5"><input type="checkbox"
+                                                value="Berkebinekaan Global"
+                                                class="ppp-check text-tealbrand-600 rounded">
+                                            Berkebinekaan Global</label>
+                                        <label class="flex items-center gap-1.5"><input type="checkbox"
+                                                value="Gotong Royong" class="ppp-check text-tealbrand-600 rounded">
+                                            Gotong
+                                            Royong</label>
+                                        <label class="flex items-center gap-1.5"><input type="checkbox" value="Mandiri"
+                                                class="ppp-check text-tealbrand-600 rounded" checked> Mandiri</label>
+                                        <label class="flex items-center gap-1.5"><input type="checkbox"
+                                                value="Bernalar Kritis" class="ppp-check text-tealbrand-600 rounded"
+                                                checked> Bernalar Kritis</label>
+                                        <label class="flex items-center gap-1.5"><input type="checkbox" value="Kreatif"
+                                                class="ppp-check text-tealbrand-600 rounded" checked> Kreatif</label>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="block font-semibold text-slate-700 mb-1">Model
+                                            Pembelajaran</label>
+                                        <select id="input-model"
+                                            class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
+                                            <option value="Problem-Based Learning (PBL)">Problem-Based Learning (PBL)
+                                            </option>
+                                            <option value="Project-Based Learning (PjBL)">Project-Based Learning (PjBL)
+                                            </option>
+                                            <option value="Discovery Learning">Discovery Learning</option>
+                                            <option value="Inquiry Learning">Inquiry Learning</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block font-semibold text-slate-700 mb-1">Fokus
+                                            Diferensiasi</label>
+                                        <select id="input-diferensiasi"
+                                            class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-tealbrand-500">
+                                            <option value="Diferensiasi Proses & Hasil/Produk">Proses & Produk</option>
+                                            <option value="Diferensiasi Konten (Materi)">Konten (Materi)</option>
+                                            <option value="Integrasi Keseluruhan (Konten, Proses, Produk)">Lengkap
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="sticky bottom-0 bg-white/95 backdrop-blur-sm pt-3 pb-2 border-t border-slate-200 lg:static lg:bg-transparent lg:border-0 lg:pt-2 lg:pb-0 z-20">
+                                    <button type="submit" id="btn-generate"
+                                        class="w-full bg-tealbrand-700 hover:bg-tealbrand-800 text-white font-bold py-3 md:py-2.5 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-2 text-xs md:text-sm">
+                                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                        <span>Susun Perangkat Ajar Sekarang</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </section>
+
+                        <!-- RIGHT EDITOR PANEL -->
+                        <section id="panel-generator-editor"
+                            class="hidden lg:flex w-full lg:w-1/2 p-4 md:p-5 flex-col h-full bg-slate-100 flex-1">
+                            <div
+                                class="bg-white p-3 rounded-t-2xl border border-slate-200 flex flex-wrap items-center justify-between gap-2 shadow-sm">
+                                <div class="flex items-center space-x-1 border-r border-slate-200 pr-2">
+                                    <button onclick="formatText('bold')"
+                                        class="p-1.5 hover:bg-slate-100 rounded text-slate-700 font-bold"><i
+                                            class="fa-solid fa-bold"></i></button>
+                                    <button onclick="formatText('italic')"
+                                        class="p-1.5 hover:bg-slate-100 rounded text-slate-700 italic"><i
+                                            class="fa-solid fa-italic"></i></button>
+                                    <button onclick="formatText('insertUnorderedList')"
+                                        class="p-1.5 hover:bg-slate-100 rounded text-slate-700"><i
+                                            class="fa-solid fa-list-ul"></i></button>
+                                </div>
+
+                                <div class="flex items-center space-x-1.5">
+                                    <button onclick="saveToPustaka()"
+                                        class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-300 transition flex items-center gap-1">
+                                        <i class="fa-solid fa-bookmark text-amber-600"></i> Simpan
+                                    </button>
+                                    <button onclick="exportToWord()"
+                                        class="bg-tealbrand-700 hover:bg-tealbrand-800 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
+                                        <i class="fa-solid fa-file-word"></i> .DOCX
+                                    </button>
+                                    <button onclick="exportToPDF()"
+                                        class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
+                                        <i class="fa-solid fa-file-pdf"></i> PDF
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="flex-1 bg-white border-x border-b border-slate-200 rounded-b-2xl p-4 md:p-6 overflow-y-auto custom-scrollbar shadow-inner relative"
+                                id="printableArea">
+                                <div id="editor-placeholder"
+                                    class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-slate-400">
+                                    <img src="logo.png" alt="Rekan Ajar AI Logo"
+                                        class="w-14 h-16 mb-3 opacity-25 object-contain select-none pointer-events-none">
+                                    <h3 class="font-bold text-slate-600 text-sm">Dokumen Belum Diisi</h3>
+                                    <p class="text-[11px] max-w-xs mt-1">Isi parameter lalu klik "Susun Perangkat Ajar
+                                        Sekarang".</p>
+                                </div>
+
+                                <div id="editor-loading"
+                                    class="hidden absolute inset-0 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center z-10">
+                                    <div
+                                        class="w-10 h-10 border-4 border-tealbrand-200 border-t-tealbrand-700 rounded-full animate-spin mb-3">
+                                    </div>
+                                    <p class="font-bold text-slate-700 text-xs">Menyusun Dokumen Rekan Ajar AI...</p>
+                                </div>
+
+                                <div id="editorContent" contenteditable="true"
+                                    class="prose prose-slate max-w-none text-xs leading-relaxed outline-none min-h-full">
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- SUB-VIEW B: WORKBOOK GURU PRO -->
+                    <div id="view-workbook"
+                        class="hidden flex-1 p-4 md:p-6 overflow-y-auto custom-scrollbar bg-slate-100">
+                        <div class="max-w-6xl mx-auto space-y-4 md:space-y-6">
+
+                            <div
+                                class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 md:p-5 rounded-2xl border border-slate-200 shadow-sm gap-3">
+                                <div>
+                                    <h2 class="text-base md:text-xl font-bold text-slate-800">Workbook Guru Digital Pro
+                                    </h2>
+                                    <p class="text-[11px] text-slate-500">Kelola Absensi Harian, Jurnal Mengajar, &
+                                        Daftar Siswa Per Kelas.</p>
+                                </div>
+
+                                <div class="flex flex-wrap items-center gap-2 text-xs w-full sm:w-auto">
+                                    <div
+                                        class="flex items-center gap-1.5 bg-slate-50 p-1.5 rounded-xl border border-slate-200 flex-1 sm:flex-none">
+                                        <span class="font-semibold text-slate-600 pl-1">Kelas:</span>
+                                        <select id="workbook-class-select" onchange="changeWorkbookClass()"
+                                            class="bg-white border border-slate-300 rounded-lg p-1 font-bold text-tealbrand-800 focus:ring-2 focus:ring-tealbrand-500">
+                                        </select>
+                                    </div>
+
+                                    <div
+                                        class="flex items-center gap-1.5 bg-slate-50 p-1.5 rounded-xl border border-slate-200 flex-1 sm:flex-none">
+                                        <span class="font-semibold text-slate-600 pl-1">Tgl:</span>
+                                        <input type="date" id="workbook-date"
+                                            class="bg-white border border-slate-300 rounded-lg p-1 font-bold text-slate-700 text-xs">
+                                    </div>
+
+                                    <button onclick="saveWorkbookData()"
+                                        class="bg-tealbrand-700 hover:bg-tealbrand-800 text-white font-bold px-3 py-2 rounded-xl shadow transition flex items-center gap-1 text-xs">
+                                        <i class="fa-solid fa-floppy-disk"></i> Simpan
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+
+                                <div
+                                    class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200 shadow-sm lg:col-span-2 flex flex-col justify-between">
+                                    <div>
+                                        <div class="flex flex-wrap justify-between items-center mb-4 gap-2">
+                                            <h3 class="font-bold text-xs md:text-sm text-slate-800 flex items-center">
+                                                <i class="fa-solid fa-user-check text-tealbrand-600 mr-2"></i> Presensi
+                                                Siswa Harian
+                                            </h3>
+
+                                            <div class="flex items-center gap-2">
+                                                <button onclick="markAllPresent()"
+                                                    class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-[10px] font-bold px-2 py-1 rounded-lg transition">
+                                                    <i class="fa-solid fa-check-double mr-1"></i> Hadir Semua
+                                                </button>
+                                                <button onclick="openAddStudentModal()"
+                                                    class="bg-tealbrand-700 hover:bg-tealbrand-800 text-white text-[10px] font-bold px-2 py-1 rounded-lg transition">
+                                                    <i class="fa-solid fa-user-plus mr-1"></i> Tambah Siswa
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="overflow-x-auto">
+                                            <table class="w-full text-xs text-left border-collapse min-w-[320px]">
+                                                <thead>
+                                                    <tr class="bg-slate-50 border-b text-slate-600">
+                                                        <th class="p-2 border border-slate-200 w-8 text-center">No</th>
+                                                        <th class="p-2 border border-slate-200">Nama Siswa</th>
+                                                        <th class="p-2 border border-slate-200 text-center w-12">H</th>
+                                                        <th class="p-2 border border-slate-200 text-center w-12">I</th>
+                                                        <th class="p-2 border border-slate-200 text-center w-12">S</th>
+                                                        <th class="p-2 border border-slate-200 text-center w-12">A</th>
+                                                        <th class="p-2 border border-slate-200 text-center w-10">Aksi
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="student-attendance-tbody">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-[11px] text-slate-400">
+                                        <span>Total Siswa: <strong id="total-students-count"
+                                                class="text-slate-700">0</strong></span>
+                                        <span>Status: Auto-saved</span>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-4 md:space-y-6">
+                                    <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200 shadow-sm">
+                                        <h3 class="font-bold text-xs md:text-sm text-slate-800 mb-3 flex items-center">
+                                            <i class="fa-solid fa-book-journal-whills text-indigo-600 mr-2"></i> Jurnal
+                                            Mengajar
+                                        </h3>
+                                        <form class="space-y-3 text-xs">
+                                            <div>
+                                                <label class="block font-semibold mb-1 text-slate-700">Materi /
+                                                    Sub-Bab</label>
+                                                <input type="text" id="jurnal-materi"
+                                                    placeholder="Misal: Bab 2 Ekosistem"
+                                                    class="w-full p-2 border border-slate-300 rounded-lg">
+                                            </div>
+                                            <div>
+                                                <label class="block font-semibold mb-1 text-slate-700">Hambatan
+                                                    Kelas</label>
+                                                <textarea id="jurnal-hambatan" rows="2"
+                                                    placeholder="Catatan kelompok..."
+                                                    class="w-full p-2 border border-slate-300 rounded-lg"></textarea>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SUB-VIEW C: PUSTAKA DOKUMEN -->
+                    <div id="view-pustaka" class="hidden flex-1 p-4 md:p-6 overflow-y-auto custom-scrollbar">
+                        <div class="max-w-5xl mx-auto">
+                            <div class="flex justify-between items-center mb-6">
+                                <div>
+                                    <h2 class="text-lg md:text-xl font-bold text-slate-800">Pustaka Dokumen Cloud</h2>
+                                    <p class="text-xs text-slate-500">Semua dokumen tersimpan di server Rekan Ajar AI
+                                        Supabase Anda.</p>
+                                </div>
+                            </div>
+                            <div id="pustaka-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+                        </div>
+                    </div>
+
+                    <!-- SUB-VIEW D: BELI TOKEN / TOP UP (HARGA & PAKET SKEMA BARU) -->
+                    <div id="view-topup" class="hidden flex-1 p-4 md:p-6 overflow-y-auto custom-scrollbar">
+                        <div class="max-w-4xl mx-auto">
+                            <div class="text-center mb-6 md:mb-8">
+                                <span
+                                    class="bg-tealbrand-50 text-tealbrand-700 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Investasi
+                                    Hemat Mengajar</span>
+                                <h2 class="text-xl md:text-2xl font-extrabold text-slate-800 mt-2">Pilih Paket Token
+                                    Rekan Ajar AI Pro</h2>
+                                <p class="text-xs text-slate-500 mt-1">Solusi instan selesaikan administrasi sekolah
+                                    tanpa ribet berlangganan mahal.</p>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8">
+                                <!-- PAKET 1: PEMULA -->
+                                <div
+                                    class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between hover:border-slate-300 transition">
+                                    <div>
+                                        <span
+                                            class="bg-slate-100 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Pencoba</span>
+                                        <h3 class="text-lg font-extrabold text-slate-800 mt-2">20 Token</h3>
+                                        <p class="text-[11px] text-slate-400 mb-2">Cukup untuk ~4-6 Dokumen AI</p>
+                                        <div class="flex items-baseline gap-1.5 mt-1">
+                                            <span class="text-xs text-slate-400 line-through">Rp 20.000</span>
+                                            <span class="text-xl font-extrabold text-tealbrand-700">Rp 9.900</span>
+                                        </div>
+                                    </div>
+                                    <button onclick="openPaymentCheckout('pemula')"
+                                        class="w-full mt-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5">
+                                        <i class="fa-solid fa-qrcode"></i> Beli via QRIS Instan
+                                    </button>
+                                </div>
+
+                                <!-- PAKET 2: HEMAT (BEST SELLER) -->
+                                <div
+                                    class="bg-white rounded-2xl p-5 border-2 border-tealbrand-500 shadow-md relative flex flex-col justify-between transform hover:-translate-y-1 transition">
+                                    <span
+                                        class="absolute -top-3 right-4 bg-tealbrand-600 text-white text-[9px] font-extrabold uppercase px-2.5 py-0.5 rounded-full shadow">Paling
+                                        Laris 🔥</span>
+                                    <div>
+                                        <span
+                                            class="bg-tealbrand-50 text-tealbrand-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Hemat
+                                            Semester</span>
+                                        <h3 class="text-lg font-extrabold text-slate-800 mt-2">75 Token</h3>
+                                        <p class="text-[11px] text-slate-400 mb-2">Cukup untuk ~15-25 Dokumen AI</p>
+                                        <div class="flex items-baseline gap-1.5 mt-1">
+                                            <span class="text-xs text-slate-400 line-through">Rp 60.000</span>
+                                            <span class="text-xl font-extrabold text-tealbrand-700">Rp 29.000</span>
+                                        </div>
+                                    </div>
+                                    <button onclick="openPaymentCheckout('hemat')"
+                                        class="w-full mt-5 py-2.5 bg-tealbrand-700 hover:bg-tealbrand-800 text-white font-bold rounded-xl text-xs transition shadow flex items-center justify-center gap-1.5">
+                                        <i class="fa-solid fa-qrcode"></i> Beli via QRIS Instan
+                                    </button>
+                                </div>
+
+                                <!-- PAKET 3: LIFETIME PRO (UNLIMITED) -->
+                                <div
+                                    class="bg-gradient-to-b from-amber-500/10 via-white to-white rounded-2xl p-5 border-2 border-amber-400/80 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                                    <div>
+                                        <span
+                                            class="bg-amber-100 text-amber-800 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">Akses
+                                            Seumur Hidup 👑</span>
+                                        <h3 class="text-lg font-extrabold text-slate-800 mt-2">LIFETIME PRO</h3>
+                                        <p class="text-[11px] text-slate-500 mb-2">Reset 150 Token Setiap Bulan
+                                            Selamanya!</p>
+                                        <div class="flex items-baseline gap-1.5 mt-1">
+                                            <span class="text-xs text-slate-400 line-through">Rp 350.000</span>
+                                            <span class="text-xl font-extrabold text-amber-600">Rp 99.000</span>
+                                        </div>
+                                    </div>
+                                    <button onclick="openPaymentCheckout('lifetime')"
+                                        class="w-full mt-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-900 font-extrabold rounded-xl text-xs transition shadow flex items-center justify-center gap-1.5">
+                                        <i class="fa-solid fa-crown"></i> Ambil Akses Lifetime
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </main>
+            </div>
+
         </div>
-
-    </div>
 
     </div>
     <!-- END APP SHELL -->
@@ -1187,7 +1305,8 @@
     <!-- MODAL CHECKOUT PEMBAYARAN QRIS + WA ADMIN + KUPON -->
     <div id="payment-modal"
         class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl p-5 w-full max-w-md shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto custom-scrollbar">
+        <div
+            class="bg-white rounded-2xl p-5 w-full max-w-md shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto custom-scrollbar">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-100">
                 <div class="flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -1198,7 +1317,8 @@
             </div>
 
             <div class="text-center bg-slate-50 p-3 rounded-xl border border-slate-200 mb-3">
-                <p id="checkout-package-title" class="font-extrabold text-tealbrand-800 text-xs uppercase">Paket Hemat (75 Token)</p>
+                <p id="checkout-package-title" class="font-extrabold text-tealbrand-800 text-xs uppercase">Paket Hemat
+                    (75 Token)</p>
                 <div class="flex justify-center items-baseline gap-2 mt-1">
                     <span id="checkout-original-price" class="text-slate-400 line-through text-xs">Rp 60.000</span>
                     <span id="checkout-final-price" class="text-lg font-extrabold text-slate-800">Rp 29.000</span>
@@ -1207,28 +1327,41 @@
 
             <!-- GAMBAR QRIS STATIS TOKO -->
             <div class="bg-white p-3 rounded-xl border border-slate-200 text-center mb-3">
-                <p class="text-[11px] font-bold text-slate-600 mb-2"><i class="fa-solid fa-camera mr-1"></i> Scan QRIS Menggunakan e-Wallet / M-Banking Anda:</p>
-                <div class="w-48 h-48 mx-auto bg-slate-100 border border-slate-300 rounded-xl p-2 flex items-center justify-center overflow-hidden shadow-inner">
-                    <img id="qris-image" src="qris.png" alt="Scan QRIS Rekan Ajar AI" class="w-full h-full object-contain" onerror="this.src='logo.png'; this.className='w-20 h-20 opacity-40 object-contain';">
+                <p class="text-[11px] font-bold text-slate-600 mb-2"><i class="fa-solid fa-camera mr-1"></i> Scan QRIS
+                    Menggunakan e-Wallet / M-Banking Anda:</p>
+                <div
+                    class="w-48 h-48 mx-auto bg-slate-100 border border-slate-300 rounded-xl p-2 flex items-center justify-center overflow-hidden shadow-inner">
+                    <img id="qris-image" src="qris.png" alt="Scan QRIS Rekan Ajar AI"
+                        class="w-full h-full object-contain"
+                        onerror="this.src='logo.png'; this.className='w-20 h-20 opacity-40 object-contain';">
                 </div>
-                <p class="text-[10px] text-slate-400 mt-2">Dukungan Scan: GoPay, OVO, Dana, ShopeePay, LinkAja, BCA, Mandiri, BRI, BNI, dll.</p>
+                <p class="text-[10px] text-slate-400 mt-2">Dukungan Scan: GoPay, OVO, Dana, ShopeePay, LinkAja, BCA,
+                    Mandiri, BRI, BNI, dll.</p>
             </div>
 
             <!-- INPUT KODE KUPON DISKON PSIKOLOGIS -->
             <div class="mb-4">
-                <label class="block font-bold text-slate-700 text-[11px] mb-1"><i class="fa-solid fa-ticket text-amber-500 mr-1"></i> Kode Kupon Diskon (Opsional)</label>
+                <label class="block font-bold text-slate-700 text-[11px] mb-1"><i
+                        class="fa-solid fa-ticket text-amber-500 mr-1"></i> Kode Kupon Diskon (Opsional)</label>
                 <div class="flex gap-2">
-                    <input type="text" id="coupon-code-input" placeholder="Misal: GURUMERDEKA" class="flex-1 p-2 border border-slate-300 rounded-lg text-xs uppercase font-bold text-tealbrand-800 focus:ring-2 focus:ring-tealbrand-500">
-                    <button type="button" onclick="applyCouponCode()" class="bg-tealbrand-700 hover:bg-tealbrand-800 text-white font-bold px-3 py-2 rounded-lg text-xs transition">Gunakan</button>
+                    <input type="text" id="coupon-code-input" placeholder="Misal: GURUMERDEKA"
+                        class="flex-1 p-2 border border-slate-300 rounded-lg text-xs uppercase font-bold text-tealbrand-800 focus:ring-2 focus:ring-tealbrand-500">
+                    <button type="button" onclick="applyCouponCode()"
+                        class="bg-tealbrand-700 hover:bg-tealbrand-800 text-white font-bold px-3 py-2 rounded-lg text-xs transition">Gunakan</button>
                 </div>
-                <p id="coupon-status-text" class="text-[10px] text-slate-400 mt-1">Coba gunakan kupon: <strong class="text-tealbrand-700 cursor-pointer" onclick="document.getElementById('coupon-code-input').value='GURUMERDEKA'; applyCouponCode();">GURUMERDEKA</strong></p>
+                <p id="coupon-status-text" class="text-[10px] text-slate-400 mt-1">Coba gunakan kupon: <strong
+                        class="text-tealbrand-700 cursor-pointer"
+                        onclick="document.getElementById('coupon-code-input').value='GURUMERDEKA'; applyCouponCode();">GURUMERDEKA</strong>
+                </p>
             </div>
 
             <!-- TOMBOL KONFIRMASI WA ADMIN -->
-            <button onclick="submitPaymentToWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-xs transition shadow-md flex items-center justify-center gap-2">
+            <button onclick="submitPaymentToWhatsApp()"
+                class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-xs transition shadow-md flex items-center justify-center gap-2">
                 <i class="fa-brands fa-whatsapp text-lg"></i> Konfirmasi Pembayaran via WA Admin
             </button>
-            <p class="text-[10px] text-center text-slate-400 mt-2">Setelah mentransfer, klik tombol di atas untuk mengirimkan bukti bayar agar token langsung diaktifkan.</p>
+            <p class="text-[10px] text-center text-slate-400 mt-2">Setelah mentransfer, klik tombol di atas untuk
+                mengirimkan bukti bayar agar token langsung diaktifkan.</p>
         </div>
     </div>
 
@@ -1281,7 +1414,8 @@
                 <div id="field-password-container">
                     <div class="flex justify-between items-center mb-1">
                         <label class="block font-semibold text-slate-700">Password</label>
-                        <button type="button" id="btn-forgot-password" onclick="setAuthMode('forgot')" class="text-[11px] text-tealbrand-700 font-semibold hover:underline">Lupa Password?</button>
+                        <button type="button" id="btn-forgot-password" onclick="setAuthMode('forgot')"
+                            class="text-[11px] text-tealbrand-700 font-semibold hover:underline">Lupa Password?</button>
                     </div>
                     <div class="relative">
                         <input type="password" id="auth-password" required minlength="6"
@@ -1321,7 +1455,7 @@
         let activeModule = 'modul-ajar';
         let currentUser = null;
         let userProfile = null;
-        let authMode = 'login'; 
+        let authMode = 'login';
 
         // Payment State
         let selectedPackage = null;
@@ -1487,7 +1621,7 @@
         function updateJenjangAndKelas() {
             const jenjang = document.getElementById('input-jenjang').value;
             const kelasSelect = document.getElementById('input-kelas');
-            
+
             let kelasOptions = [];
             if (jenjang === 'SD') {
                 kelasOptions = [1, 2, 3, 4, 5, 6];
@@ -1809,7 +1943,7 @@
                 tokenContainer.classList.remove('flex');
                 topupBtn.classList.add('hidden');
                 topupBtn.classList.remove('flex');
-                
+
                 // HILANGKAN TOMBOL BURGER SAAT DI LANDING PAGE
                 if (mobileMenuBtn) mobileMenuBtn.classList.add('hidden');
             } else {
@@ -1821,7 +1955,7 @@
                 tokenContainer.classList.add('flex');
                 topupBtn.classList.remove('hidden');
                 topupBtn.classList.add('flex');
-                
+
                 // TAMPILKAN TOMBOL BURGER DI WORKSPACE UNTUK TAMPILAN MOBILE
                 if (mobileMenuBtn) mobileMenuBtn.classList.remove('hidden');
 
@@ -2263,7 +2397,7 @@ Susun MODUL AJAR / RPP PLUS Kurikulum Merdeka berstandar BSKAP Kemendikbudristek
    - <h3>B. Bahan Bacaan Guru & Peserta Didik</h3>
    - <h3>C. Glosarium Istilah Penting</h3>
    - <h3>D. Daftar Pustaka / Referensi Resmi</h3>`;
-            } 
+            }
             else if (activeModule === 'tp-atp') {
                 modulePromptSpec = `
 Susun DOKUMEN TUJUAN PEMBELAJARAN (TP) DAN ALUR TUJUAN PEMBELAJARAN (ATP) Kurikulum Merdeka BSKAP secara sistematis:
@@ -2278,7 +2412,7 @@ Susun DOKUMEN TUJUAN PEMBELAJARAN (TP) DAN ALUR TUJUAN PEMBELAJARAN (ATP) Kuriku
 
 3. <h2>III. RASIONALISASI DAN ALUR URUTAN PEMBELAJARAN</h2>
    Jelaskan Alur Pengurutan Pembelajaran dari LOTS (Konsep Dasar) menuju HOTS (Penerapan/Analisis) secara logis dan runtut.`;
-            } 
+            }
             else if (activeModule === 'prota-prosem') {
                 const ta = document.getElementById('opt-ta')?.value || '2024/2025';
                 const minggu = document.getElementById('opt-minggu')?.value || '18';
@@ -2294,7 +2428,7 @@ Susun PROGRAM TAHUNAN (PROTA) DAN PROGRAM SEMESTER (PROSEM) Kurikulum Merdeka re
 
 3. <h2>III. MATRIKS PROGRAM SEMESTER (PROSEM)</h2>
    Buat TABEL PROSEM mendatar dengan pembagian alokasi waktu per Bulan (Juli s.d. Desember atau Januari s.d. Juni) dan Minggu Efektif, mencakup alokasi materi utama ${materi}, Cadangan Asesmen Sumatif, dan Projek P5.`;
-            } 
+            }
             else if (activeModule === 'lkpd') {
                 const lkpdType = document.getElementById('opt-lkpd-type')?.value || 'Eksperimen / Praktikum Kelompok';
                 modulePromptSpec = `
@@ -2315,7 +2449,7 @@ Susun LEMBAR KERJA PESERTA DIDIK (LKPD) DIGITAL BERBASIS AKTIVITAS MENARIK:
 
 5. <h2>V. PERTANYAAN ANALISIS HOTS & KESIMPULAN</h2>
    Sajikan 3-5 Pertanyaan Analisis Kritis HOTS berbasis materi ${materi} dan Kotak Kesimpulan Akhir.`;
-            } 
+            }
             else if (activeModule === 'asesmen') {
                 const tipeSoal = document.getElementById('opt-tipe-soal')?.value || 'Pilihan Ganda & Essay HOTS';
                 const jumlahSoal = document.getElementById('opt-jumlah-soal')?.value || '5';
@@ -2334,7 +2468,7 @@ Susun INSTRUMEN DAN RUBRIK ASESMEN PEMBELAJARAN LENGKAP:
 
 4. <h2>IV. RUBRIK ASESMEN ANALITIK (SKOR 1 - 4)</h2>
    Buat TABEL RUBRIK UNJUK KERJA / PENILAIAN ANALITIK lengkap dengan Kriteria Penilaian, Indikator Perolehan Skor (1: Perlu Bimbingan, 2: Cukup, 3: Baik, 4: Sangat Baik), serta Formula Penentuan Nilai Akhir.`;
-            } 
+            }
             else if (activeModule === 'p5') {
                 modulePromptSpec = `
 Susun MODUL PROJEK PENGUATAN PROFIL PELAJAR PANCASILA (P5) RESMI BSKAP:
@@ -2371,7 +2505,17 @@ PETUNJUK FORMATTING WAJIB:
                 });
 
                 const data = await response.json();
-                if (data.error) throw new Error(typeof data.error === 'string' ? data.error : (data.error.message || 'Gagal memproses API AI'));
+
+                // PENANGANAN ERROR GURU-FRIENDLY
+                if (!response.ok || data.error) {
+                    if (response.status === 503 || (data.error && data.error.message === 'SERVER_BUSY')) {
+                        throw new Error(
+                            'Mohon maaf Bapak/Ibu Guru, lalu lintas server penyusunan saat ini sedang sangat padat. ' +
+                            'Sistem sedang menyegarkan antrean. Silakan klik tombol "Susun Perangkat Ajar Sekarang" sekali lagi dalam 10-20 detik.'
+                        );
+                    }
+                    throw new Error(typeof data.error === 'string' ? data.error : (data.error.message || 'Gagal memproses dokumen.'));
+                }
 
                 let resultHtml = data.candidates[0].content.parts[0].text;
                 resultHtml = sanitizeDocumentHTML(resultHtml);
@@ -2593,7 +2737,7 @@ PETUNJUK FORMATTING WAJIB:
                 printElement.style.fontSize = '12px';
                 printElement.style.lineHeight = '1.5';
                 printElement.style.boxSizing = 'border-box';
-                
+
                 printElement.innerHTML = `
                     <style>
                         .pdf-render table {
@@ -2652,9 +2796,9 @@ PETUNJUK FORMATTING WAJIB:
                     margin: [10, 10, 10, 10],
                     filename: filename,
                     image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { 
-                        scale: 2, 
-                        useCORS: true, 
+                    html2canvas: {
+                        scale: 2,
+                        useCORS: true,
                         logging: false,
                         letterRendering: true
                     },

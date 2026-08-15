@@ -1,38 +1,55 @@
+// /api/generate.js
+
 export default async function handler(req, res) {
-    // Hanya menerima request POST
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method Not Allowed' });
-    }
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
 
-    try {
-        const { promptText } = req.body;
-        
-        // Mengambil API Key rahasia yang tersimpan di Vercel
-        const apiKey = process.env.GEMINI_API_KEY;
+  const { promptText } = req.body;
 
-        if (!apiKey) {
-            return res.status(500).json({ error: 'Gemini API Key belum diset di Vercel!' });
-        }
+  // 1. Ambil daftar API Key dari Vercel Environment Variables
+  const API_KEYS = [
+    process.env.GEMINI_API_KEY_1 || process.env.GEMINI_API_KEY,
+    process.env.GEMINI_API_KEY_2,
+    process.env.GEMINI_API_KEY_3
+  ].filter(Boolean); // Hanya ambil yang terisi
 
-        // Panggil Google Gemini API dari server-side
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`, {
+  // 2. Daftar model yang dicoba berurutan (utamakan flash yang stabil)
+  const MODELS = ['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-1.5-pro'];
+
+  let lastErrorDetail = null;
+
+  // 3. Looping mencoba kombinasi API Key & Model secara otomatis
+  for (const apiKey of API_KEYS) {
+    for (const modelName of MODELS) {
+      try {
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`,
+          {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                contents: [{ parts: [{ text: promptText }] }]
+              contents: [{ parts: [{ text: promptText }] }]
             })
-        });
+          }
+        );
 
         const data = await response.json();
 
-        if (data.error) {
-            return res.status(400).json({ error: data.error.message });
+        // Jika sukses mendapatkan jawaban dari Google
+        if (response.ok && data.candidates && data.candidates.length > 0) {
+          return res.status(200).json(data);
         }
 
-        // Kirim hasil teks ke frontend
-        return res.status(200).json(data);
-
-    } catch (error) {
-        return res.status(500).json({ error: 'Gagal memproses di server: ' + error.message });
+        lastErrorDetail = data.error?.message || 'Server sibuk';
+      } catch (err) {
+        lastErrorDetail = err.message;
+      }
     }
+  }
+
+  // 4. Jika semua Key & Model gagal/high demand, kirim status 503 dengan kode 'SERVER_BUSY'
+  return res.status(503).json({ 
+    error: { message: 'SERVER_BUSY', detail: lastErrorDetail } 
+  });
 }
