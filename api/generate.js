@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   ].filter(Boolean); // Hanya ambil yang terisi
 
   // 2. Daftar model yang dicoba berurutan (utamakan flash yang stabil)
-  const MODELS = ['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-1.5-pro'];
+  const MODELS = ['gemini-1.5-flash', 'gemini-1.5-flash-latest'];
 
   let lastErrorDetail = null;
 
