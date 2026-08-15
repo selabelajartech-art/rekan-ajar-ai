@@ -1,0 +1,3 @@
+// config.js
+window.ENV_SUPABASE_URL = 'https://jxobndahksbowmthrflh.supabase.co';
+window.ENV_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4b2JuZGFoa3Nib3dtdGhyZmxoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxOTI5ODIsImV4cCI6MjEwMTc2ODk4Mn0.HqRw6I2NmZ3VoGUjPotVbuhUakIqqVknQQRofft_nIg';
