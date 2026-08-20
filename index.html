@@ -2829,7 +2829,6 @@ PETUNJUK FORMATTING WAJIB:
                 showToast('Gagal membuat PDF: ' + err.message, 'error');
             });
         }
-        }
         async function simulasiBayar(amount, price) {
             if (!currentUser) return showToast('Silakan login terlebih dahulu untuk membeli token!', 'warning');
             if (amount === 20) openPaymentCheckout('pemula');
