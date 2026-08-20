@@ -2720,7 +2720,8 @@ PETUNJUK FORMATTING WAJIB:
         // PERBAIKAN TOTAL EKSPOR PDF (PRESISI VEKTOR & GARIS TABEL UTUH)
         function exportToPDF() {
             const editorEl = document.getElementById('editorContent');
-            const htmlContent = sanitizeDocumentHTML(editorEl.innerHTML);
+            const rawContent = editorEl.innerHTML;
+            const htmlContent = sanitizeDocumentHTML(rawContent);
             if (!htmlContent.trim()) return showToast('Editor masih kosong!', 'warning');
 
             const mapel = document.getElementById('input-mapel').value || 'Dokumen';
@@ -2732,112 +2733,170 @@ PETUNJUK FORMATTING WAJIB:
                 return;
             }
 
-            showToast('Menyiapkan file PDF...', 'info');
+            showToast('Menyiapkan file PDF presisi...', 'info');
 
-            // 1. Buat kontainer cetak sementara & tampilkan paling depan (z-index: 99999) agar koordinat (0,0) terbaca presisi oleh html2canvas
+            // Ukuran A4 presisi pada 96 DPI
+            const containerWidth = isLandscape ? 1123 : 794; // px
+
+            // Container sementara di luar layar (tapi tetap di-render oleh browser)
             const printContainer = document.createElement('div');
             printContainer.id = 'temp-pdf-render-box';
             printContainer.style.position = 'absolute';
-            printContainer.style.top = '0';
-            printContainer.style.left = '0';
-            printContainer.style.width = isLandscape ? '1080px' : '794px'; // 794px = Presisi Lebar A4 (96 DPI)
+            printContainer.style.top = '-9999px';
+            printContainer.style.left = '-9999px';
+            printContainer.style.width = containerWidth + 'px';
             printContainer.style.background = '#ffffff';
             printContainer.style.color = '#0f172a';
             printContainer.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
             printContainer.style.fontSize = '11px';
             printContainer.style.lineHeight = '1.6';
             printContainer.style.boxSizing = 'border-box';
-            printContainer.style.padding = '0';
-            printContainer.style.zIndex = '99999';
+            printContainer.style.padding = '40px 35px';
+            printContainer.style.overflow = 'visible';
+            printContainer.style.zIndex = '-1';
+            printContainer.style.pointerEvents = 'none';
 
+            // CSS internal untuk container (presisi print)
             printContainer.innerHTML = `
-        <style>
-            #temp-pdf-render-box * {
-                box-sizing: border-box !important;
-            }
-            #temp-pdf-render-box table {
-                width: 100% !important;
-                border-collapse: collapse !important;
-                margin: 12px 0 !important;
-                table-layout: fixed !important;
-            }
-            #temp-pdf-render-box th, #temp-pdf-render-box td {
-                border: 1px solid #334155 !important;
-                padding: 6px 8px !important;
-                text-align: left !important;
-                vertical-align: top !important;
-                font-size: 10px !important;
-                word-break: break-word !important;
-                overflow-wrap: break-word !important;
-                white-space: normal !important;
-            }
-            #temp-pdf-render-box th {
-                background-color: #f0fdfa !important;
-                color: #0f766e !important;
-                font-weight: bold !important;
-            }
-            #temp-pdf-render-box tr {
-                page-break-inside: avoid !important;
-            }
-            #temp-pdf-render-box h2 {
-                font-size: 15px !important;
-                font-weight: bold !important;
-                color: #0f172a !important;
-                border-bottom: 2px solid #99f6e4 !important;
-                padding-bottom: 4px !important;
-                margin-top: 16px !important;
-                margin-bottom: 8px !important;
-                page-break-after: avoid !important;
-            }
-            #temp-pdf-render-box h3 {
-                font-size: 13px !important;
-                font-weight: bold !important;
-                color: #0f172a !important;
-                margin-top: 12px !important;
-                margin-bottom: 6px !important;
-                page-break-after: avoid !important;
-            }
-            #temp-pdf-render-box ul, #temp-pdf-render-box ol {
-                padding-left: 20px !important;
-                margin-bottom: 8px !important;
-            }
-        </style>
-        <div style="width: 100%; box-sizing: border-box; padding: 10px;">${htmlContent}</div>
-    `;
+<style>
+    #temp-pdf-render-box * {
+        box-sizing: border-box !important;
+    }
+    #temp-pdf-render-box {
+        width: ${containerWidth}px !important;
+        max-width: ${containerWidth}px !important;
+    }
+    #temp-pdf-render-box table {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-collapse: collapse !important;
+        margin: 14px 0 !important;
+        table-layout: auto !important;
+        font-size: 10px !important;
+    }
+    #temp-pdf-render-box th,
+    #temp-pdf-render-box td {
+        border: 1px solid #334155 !important;
+        padding: 6px 8px !important;
+        text-align: left !important;
+        vertical-align: top !important;
+        word-break: break-word !important;
+        overflow-wrap: break-word !important;
+        white-space: normal !important;
+    }
+    #temp-pdf-render-box th {
+        background-color: #f0fdfa !important;
+        color: #0f766e !important;
+        font-weight: bold !important;
+    }
+    #temp-pdf-render-box tr {
+        page-break-inside: avoid !important;
+        page-break-after: auto !important;
+    }
+    #temp-pdf-render-box table {
+        page-break-inside: auto !important;
+    }
+    #temp-pdf-render-box h2 {
+        font-size: 15px !important;
+        font-weight: bold !important;
+        color: #0f172a !important;
+        border-bottom: 2px solid #99f6e4 !important;
+        padding-bottom: 4px !important;
+        margin: 18px 0 10px 0 !important;
+        page-break-after: avoid !important;
+    }
+    #temp-pdf-render-box h3 {
+        font-size: 13px !important;
+        font-weight: bold !important;
+        color: #0f172a !important;
+        margin: 14px 0 6px 0 !important;
+        page-break-after: avoid !important;
+    }
+    #temp-pdf-render-box ul,
+    #temp-pdf-render-box ol {
+        padding-left: 22px !important;
+        margin-bottom: 8px !important;
+    }
+    #temp-pdf-render-box li {
+        margin-bottom: 3px !important;
+    }
+    #temp-pdf-render-box p {
+        margin: 6px 0 !important;
+    }
+    #temp-pdf-render-box br {
+        display: none !important;
+    }
+    /* Mencegah konten terpotong di tepi */
+    #temp-pdf-render-box .break-avoid {
+        page-break-inside: avoid !important;
+    }
+</style>
+<div style="width:100%;box-sizing:border-box;padding:0;">
+    ${htmlContent}
+</div>
+`;
 
             document.body.appendChild(printContainer);
 
+            // Opsi html2pdf yang presisi
             const opt = {
-                margin: [10, 10, 10, 10], // Margin A4 resmi (mm)
+                margin: [14, 14, 14, 14], // mm (kiri, atas, kanan, bawah)
                 filename: filename,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: {
-                    scale: 2,
+                    scale: 2.5,                // resolusi tinggi
                     useCORS: true,
                     logging: false,
                     letterRendering: true,
+                    width: containerWidth,
+                    height: printContainer.scrollHeight || 'auto',
+                    windowWidth: containerWidth,
                     scrollX: 0,
                     scrollY: 0,
                     x: 0,
                     y: 0,
-                    windowWidth: isLandscape ? 1200 : 850
+                    onclone: function (clonedDoc) {
+                        // Pastikan tabel tidak overflow
+                        const tables = clonedDoc.querySelectorAll('table');
+                        tables.forEach(t => {
+                            t.style.width = '100%';
+                            t.style.maxWidth = '100%';
+                            t.style.tableLayout = 'auto';
+                        });
+                    }
                 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: isLandscape ? 'landscape' : 'portrait' },
-                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+                jsPDF: {
+                    unit: 'mm',
+                    format: 'a4',
+                    orientation: isLandscape ? 'landscape' : 'portrait',
+                    compress: true
+                },
+                pagebreak: {
+                    mode: ['css', 'legacy'],
+                    before: ['h2', 'h3'],
+                    after: ['table'],
+                    avoid: ['tr', 'th', 'td', 'h2', 'h3']
+                }
             };
 
-            html2pdf().set(opt).from(printContainer).save().then(() => {
-                if (document.body.contains(printContainer)) {
-                    document.body.removeChild(printContainer);
-                }
-                showToast('PDF berhasil diunduh secara utuh!', 'success');
-            }).catch(err => {
-                if (document.body.contains(printContainer)) {
-                    document.body.removeChild(printContainer);
-                }
-                console.error('PDF export error:', err);
-                showToast('Gagal membuat PDF: ' + err.message, 'error');
-            });
+            // Eksekusi
+            html2pdf()
+                .set(opt)
+                .from(printContainer)
+                .save()
+                .then(() => {
+                    if (document.body.contains(printContainer)) {
+                        document.body.removeChild(printContainer);
+                    }
+                    showToast('✅ PDF berhasil diunduh dengan rapi!', 'success');
+                })
+                .catch(err => {
+                    if (document.body.contains(printContainer)) {
+                        document.body.removeChild(printContainer);
+                    }
+                    console.error('PDF export error:', err);
+                    showToast('❌ Gagal membuat PDF: ' + err.message, 'error');
+                });
         }
         async function simulasiBayar(amount, price) {
             if (!currentUser) return showToast('Silakan login terlebih dahulu untuk membeli token!', 'warning');
