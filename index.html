@@ -2719,7 +2719,8 @@ PETUNJUK FORMATTING WAJIB:
 
         // PERBAIKAN TOTAL EKSPOR PDF (PRESISI VEKTOR & GARIS TABEL UTUH)
         function exportToPDF() {
-            const htmlContent = sanitizeDocumentHTML(document.getElementById('editorContent').innerHTML);
+            const editorEl = document.getElementById('editorContent');
+            const htmlContent = sanitizeDocumentHTML(editorEl.innerHTML);
             if (!htmlContent.trim()) return showToast('Editor masih kosong!', 'warning');
 
             const mapel = document.getElementById('input-mapel').value || 'Dokumen';
@@ -2733,21 +2734,21 @@ PETUNJUK FORMATTING WAJIB:
 
             showToast('Menyiapkan file PDF...', 'info');
 
-            // 1. Wadah cetak di titik (0,0) layar tetapi di belakang latar belakang (z-index negatif)
+            // 1. Buat kontainer cetak sementara & tampilkan paling depan (z-index: 99999) agar koordinat (0,0) terbaca presisi oleh html2canvas
             const printContainer = document.createElement('div');
             printContainer.id = 'temp-pdf-render-box';
-            printContainer.style.position = 'fixed';
+            printContainer.style.position = 'absolute';
             printContainer.style.top = '0';
             printContainer.style.left = '0';
-            printContainer.style.zIndex = '-9999';
-            printContainer.style.width = isLandscape ? '1000px' : '720px'; // Pas dengan area cetak A4
+            printContainer.style.width = isLandscape ? '1080px' : '794px'; // 794px = Presisi Lebar A4 (96 DPI)
             printContainer.style.background = '#ffffff';
             printContainer.style.color = '#0f172a';
             printContainer.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
             printContainer.style.fontSize = '11px';
-            printContainer.style.lineHeight = '1.5';
+            printContainer.style.lineHeight = '1.6';
             printContainer.style.boxSizing = 'border-box';
-            printContainer.style.padding = '10px';
+            printContainer.style.padding = '0';
+            printContainer.style.zIndex = '99999';
 
             printContainer.innerHTML = `
         <style>
@@ -2757,7 +2758,7 @@ PETUNJUK FORMATTING WAJIB:
             #temp-pdf-render-box table {
                 width: 100% !important;
                 border-collapse: collapse !important;
-                margin: 10px 0 !important;
+                margin: 12px 0 !important;
                 table-layout: fixed !important;
             }
             #temp-pdf-render-box th, #temp-pdf-render-box td {
@@ -2766,7 +2767,7 @@ PETUNJUK FORMATTING WAJIB:
                 text-align: left !important;
                 vertical-align: top !important;
                 font-size: 10px !important;
-                word-wrap: break-word !important;
+                word-break: break-word !important;
                 overflow-wrap: break-word !important;
                 white-space: normal !important;
             }
@@ -2779,38 +2780,47 @@ PETUNJUK FORMATTING WAJIB:
                 page-break-inside: avoid !important;
             }
             #temp-pdf-render-box h2 {
-                font-size: 14px !important;
+                font-size: 15px !important;
                 font-weight: bold !important;
-                color: #0f766e !important;
+                color: #0f172a !important;
                 border-bottom: 2px solid #99f6e4 !important;
                 padding-bottom: 4px !important;
-                margin-top: 14px !important;
-                margin-bottom: 6px !important;
+                margin-top: 16px !important;
+                margin-bottom: 8px !important;
                 page-break-after: avoid !important;
             }
             #temp-pdf-render-box h3 {
-                font-size: 12px !important;
+                font-size: 13px !important;
                 font-weight: bold !important;
                 color: #0f172a !important;
-                margin-top: 10px !important;
-                margin-bottom: 4px !important;
+                margin-top: 12px !important;
+                margin-bottom: 6px !important;
                 page-break-after: avoid !important;
             }
+            #temp-pdf-render-box ul, #temp-pdf-render-box ol {
+                padding-left: 20px !important;
+                margin-bottom: 8px !important;
+            }
         </style>
-        <div>${htmlContent}</div>
+        <div style="width: 100%; box-sizing: border-box; padding: 10px;">${htmlContent}</div>
     `;
 
             document.body.appendChild(printContainer);
 
             const opt = {
-                margin: [10, 10, 10, 10],
+                margin: [10, 10, 10, 10], // Margin A4 resmi (mm)
                 filename: filename,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: {
                     scale: 2,
                     useCORS: true,
                     logging: false,
-                    letterRendering: true
+                    letterRendering: true,
+                    scrollX: 0,
+                    scrollY: 0,
+                    x: 0,
+                    y: 0,
+                    windowWidth: isLandscape ? 1200 : 850
                 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: isLandscape ? 'landscape' : 'portrait' },
                 pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
@@ -2820,7 +2830,7 @@ PETUNJUK FORMATTING WAJIB:
                 if (document.body.contains(printContainer)) {
                     document.body.removeChild(printContainer);
                 }
-                showToast('PDF berhasil diunduh!', 'success');
+                showToast('PDF berhasil diunduh secara utuh!', 'success');
             }).catch(err => {
                 if (document.body.contains(printContainer)) {
                     document.body.removeChild(printContainer);
