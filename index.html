@@ -2732,17 +2732,16 @@ PETUNJUK FORMATTING WAJIB:
                 return;
             }
 
-            showToast('Menyiapkan file PDF...', 'info');
+            showToast('Menyiapkan file PDF rapi...', 'info');
 
-            // Buat wadah cetak terpisah (html2pdf akan merender elemen ini secara otomatis di memori)
             const printElement = document.createElement('div');
-            printElement.style.width = isLandscape ? '1000px' : '750px';
-            printElement.style.padding = '20px';
+            printElement.style.width = isLandscape ? '1000px' : '760px';
+            printElement.style.padding = '15px';
             printElement.style.background = '#ffffff';
             printElement.style.color = '#0f172a';
             printElement.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
             printElement.style.fontSize = '11px';
-            printElement.style.lineHeight = '1.6';
+            printElement.style.lineHeight = '1.5';
             printElement.style.boxSizing = 'border-box';
 
             printElement.innerHTML = `
@@ -2751,7 +2750,7 @@ PETUNJUK FORMATTING WAJIB:
                 width: 100% !important;
                 border-collapse: collapse !important;
                 margin: 12px 0 !important;
-                table-layout: fixed !important;
+                table-layout: auto !important; /* Biarkan kolom menyesuaikan isi teks */
             }
             th, td {
                 border: 1px solid #334155 !important;
@@ -2759,7 +2758,7 @@ PETUNJUK FORMATTING WAJIB:
                 text-align: left !important;
                 vertical-align: top !important;
                 font-size: 10px !important;
-                word-break: break-word !important;
+                word-break: normal !important;
                 overflow-wrap: break-word !important;
                 white-space: normal !important;
             }
@@ -2771,34 +2770,42 @@ PETUNJUK FORMATTING WAJIB:
             tr {
                 page-break-inside: avoid !important;
             }
+            /* Aturan proporsi lebar kolom untuk Tabel 2 Kolom (Informasi Umum) */
+            table tr td:first-child, table tr th:first-child {
+                width: 28% !important; /* Kolom label diberi ruang 28% agar tidak tergepeng */
+            }
+            /* Aturan proporsi lebar kolom untuk Tabel 4 Kolom (Rubrik Asesmen) */
+            table tr th:nth-child(4), table tr td:nth-child(4) {
+                width: 22% !important;
+            }
             h2 {
-                font-size: 15px !important;
+                font-size: 14px !important;
                 font-weight: bold !important;
                 color: #0f172a !important;
                 border-bottom: 2px solid #99f6e4 !important;
                 padding-bottom: 4px !important;
-                margin-top: 16px !important;
-                margin-bottom: 8px !important;
-                page-break-after: avoid !important;
-            }
-            h3 {
-                font-size: 13px !important;
-                font-weight: bold !important;
-                color: #0f172a !important;
-                margin-top: 12px !important;
+                margin-top: 14px !important;
                 margin-bottom: 6px !important;
                 page-break-after: avoid !important;
             }
+            h3 {
+                font-size: 12px !important;
+                font-weight: bold !important;
+                color: #0f172a !important;
+                margin-top: 10px !important;
+                margin-bottom: 4px !important;
+                page-break-after: avoid !important;
+            }
             ul, ol {
-                padding-left: 20px !important;
-                margin-bottom: 8px !important;
+                padding-left: 18px !important;
+                margin-bottom: 6px !important;
             }
         </style>
         <div>${htmlContent}</div>
     `;
 
             const opt = {
-                margin: [10, 10, 10, 10], // Margin standar A4 (mm)
+                margin: [10, 10, 10, 10],
                 filename: filename,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: {
@@ -2811,9 +2818,8 @@ PETUNJUK FORMATTING WAJIB:
                 pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
             };
 
-            // Ekspor langsung dari elemen memori tanpa mengganggu DOM
             html2pdf().set(opt).from(printElement).save().then(() => {
-                showToast('PDF berhasil diunduh secara utuh!', 'success');
+                showToast('PDF berhasil diunduh secara presisi!', 'success');
             }).catch(err => {
                 console.error('PDF export error:', err);
                 showToast('Gagal membuat PDF: ' + err.message, 'error');
