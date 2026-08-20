@@ -2495,7 +2495,9 @@ PETUNJUK FORMATTING WAJIB:
 3. OUTPUT HARUS HANYA FRAGMENT HTML ISI DOKUMEN, tanpa markdown \`\`\`html dan tanpa wrapper HTML.
 4. DILARANG menghasilkan tag <html>, <head>, <body>, <style>, <script>, <link>, <meta>, <base>, <iframe>, <form>, <input>, atau <button>.
 5. DILARANG menggunakan atribut style, class, id, onclick, atau event handler HTML apa pun.
-6. Jangan membuat atau mengubah CSS aplikasi. Gunakan hanya struktur HTML semantik seperti h1-h6, p, ul, ol, li, table, thead, tbody, tr, th, td, strong, em, div, dan br.`;
+6. Jangan membuat atau mengubah CSS aplikasi. Gunakan hanya struktur HTML semantik seperti h1-h6, p, ul, ol, li, table, thead, tbody, tr, th, td, strong, em, div, dan br.
+7. DILARANG memotong kata di akhir kalimat. Tuliskan setiap kata secara utuh.
+8. DILARANG menggunakan tag <br> atau membuat baris <tr> baru di dalam sel tabel <td>. Setiap deskripsi indikator rubrik harus berada utuh di dalam satu sel <td>.`;
             try {
                 const response = await fetch('/api/generate', {
                     method: 'POST',
@@ -2794,7 +2796,7 @@ PETUNJUK FORMATTING WAJIB:
                 `;
 
                 const opt = {
-                    margin: [10, 10, 10, 10],
+                    margin: [12, 12, 12, 12],
                     filename: filename,
                     image: { type: 'jpeg', quality: 0.98 },
                     html2canvas: {
@@ -2804,7 +2806,7 @@ PETUNJUK FORMATTING WAJIB:
                         letterRendering: true
                     },
                     jsPDF: { unit: 'mm', format: 'a4', orientation: isLandscape ? 'landscape' : 'portrait' },
-                    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+                    pagebreak: { mode: ['avoid-all' , 'css', 'legacy'] }
                 };
 
                 html2pdf().set(opt).from(printElement).save().then(() => {
