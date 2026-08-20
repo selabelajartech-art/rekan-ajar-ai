@@ -2724,106 +2724,91 @@ PETUNJUK FORMATTING WAJIB:
             if (!htmlContent.trim()) return showToast('Editor masih kosong!', 'warning');
 
             const mapel = document.getElementById('input-mapel').value || 'Dokumen';
-            const filename = `RekanAjar_${activeModule}_${mapel.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
             const isLandscape = (activeModule === 'prota-prosem' || activeModule === 'tp-atp');
 
-            if (typeof html2pdf === 'undefined') {
-                window.print();
-                return;
-            }
+            showToast('Membuka jendela cetak PDF presisi...', 'info');
 
-            showToast('Menyiapkan file PDF rapi...', 'info');
+            // Buat iframe rahasia untuk merender cetakan vektor asli
+            const iframe = document.createElement('iframe');
+            iframe.style.position = 'fixed';
+            iframe.style.right = '0';
+            iframe.style.bottom = '0';
+            iframe.style.width = '0';
+            iframe.style.height = '0';
+            iframe.style.border = '0';
+            document.body.appendChild(iframe);
 
-            const printElement = document.createElement('div');
-            printElement.style.width = isLandscape ? '1000px' : '760px';
-            printElement.style.padding = '15px';
-            printElement.style.background = '#ffffff';
-            printElement.style.color = '#0f172a';
-            printElement.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
-            printElement.style.fontSize = '11px';
-            printElement.style.lineHeight = '1.5';
-            printElement.style.boxSizing = 'border-box';
+            const doc = iframe.contentWindow.document;
+            doc.open();
+            doc.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>RekanAjar_${activeModule}_${mapel}</title>
+            <style>
+                @page {
+                    size: A4 ${isLandscape ? 'landscape' : 'portrait'};
+                    margin: 15mm;
+                }
+                body {
+                    font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+                    font-size: 10.5pt;
+                    line-height: 1.5;
+                    color: #0f172a;
+                    margin: 0;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 12pt 0;
+                    page-break-inside: auto;
+                }
+                tr {
+                    page-break-inside: avoid;
+                    page-break-after: auto;
+                }
+                thead {
+                    display: table-header-group; /* Ulangi header tabel jika terpotong ke halaman baru */
+                }
+                th, td {
+                    border: 1px solid #334155;
+                    padding: 6pt 8pt;
+                    text-align: left;
+                    vertical-align: top;
+                    font-size: 9.5pt;
+                    word-break: normal;
+                    overflow-wrap: break-word;
+                }
+                th {
+                    background-color: #f0fdfa !important;
+                    color: #0f766e !important;
+                    font-weight: bold;
+                    -webkit-print-color-adjust: exact;
+                    print-color-adjust: exact;
+                }
+                h2 {
+                    font-size: 13pt;
+                    color: #0f766e;
+                    border-bottom: 2pt solid #99f6e4;
+                    padding-bottom: 3pt;
+                    margin-top: 14pt;
+                    page-break-after: avoid;
+                }
+                h3 { font-size: 11pt; margin-top: 10pt; page-break-after: avoid; }
+            </style>
+        </head>
+        <body>
+            ${htmlContent}
+        </body>
+        </html>
+    `);
+            doc.close();
 
-            printElement.innerHTML = `
-        <style>
-            table {
-                width: 100% !important;
-                border-collapse: collapse !important;
-                margin: 12px 0 !important;
-                table-layout: auto !important; /* Biarkan kolom menyesuaikan isi teks */
-            }
-            th, td {
-                border: 1px solid #334155 !important;
-                padding: 6px 8px !important;
-                text-align: left !important;
-                vertical-align: top !important;
-                font-size: 10px !important;
-                word-break: normal !important;
-                overflow-wrap: break-word !important;
-                white-space: normal !important;
-            }
-            th {
-                background-color: #f0fdfa !important;
-                color: #0f766e !important;
-                font-weight: bold !important;
-            }
-            tr {
-                page-break-inside: avoid !important;
-            }
-            /* Aturan proporsi lebar kolom untuk Tabel 2 Kolom (Informasi Umum) */
-            table tr td:first-child, table tr th:first-child {
-                width: 28% !important; /* Kolom label diberi ruang 28% agar tidak tergepeng */
-            }
-            /* Aturan proporsi lebar kolom untuk Tabel 4 Kolom (Rubrik Asesmen) */
-            table tr th:nth-child(4), table tr td:nth-child(4) {
-                width: 22% !important;
-            }
-            h2 {
-                font-size: 14px !important;
-                font-weight: bold !important;
-                color: #0f172a !important;
-                border-bottom: 2px solid #99f6e4 !important;
-                padding-bottom: 4px !important;
-                margin-top: 14px !important;
-                margin-bottom: 6px !important;
-                page-break-after: avoid !important;
-            }
-            h3 {
-                font-size: 12px !important;
-                font-weight: bold !important;
-                color: #0f172a !important;
-                margin-top: 10px !important;
-                margin-bottom: 4px !important;
-                page-break-after: avoid !important;
-            }
-            ul, ol {
-                padding-left: 18px !important;
-                margin-bottom: 6px !important;
-            }
-        </style>
-        <div>${htmlContent}</div>
-    `;
-
-            const opt = {
-                margin: [10, 10, 10, 10],
-                filename: filename,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: {
-                    scale: 2,
-                    useCORS: true,
-                    logging: false,
-                    letterRendering: true
-                },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: isLandscape ? 'landscape' : 'portrait' },
-                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-            };
-
-            html2pdf().set(opt).from(printElement).save().then(() => {
-                showToast('PDF berhasil diunduh secara presisi!', 'success');
-            }).catch(err => {
-                console.error('PDF export error:', err);
-                showToast('Gagal membuat PDF: ' + err.message, 'error');
-            });
+            setTimeout(() => {
+                iframe.contentWindow.focus();
+                iframe.contentWindow.print();
+                setTimeout(() => document.body.removeChild(iframe), 1000);
+            }, 400);
         }
         async function simulasiBayar(amount, price) {
             if (!currentUser) return showToast('Silakan login terlebih dahulu untuk membeli token!', 'warning');
