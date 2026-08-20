@@ -30,8 +30,7 @@ export default async function handler(req, res) {
       });
     }
 
-    const modelName = 'gemini-flash-latest';
-    let lastErrorMsg = '';
+const MODELS = ['gemini-flash-latest', 'gemini-2.5-flash', 'gemini-3.5-flash'];    let lastErrorMsg = '';
 
     for (const apiKey of API_KEYS) {
       try {
