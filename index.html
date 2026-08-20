@@ -2724,97 +2724,75 @@ PETUNJUK FORMATTING WAJIB:
 
             const mapel = document.getElementById('input-mapel').value || 'Dokumen';
             const filename = `RekanAjar_${activeModule}_${mapel.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
-
             const isLandscape = (activeModule === 'prota-prosem' || activeModule === 'tp-atp');
-            const targetWidthPx = isLandscape ? '1020px' : '750px';
 
             if (typeof html2pdf !== 'undefined') {
                 showToast('Menyiapkan file PDF...', 'info');
 
+                // Bikin wadah cetak dengan ukuran fisik yang pas dengan A4 & padding aman
                 const printElement = document.createElement('div');
-                printElement.style.width = targetWidthPx;
-                printElement.style.padding = '15px';
+                printElement.style.width = isLandscape ? '270mm' : '190mm'; // Sangat pas dengan lebar A4
+                printElement.style.padding = '5mm';
                 printElement.style.background = '#ffffff';
                 printElement.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
                 printElement.style.color = '#0f172a';
-                printElement.style.fontSize = '12px';
+                printElement.style.fontSize = '11px';
                 printElement.style.lineHeight = '1.5';
                 printElement.style.boxSizing = 'border-box';
 
                 printElement.innerHTML = `
-                    <style>
-                        .pdf-render table {
-                            width: 100% !important;
-                            border-collapse: collapse !important;
-                            margin: 12px 0 !important;
-                            table-layout: auto !important;
-                        }
-                        .pdf-render th, .pdf-render td {
-                            border: 1.5px solid #1e293b !important;
-                            padding: 8px 10px !important;
-                            text-align: left !important;
-                            vertical-align: top !important;
-                            font-size: 11px !important;
-                            word-break: keep-all !important;
-                            overflow-wrap: break-word !important;
-                            white-space: normal !important;
-                        }
-                        .pdf-render th {
-                            background-color: #f0fdfa !important;
-                            color: #0f766e !important;
-                            font-weight: bold !important;
-                        }
-                        .pdf-render h2 {
-                            font-size: 16px !important;
-                            font-weight: bold !important;
-                            color: #0f766e !important;
-                            border-bottom: 2px solid #99f6e4 !important;
-                            padding-bottom: 4px !important;
-                            margin-top: 16px !important;
-                            margin-bottom: 8px !important;
-                            page-break-after: avoid !important;
-                        }
-                        .pdf-render h3 {
-                            font-size: 13px !important;
-                            font-weight: bold !important;
-                            color: #0f172a !important;
-                            margin-top: 12px !important;
-                            margin-bottom: 6px !important;
-                            page-break-after: avoid !important;
-                        }
-                        .pdf-render tr {
-                            page-break-inside: avoid !important;
-                        }
-                        .pdf-render ul, .pdf-render ol {
-                            padding-left: 20px !important;
-                            margin-bottom: 8px !important;
-                        }
-                        .pdf-render li {
-                            margin-bottom: 3px !important;
-                        }
-                    </style>
-                    <div class="pdf-render">${htmlContent}</div>
-                `;
+            <style>
+                .pdf-render { width: 100% !important; box-sizing: border-box !important; }
+                .pdf-render table {
+                    width: 100% !important;
+                    border-collapse: collapse !important;
+                    margin: 10px 0 !important;
+                    table-layout: fixed !important; /* Mencegah tabel meledak ke kanan */
+                }
+                .pdf-render th, .pdf-render td {
+                    border: 1px solid #334155 !important;
+                    padding: 6px 8px !important;
+                    text-align: left !important;
+                    vertical-align: top !important;
+                    font-size: 10px !important;
+                    word-wrap: break-word !important;
+                    overflow-wrap: break-word !important;
+                    white-space: normal !important;
+                }
+                .pdf-render th {
+                    background-color: #f0fdfa !important;
+                    color: #0f766e !important;
+                    font-weight: bold !important;
+                }
+                .pdf-render tr {
+                    page-break-inside: avoid !important; /* Cegah pemotongan baris tabel */
+                }
+                .pdf-render h2 { font-size: 14px !important; font-weight: bold !important; color: #0f766e !important; margin-top: 14px !important; margin-bottom: 6px !important; page-break-after: avoid !important; }
+                .pdf-render h3 { font-size: 12px !important; font-weight: bold !important; color: #0f172a !important; margin-top: 10px !important; margin-bottom: 4px !important; page-break-after: avoid !important; }
+                .pdf-render p, .pdf-render li { word-wrap: break-word !important; }
+            </style>
+            <div class="pdf-render">${htmlContent}</div>
+        `;
 
                 const opt = {
-                    margin: [12, 12, 12, 12],
+                    margin: [8, 8, 8, 8], // Margin kertas A4 (mm)
                     filename: filename,
                     image: { type: 'jpeg', quality: 0.98 },
                     html2canvas: {
                         scale: 2,
                         useCORS: true,
                         logging: false,
-                        letterRendering: true
+                        letterRendering: true,
+                        windowWidth: 1200 // Memastikan canvas menangkap seluruh lebar teks
                     },
                     jsPDF: { unit: 'mm', format: 'a4', orientation: isLandscape ? 'landscape' : 'portrait' },
-                    pagebreak: { mode: ['avoid-all' , 'css', 'legacy'] }
+                    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
                 };
 
                 html2pdf().set(opt).from(printElement).save().then(() => {
-                    showToast('PDF Vektor Rapi berhasil diunduh!', 'success');
+                    showToast('PDF berhasil diunduh tanpa terpotong!', 'success');
                 }).catch(err => {
                     console.error('PDF export error:', err);
-                    showToast('Gagal membuat PDF. Mengalihkan ke Cetak PDF Browser...', 'warning');
                     window.print();
                 });
             } else {
