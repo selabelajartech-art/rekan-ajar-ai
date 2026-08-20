@@ -22,7 +22,7 @@ export default async function handler(req, res) {
 
     const API_KEYS = rawKeys
       .filter(Boolean)
-      .map((key) => key.trim().replace(/^["']|["']$/g, '')); // Pembersihan total karakter pengganggu
+      .map((key) => key.trim().replace(/^["']|["']$/g, ''));
 
     if (API_KEYS.length === 0) {
       return res.status(500).json({ 
@@ -30,31 +30,36 @@ export default async function handler(req, res) {
       });
     }
 
-const MODELS = ['gemini-flash-latest', 'gemini-2.5-flash', 'gemini-3.5-flash'];    let lastErrorMsg = '';
+    // Model resmi yang terbukti ada di JSON katalog kamu
+    const MODELS = ['gemini-flash-latest', 'gemini-2.5-flash', 'gemini-3.5-flash'];
+    let lastErrorMsg = '';
 
+    // Perulangan bertingkat: Coba tiap Key, lalu coba tiap Model
     for (const apiKey of API_KEYS) {
-      try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-        
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: promptText }] }]
-          })
-        });
+      for (const modelName of MODELS) {
+        try {
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+          
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: promptText }] }]
+            })
+          });
 
-        const data = await response.json();
+          const data = await response.json();
 
-        if (response.ok && data.candidates && data.candidates.length > 0) {
-          return res.status(200).json(data);
+          if (response.ok && data.candidates && data.candidates.length > 0) {
+            return res.status(200).json(data);
+          }
+
+          lastErrorMsg = data.error?.message || `[${modelName}] Status HTTP ${response.status}`;
+          await delay(300);
+        } catch (err) {
+          lastErrorMsg = err.message;
+          await delay(300);
         }
-
-        lastErrorMsg = data.error?.message || `Status HTTP ${response.status}`;
-        await delay(300);
-      } catch (err) {
-        lastErrorMsg = err.message;
-        await delay(300);
       }
     }
 
