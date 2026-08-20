@@ -2729,53 +2729,77 @@ PETUNJUK FORMATTING WAJIB:
             if (typeof html2pdf !== 'undefined') {
                 showToast('Menyiapkan file PDF...', 'info');
 
-                // Bikin wadah cetak dengan ukuran fisik yang pas dengan A4 & padding aman
-                const printElement = document.createElement('div');
-                printElement.style.width = isLandscape ? '270mm' : '190mm'; // Sangat pas dengan lebar A4
-                printElement.style.padding = '5mm';
-                printElement.style.background = '#ffffff';
-                printElement.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
-                printElement.style.color = '#0f172a';
-                printElement.style.fontSize = '11px';
-                printElement.style.lineHeight = '1.5';
-                printElement.style.boxSizing = 'border-box';
+                // 1. Buat kontainer cetak sementara & TEMPELKAN KE DOM agar koordinat render 100% pas
+                const printContainer = document.createElement('div');
+                printContainer.id = 'temp-pdf-container';
+                printContainer.style.position = 'absolute';
+                printContainer.style.left = '-9999px'; // Sembunyikan dari tampilan layar tanpa merusak layout
+                printContainer.style.top = '0';
+                printContainer.style.width = isLandscape ? '1080px' : '790px'; // Ukuran rasio A4 presisi
+                printContainer.style.background = '#ffffff';
+                printContainer.style.color = '#0f172a';
+                printContainer.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
+                printContainer.style.fontSize = '12px';
+                printContainer.style.lineHeight = '1.5';
+                printContainer.style.boxSizing = 'border-box';
+                printContainer.style.padding = '20px';
 
-                printElement.innerHTML = `
+                printContainer.innerHTML = `
             <style>
-                .pdf-render { width: 100% !important; box-sizing: border-box !important; }
-                .pdf-render table {
+                #temp-pdf-container * {
+                    box-sizing: border-box !important;
+                }
+                #temp-pdf-container table {
                     width: 100% !important;
                     border-collapse: collapse !important;
-                    margin: 10px 0 !important;
-                    table-layout: fixed !important; /* Mencegah tabel meledak ke kanan */
+                    margin: 12px 0 !important;
+                    table-layout: auto !important;
                 }
-                .pdf-render th, .pdf-render td {
+                #temp-pdf-container th, #temp-pdf-container td {
                     border: 1px solid #334155 !important;
-                    padding: 6px 8px !important;
+                    padding: 8px 10px !important;
                     text-align: left !important;
                     vertical-align: top !important;
-                    font-size: 10px !important;
-                    word-wrap: break-word !important;
+                    font-size: 11px !important;
+                    word-break: normal !important;
                     overflow-wrap: break-word !important;
                     white-space: normal !important;
                 }
-                .pdf-render th {
+                #temp-pdf-container th {
                     background-color: #f0fdfa !important;
                     color: #0f766e !important;
                     font-weight: bold !important;
                 }
-                .pdf-render tr {
-                    page-break-inside: avoid !important; /* Cegah pemotongan baris tabel */
+                #temp-pdf-container tr {
+                    page-break-inside: avoid !important;
                 }
-                .pdf-render h2 { font-size: 14px !important; font-weight: bold !important; color: #0f766e !important; margin-top: 14px !important; margin-bottom: 6px !important; page-break-after: avoid !important; }
-                .pdf-render h3 { font-size: 12px !important; font-weight: bold !important; color: #0f172a !important; margin-top: 10px !important; margin-bottom: 4px !important; page-break-after: avoid !important; }
-                .pdf-render p, .pdf-render li { word-wrap: break-word !important; }
+                #temp-pdf-container h2 {
+                    font-size: 15px !important;
+                    font-weight: bold !important;
+                    color: #0f172a !important;
+                    border-bottom: 2px solid #99f6e4 !important;
+                    padding-bottom: 4px !important;
+                    margin-top: 16px !important;
+                    margin-bottom: 8px !important;
+                    page-break-after: avoid !important;
+                }
+                #temp-pdf-container h3 {
+                    font-size: 13px !important;
+                    font-weight: bold !important;
+                    color: #0f172a !important;
+                    margin-top: 12px !important;
+                    margin-bottom: 6px !important;
+                    page-break-after: avoid !important;
+                }
             </style>
-            <div class="pdf-render">${htmlContent}</div>
+            <div>${htmlContent}</div>
         `;
 
+                // Masukkan elemen ke dalam DOM aktif agar html2canvas membaca margin dengan benar
+                document.body.appendChild(printContainer);
+
                 const opt = {
-                    margin: [8, 8, 8, 8], // Margin kertas A4 (mm)
+                    margin: [10, 10, 10, 10], // Margin kertas A4 (mm)
                     filename: filename,
                     image: { type: 'jpeg', quality: 0.98 },
                     html2canvas: {
@@ -2783,15 +2807,23 @@ PETUNJUK FORMATTING WAJIB:
                         useCORS: true,
                         logging: false,
                         letterRendering: true,
-                        windowWidth: 1200 // Memastikan canvas menangkap seluruh lebar teks
+                        scrollX: 0,
+                        scrollY: 0
                     },
                     jsPDF: { unit: 'mm', format: 'a4', orientation: isLandscape ? 'landscape' : 'portrait' },
                     pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
                 };
 
-                html2pdf().set(opt).from(printElement).save().then(() => {
-                    showToast('PDF berhasil diunduh tanpa terpotong!', 'success');
+                html2pdf().set(opt).from(printContainer).save().then(() => {
+                    // Bersihkan elemen sementara setelah cetak selesai
+                    if (document.body.contains(printContainer)) {
+                        document.body.removeChild(printContainer);
+                    }
+                    showToast('PDF Rapi berhasil diunduh!', 'success');
                 }).catch(err => {
+                    if (document.body.contains(printContainer)) {
+                        document.body.removeChild(printContainer);
+                    }
                     console.error('PDF export error:', err);
                     window.print();
                 });
@@ -2799,7 +2831,6 @@ PETUNJUK FORMATTING WAJIB:
                 window.print();
             }
         }
-
         async function simulasiBayar(amount, price) {
             if (!currentUser) return showToast('Silakan login terlebih dahulu untuk membeli token!', 'warning');
             if (amount === 20) openPaymentCheckout('pemula');
