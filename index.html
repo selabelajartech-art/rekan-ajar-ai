@@ -2497,7 +2497,7 @@ PETUNJUK FORMATTING WAJIB:
 5. DILARANG menggunakan atribut style, class, id, onclick, atau event handler HTML apa pun.
 6. Jangan membuat atau mengubah CSS aplikasi. Gunakan hanya struktur HTML semantik seperti h1-h6, p, ul, ol, li, table, thead, tbody, tr, th, td, strong, em, div, dan br.
 7. DILARANG memotong kata di akhir kalimat. Tuliskan setiap kata secara utuh.
-8. DILARANG menggunakan tag <br> atau membuat baris <tr> baru di dalam sel tabel <td>. Setiap deskripsi indikator rubrik harus berada utuh di dalam satu sel <td>.`;
+8. DILARANG menggunakan tag <br> atau membuat baris <tr> baru di dalam sel tabel <td>. Setiap deskripsi indikator rubrik harus berada utuh di dalam satu sel, 1 paragraf tanpa pemisah baris <td>.`;
             try {
                 const response = await fetch('/api/generate', {
                     method: 'POST',
@@ -2755,8 +2755,9 @@ PETUNJUK FORMATTING WAJIB:
                             text-align: left !important;
                             vertical-align: top !important;
                             font-size: 11px !important;
-                            word-break: normal !important;
+                            word-break: keep-all !important;
                             overflow-wrap: break-word !important;
+                            white-space: normal !important;
                         }
                         .pdf-render th {
                             background-color: #f0fdfa !important;
